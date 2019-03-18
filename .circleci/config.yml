@@ -1,0 +1,44 @@
+version: 2
+jobs:
+ build:
+   parallelism: 1
+   docker:
+     - image: circleci/ruby:2.6.1-node
+       environment:
+         RAILS_ENV: test
+         PGHOST: 127.0.0.1
+         PGUSER: postgres
+     - image: circleci/postgres:9.5-alpine
+       environment:
+         POSTGRES_USER: postgres
+         POSTGRES_DB: ab_test
+         POSTGRES_PASSWORD: ''
+   working_directory: ~/radar-api/radar-api
+   steps:
+     - checkout
+     - run:
+         name: Configure Bundler
+         command: |
+           echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
+           source $BASH_ENV
+           gem install bundler
+     # Restore bundle cache
+     - type: cache-restore
+       key: radar-api-{{ checksum "Gemfile.lock" }}
+     # Bundle install dependencies
+     - run: bundle install --path vendor/bundle
+     # Store bundle cache
+     - type: cache-save
+       key: radar-api-{{ checksum "Gemfile.lock" }}
+       paths:
+         - vendor/bundle
+     - run: bundle exec rake db:create
+     - run: bundle exec rake db:migrate
+     - run:
+         command: |
+           mkdir /tmp/test-results
+           bundle exec rspec --profile 10 \
+                           --out /tmp/test-results/rspec.xml \
+                           --format progress \
+                           $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+     - run: bundle exec rubocop
