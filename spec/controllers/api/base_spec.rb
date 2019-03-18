@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-describe API::Base, type: :request do
-
+describe API, type: :request do
   context 'GET /api/status' do
     subject do
       get '/api/status'

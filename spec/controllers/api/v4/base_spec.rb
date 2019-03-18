@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe API::V4::Base, type: :request do
-
   context 'GET /api/v4/version' do
     subject do
       get '/api/v4/version'
