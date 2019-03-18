@@ -10,10 +10,13 @@ gem 'grape'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.11'
 gem 'rails', '~> 5.2.2', '>= 5.2.2.1'
-gem 'rubocop'
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
+  gem 'rubocop'
+  gem 'rspec-rails'
+  gem 'factory_bot_rails'
+  gem 'pry'
 end
 
 group :development do
