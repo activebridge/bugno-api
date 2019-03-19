@@ -10,6 +10,10 @@ gem 'grape'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.11'
 gem 'rails', '~> 5.2.2', '>= 5.2.2.1'
+gem 'devise_token_auth'
+gem 'omniauth'
+gem 'rack-cors', require: 'rack/cors'
+gem 'devise'
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
@@ -17,6 +21,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'factory_bot_rails'
   gem 'pry'
+  gem 'faker'
 end
 
 group :development do
