@@ -15,7 +15,4 @@ test:
   database: radar_test
 
 production:
-  <<: *default
-  database: radar_production
-  username: radar
-  password: <%= ENV['RADAR_DATABASE_PASSWORD'] %>
+  url: <%= ENV['DATABASE_URL'] %>
