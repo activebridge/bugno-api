@@ -10,4 +10,7 @@ class User < ActiveRecord::Base
          :validatable,
          :omniauthable
   include DeviseTokenAuth::Concerns::User
+
+  has_many :project_users
+  has_many :projects, through: :project_users
 end
