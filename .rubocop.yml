@@ -6,7 +6,6 @@ AllCops:
     - 'bin/**/*'
     - 'vendor/**/*'
     - 'log/**/*'
-    - 'Gemfile'
     - 'spec/support/**/*'
 Metrics/LineLength:
   Max: 120
