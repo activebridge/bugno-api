@@ -25,6 +25,21 @@ describe API::V1::Base::Projects, type: :request do
 
     subject { -> { post(*request_params) } }
 
+    it do
+      post(*request_params)
+      expect(response.status).to eq(201)
+    end
     it { is_expected.to change(user.projects, :count).by(1) }
+  end
+
+  context '#show' do
+    let(:url) { "/api/v1/projects/#{user_project.project_id}" }
+
+    subject do
+      get(*request_params)
+      response
+    end
+
+    it { is_expected.to have_http_status(200) }
   end
 end
