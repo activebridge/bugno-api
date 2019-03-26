@@ -2,7 +2,7 @@
 
 class API::Base < Grape::API
   rescue_from ActiveRecord::RecordNotFound do |_e|
-    error_response(message: '404 not found', status: 404)
+    error_response(message: I18n.t('api.errors.not_found'), status: 404)
   end
 
   mount API::V1::Base
