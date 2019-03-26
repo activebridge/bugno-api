@@ -48,5 +48,22 @@ class API::V1::Projects < Grape::API
       status 200
       present matched_project
     end
+
+    desc "Updates project"
+    params do
+      requires :project, type: Hash do
+        requires :name, type: String
+        optional :description, type: String
+      end
+    end
+
+    patch ':id' do
+      if matched_project.update(declared_params[:project])
+        status 200
+        present matched_project
+      else
+        error!(matched_project.error.full_messages, 422)
+      end
+    end
   end
 end

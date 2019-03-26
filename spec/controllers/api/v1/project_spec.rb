@@ -42,4 +42,14 @@ describe API::V1::Base::Projects, type: :request do
 
     it { is_expected.to have_http_status(200) }
   end
+
+  context '#update' do
+    let(:url) { "/api/v1/projects/#{user_project.project_id}" }
+    let(:params) { { project: valid_params } }
+
+    it do
+      patch(*request_params)
+      expect(response.status).to eq(200)
+    end
+  end
 end
