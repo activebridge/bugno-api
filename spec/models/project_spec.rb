@@ -5,11 +5,12 @@ require 'rails_helper'
 RSpec.describe Project, type: :model do
   let(:project) { create(:project) }
 
-  context 'should have unique name' do
+  context 'name presence' do
     it { should validate_presence_of(:name) }
   end
 
-  context 'should destroy entries in project_users table with foreign key' do
+  context 'associations' do
     it { expect(project).to have_many(:project_users).dependent(:destroy) }
+    it { expect(project).to have_many(:events).dependent(:destroy) }
   end
 end
