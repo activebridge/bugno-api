@@ -97,6 +97,9 @@ GEM
       devise (>= 3.3)
       devise_token_auth (>= 0.1.32)
       grape (> 0.9.0)
+    grape_fast_jsonapi (0.2.0)
+      fast_jsonapi (>= 1.5)
+      grape
     hashie (3.6.0)
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
@@ -253,6 +256,7 @@ DEPENDENCIES
   fast_jsonapi
   grape
   grape_devise_token_auth
+  grape_fast_jsonapi
   listen (>= 3.0.5, < 3.2)
   omniauth
   pg (>= 0.18, < 2.0)
