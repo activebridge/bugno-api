@@ -19,7 +19,7 @@ class API::V1::Projects < Grape::API
     desc 'Returns projects'
     get do
       status 200
-      present projects
+      render(projects)
     end
 
     desc 'Creates project'
@@ -33,7 +33,7 @@ class API::V1::Projects < Grape::API
     post do
       if project.persisted?
         status 201
-        present project
+        render(project)
       else
         error!(project.errors.full_messages, 422)
       end
@@ -46,7 +46,7 @@ class API::V1::Projects < Grape::API
 
     get ':id' do
       status 200
-      present matched_project
+      render(matched_project)
     end
 
     desc 'Updates project'
@@ -60,7 +60,7 @@ class API::V1::Projects < Grape::API
     patch ':id' do
       if matched_project.update(declared_params[:project])
         status 200
-        present matched_project
+        render(matched_project)
       else
         error!(matched_project.error.full_messages, 422)
       end

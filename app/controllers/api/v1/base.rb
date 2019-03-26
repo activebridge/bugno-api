@@ -4,6 +4,9 @@ class API::V1::Base < Grape::API
   auth :grape_devise_token_auth, resource_class: :user
   helpers GrapeDeviseTokenAuth::AuthHelpers
 
+  formatter :json, Grape::Formatter::FastJsonapi
+  formatter :jsonapi, Grape::Formatter::FastJsonapi
+
   helpers do
     def declared_params
       declared(params, include_missing: false)
