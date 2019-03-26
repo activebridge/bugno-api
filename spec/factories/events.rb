@@ -5,7 +5,7 @@ FactoryBot.define do
     association project
     association user
     title { Faker::Food.fruits }
-    environment { Faker::Space.galaxy }
+    environment { ActiveRecord::Base.configurations.keys.sample }
     status { Event.statuses.values.sample }
     trait :active do
       status { :active }
