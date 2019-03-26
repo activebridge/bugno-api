@@ -16,7 +16,7 @@ class API::V1::Projects < Grape::API
   end
 
   resources :projects do
-    desc "Returns projects"
+    desc 'Returns projects'
     get do
       status 200
       present projects
@@ -39,7 +39,7 @@ class API::V1::Projects < Grape::API
       end
     end
 
-    desc "Returns project"
+    desc 'Returns project'
     params do
       requires :id, type: String
     end
@@ -49,7 +49,7 @@ class API::V1::Projects < Grape::API
       present matched_project
     end
 
-    desc "Updates project"
+    desc 'Updates project'
     params do
       requires :project, type: Hash do
         requires :name, type: String
@@ -66,7 +66,7 @@ class API::V1::Projects < Grape::API
       end
     end
 
-    desc "Deletes project"
+    desc 'Deletes project'
     params do
       requires :id, type: String
     end
