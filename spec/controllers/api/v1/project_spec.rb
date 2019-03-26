@@ -52,4 +52,13 @@ describe API::V1::Base::Projects, type: :request do
       expect(response.status).to eq(200)
     end
   end
+
+  context '#destroy' do
+    let(:url) { "/api/v1/projects/#{user_project.project_id}" }
+    let(:params) { { id: user_project.project_id } }
+
+    subject { -> { delete(*request_params) } }
+
+    it { is_expected.to change(user.projects, :count).by(-1) }
+  end
 end

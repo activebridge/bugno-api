@@ -65,5 +65,18 @@ class API::V1::Projects < Grape::API
         error!(matched_project.error.full_messages, 422)
       end
     end
+
+    desc "Deletes project"
+    params do
+      requires :id, type: String
+    end
+
+    delete ':id' do
+      if matched_project.destroy
+        status 200
+      else
+        error!(matched_project.error.full_messages, 422)
+      end
+    end
   end
 end
