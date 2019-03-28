@@ -11,6 +11,11 @@ class API::V1::Base < Grape::API
     def declared_params
       declared(params, include_missing: false)
     end
+
+    def render_error(record)
+      message = record.respond_to?(:errors) ? error!(record.errors.full_messages.to_sentence, 422) : nil
+      error!(message, 422)
+    end
   end
 
   version 'v1'

@@ -33,6 +33,15 @@ describe API::V1::Base::Projects, type: :request do
       expect(response.status).to eq(201)
     end
     it { is_expected.to change(user.projects, :count).by(1) }
+
+    context 'invalid params' do
+      let(:params) { { project: { name: '' } } }
+
+      it do
+        post(*request_params)
+        expect(response.status).to eq(422)
+      end
+    end
   end
 
   context '#show' do
