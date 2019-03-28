@@ -35,7 +35,7 @@ class API::V1::Projects < Grape::API
         status 201
         render(project)
       else
-        error!(project.errors.full_messages, 422)
+        render_error(project)
       end
     end
 
@@ -62,7 +62,7 @@ class API::V1::Projects < Grape::API
         status 200
         render(matched_project)
       else
-        error!(matched_project.error.full_messages, 422)
+        render_error(matched_project)
       end
     end
 
@@ -75,7 +75,7 @@ class API::V1::Projects < Grape::API
       if matched_project.destroy
         status 200
       else
-        error!(matched_project.error.full_messages, 422)
+        render_error(matched_project)
       end
     end
   end
