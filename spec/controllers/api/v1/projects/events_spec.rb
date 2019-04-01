@@ -34,7 +34,7 @@ describe API::V1::Base::Projects, type: :request do
       expect(response.status).to eq(201)
     end
 
-    it { is_expected.to change(Event, :count).by(1) }
+    it { is_expected.to change(project.events, :count).by(1) }
   end
 
   context '#show' do
