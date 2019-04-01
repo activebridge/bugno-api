@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :event do
-    association project
-    association user
+    association :project
+    association :user
     title { Faker::Food.fruits }
     environment { ActiveRecord::Base.configurations.keys.sample }
     status { Event.statuses.values.sample }

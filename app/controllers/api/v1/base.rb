@@ -28,4 +28,5 @@ class API::V1::Base < Grape::API
 
   before { authenticate_user! }
   mount API::V1::Projects
+  mount API::V1::Projects::Events
 end
