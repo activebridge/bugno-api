@@ -3,7 +3,12 @@
 class API::V1::Projects::Events < Grape::API
   helpers do
     def project
-      @project ||= current_user.projects.find(params[:project_id])
+      @project ||= current_user.projects.find(params[:id])
+    end
+
+    def project_by_api_key
+      binding.pry
+      @project_by_api_key ||= Project.find_by(api_key: params[:project_id])
     end
 
     def project_by_api_key
@@ -43,7 +48,6 @@ class API::V1::Projects::Events < Grape::API
 
         if event.persisted?
           status 201
-          render(event)
         else
           render_error(event)
         end
