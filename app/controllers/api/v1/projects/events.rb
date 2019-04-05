@@ -3,7 +3,12 @@
 class API::V1::Projects::Events < Grape::API
   helpers do
     def project
-      @project ||= current_user.projects.find(params[:project_id])
+      @project ||= current_user.projects.find(params[:id])
+    end
+
+    def project_by_api_key
+      binding.pry
+      @project_by_api_key ||= Project.find_by(api_key: params[:project_id])
     end
 
     def events
@@ -21,6 +26,26 @@ class API::V1::Projects::Events < Grape::API
       get do
         status 200
         render(events)
+      end
+
+      desc 'Create event'
+      params do
+        requires :event, type: Hash do
+          requires :status, type: Integer, values: Event.statuses.values
+          requires :title, type: String
+          requires :user_id, type: Integer
+        end
+      end
+
+      post do
+        return(status 401) unless project_by_api_key
+        
+        if project_by_api_key.events.create(declared_params[:event])
+          status 201
+          render(matched_event)
+        else
+          render_error(matched_event)
+        end
       end
 
       desc 'Returns event'
