@@ -26,7 +26,7 @@ class API::V1::Base < Grape::API
     { api_version: '1.0.0' }
   end
 
-  # before { authenticate_user! }
+  before { authenticate_user! unless route.settings.dig(:auth, :disabled) }
   mount API::V1::Projects
   mount API::V1::Projects::Events
 end

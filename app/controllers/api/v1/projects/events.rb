@@ -3,11 +3,10 @@
 class API::V1::Projects::Events < Grape::API
   helpers do
     def project
-      @project ||= current_user.projects.find(params[:id])
+      @project ||= current_user.projects.find(params[:project_id])
     end
 
     def project_by_api_key
-      binding.pry
       @project_by_api_key ||= Project.find_by(api_key: params[:project_id])
     end
 
@@ -17,6 +16,10 @@ class API::V1::Projects::Events < Grape::API
 
     def matched_event
       @matched_event ||= project.events.find(params[:id])
+    end
+
+    def event
+      @event ||= project_by_api_key.events.create(declared_params)
     end
   end
 
@@ -29,22 +32,20 @@ class API::V1::Projects::Events < Grape::API
       end
 
       desc 'Create event'
+      route_setting :auth, disabled: true
       params do
-        requires :event, type: Hash do
-          requires :status, type: Integer, values: Event.statuses.values
-          requires :title, type: String
-          requires :user_id, type: Integer
-        end
+        requires :title, type: String
+        optional :environment, type: String
       end
 
       post do
         return(status 401) unless project_by_api_key
-        
-        if project_by_api_key.events.create(declared_params[:event])
+
+        if event.persisted?
           status 201
-          render(matched_event)
+          render(event)
         else
-          render_error(matched_event)
+          render_error(event)
         end
       end
 

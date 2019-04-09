@@ -22,6 +22,21 @@ describe API::V1::Base::Projects, type: :request do
     it { is_expected.to have_http_status(200) }
   end
 
+  context '#create' do
+    let(:project) { Project.find(user_project.project_id) }
+    let(:url) { "/api/v1/projects/#{project.api_key}/events" }
+    let(:params) { attributes_for(:event) }
+
+    subject { -> { post(*request_params) } }
+
+    it do
+      post(*request_params)
+      expect(response.status).to eq(201)
+    end
+
+    it { is_expected.to change(Event, :count).by(1) }
+  end
+
   context '#show' do
     let(:url) { "#{base_url}/#{event.id}" }
 
