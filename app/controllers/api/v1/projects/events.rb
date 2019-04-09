@@ -10,10 +10,6 @@ class API::V1::Projects::Events < Grape::API
       @project_by_api_key ||= Project.find_by(api_key: params[:project_id])
     end
 
-    def project_by_api_key
-      @project_by_api_key ||= Project.find_by(api_key: params[:project_id])
-    end
-
     def events
       @events ||= project.events
     end
@@ -40,6 +36,14 @@ class API::V1::Projects::Events < Grape::API
       params do
         requires :title, type: String
         optional :environment, type: String
+        optional :message, type: String
+        optional :backtrace, type: Array
+        optional :framework, type: String
+        optional :url, type: String
+        optional :user_ip, type: String
+        optional :headers, type: Hash
+        optional :method, type: String
+        optional :params, type: Hash
       end
 
       post do
