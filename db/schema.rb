@@ -27,9 +27,9 @@ ActiveRecord::Schema.define(version: 2019_04_09_105611) do
     t.text "backtrace", default: [], array: true
     t.string "framework"
     t.string "url"
-    t.string "user_ip"
+    t.string "ip_address"
     t.jsonb "headers"
-    t.string "method"
+    t.string "http_method"
     t.jsonb "params"
     t.index ["project_id"], name: "index_events_on_project_id"
     t.index ["user_id"], name: "index_events_on_user_id"

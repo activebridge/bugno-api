@@ -40,9 +40,9 @@ class API::V1::Projects::Events < Grape::API
         optional :backtrace, type: Array
         optional :framework, type: String
         optional :url, type: String
-        optional :user_ip, type: String
+        optional :ip_address, type: String
         optional :headers, type: Hash
-        optional :method, type: String
+        optional :http_method, type: String
         optional :params, type: Hash
       end
 
