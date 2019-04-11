@@ -69,7 +69,7 @@ class API::V1::Projects::Events < Grape::API
       desc 'Updates event'
       params do
         requires :event, type: Hash do
-          optional :status, type: Integer, values: Event.statuses.values
+          optional :status, type: String, values: Event.statuses.keys
           optional :user_id, type: Integer
         end
       end
