@@ -26,6 +26,7 @@ describe API::V1::Base::Projects, type: :request do
     let(:project) { Project.find(user_project.project_id) }
     let(:url) { "/api/v1/projects/#{project.api_key}/events" }
     let(:params) { attributes_for(:event) }
+    let(:headers) { nil }
 
     subject { -> { post(*request_params) } }
 
@@ -35,6 +36,18 @@ describe API::V1::Base::Projects, type: :request do
     end
 
     it { is_expected.to change(project.events, :count).by(1) }
+  end
+
+  context '#create with empty api key' do
+    let(:api_key) { nil }
+    let(:url) { "/api/v1/projects/#{api_key}/events" }
+    let(:params) { attributes_for(:event) }
+    let(:headers) { nil }
+
+    it do
+      post(*request_params)
+      expect(response.status).to eq(401)
+    end
   end
 
   context '#show' do
@@ -51,7 +64,7 @@ describe API::V1::Base::Projects, type: :request do
   context '#update' do
     let(:url) { "#{base_url}/#{event.id}" }
     let(:another_user) { create(:user) }
-    let(:params) { { event: { status: 0, user_id: another_user.id } } }
+    let(:params) { { event: { status: 'muted', user_id: another_user.id } } }
 
     it do
       patch(*request_params)

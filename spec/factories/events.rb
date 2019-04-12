@@ -6,6 +6,7 @@ FactoryBot.define do
     association :user
     title { Faker::Food.fruits }
     environment { ActiveRecord::Base.configurations.keys.sample }
-    status { 0 }
+    status { "active" }
+    ip_address { Faker::Internet.ip_v4_address }
   end
 end
