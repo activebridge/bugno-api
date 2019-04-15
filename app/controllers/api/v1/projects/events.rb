@@ -36,6 +36,14 @@ class API::V1::Projects::Events < Grape::API
       params do
         requires :title, type: String
         optional :environment, type: String
+        optional :message, type: String
+        optional :backtrace, type: Array
+        optional :framework, type: String
+        optional :url, type: String
+        optional :ip_address, type: String
+        optional :headers, type: Hash
+        optional :http_method, type: String
+        optional :params, type: Hash
       end
 
       post do
@@ -43,7 +51,6 @@ class API::V1::Projects::Events < Grape::API
 
         if event.persisted?
           status 201
-          render(event)
         else
           render_error(event)
         end
@@ -62,7 +69,7 @@ class API::V1::Projects::Events < Grape::API
       desc 'Updates event'
       params do
         requires :event, type: Hash do
-          optional :status, type: Integer, values: Event.statuses.values
+          optional :status, type: String, values: Event.statuses.keys
           optional :user_id, type: Integer
         end
       end
