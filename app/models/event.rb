@@ -7,4 +7,6 @@ class Event < ApplicationRecord
   enum status: %i[active resolved muted]
 
   validates :title, :status, presence: true
+
+  scope :by_status, ->(status) { where(status: status) if status.present? }
 end

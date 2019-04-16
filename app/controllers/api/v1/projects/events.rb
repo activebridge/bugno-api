@@ -11,7 +11,7 @@ class API::V1::Projects::Events < Grape::API
     end
 
     def events
-      @events ||= project.events
+      @events ||= project.events.by_status(declared_params[:status])
     end
 
     def matched_event
@@ -26,6 +26,10 @@ class API::V1::Projects::Events < Grape::API
   namespace 'projects/:project_id' do
     resources :events do
       desc 'Returns events'
+      params do
+        optional :status, type: String, values: Event.statuses.keys
+      end
+
       get do
         status 200
         render(events)
