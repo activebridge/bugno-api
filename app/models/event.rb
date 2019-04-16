@@ -8,5 +8,6 @@ class Event < ApplicationRecord
 
   validates :title, :status, presence: true
 
+  acts_as_list scope: %i[status project_id]
   scope :by_status, ->(status) { where(status: status) if status.present? }
 end

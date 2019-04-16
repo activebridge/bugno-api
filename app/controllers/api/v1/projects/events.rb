@@ -11,7 +11,7 @@ class API::V1::Projects::Events < Grape::API
     end
 
     def events
-      @events ||= project.events.by_status(declared_params[:status])
+      @events ||= project.events.by_status(declared_params[:status]).order(position: :asc)
     end
 
     def matched_event
@@ -74,6 +74,7 @@ class API::V1::Projects::Events < Grape::API
       params do
         requires :event, type: Hash do
           optional :status, type: String, values: Event.statuses.keys
+          optional :position, type: Integer
           optional :user_id, type: Integer
         end
       end
