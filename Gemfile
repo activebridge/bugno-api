@@ -5,6 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.6.2'
 
+gem 'acts_as_list'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'devise'
 gem 'devise_token_auth'
