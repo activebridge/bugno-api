@@ -3,6 +3,7 @@
 class ProjectUser < ApplicationRecord
   belongs_to :user
   belongs_to :project
+  enum role: %i[owner collaborator]
 
   validates :project_id, uniqueness: { scope: :user_id }
 end
