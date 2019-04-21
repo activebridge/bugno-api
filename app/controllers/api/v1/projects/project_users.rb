@@ -11,11 +11,17 @@ class API::V1::Projects::ProjectUsers < Grape::API
     end
 
     def user_by_email
-      @user_by_email = User.find_by(email: declared_params[:email])
+      @user_by_email ||= User.find_by(email: declared_params[:email])
+    end
+
+    def role
+      @role ||= current_user.project_users.find_by(project: project).role
     end
 
     def user
-      @user ||= project.project_users.create(user: user_by_email, role: 1)
+      if role == "owner"
+        @user ||= project.project_users.create(user: user_by_email, role: 1)
+      end
     end
   end
 
@@ -34,7 +40,7 @@ class API::V1::Projects::ProjectUsers < Grape::API
       end
 
       post do
-        if user.persisted?
+        if user && user.persisted?
           status 201
         else
           render_error(user)
