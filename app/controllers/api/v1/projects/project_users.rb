@@ -23,7 +23,7 @@ class API::V1::Projects::ProjectUsers < Grape::API
     end
   end
 
-   namespace 'projects/:project_id' do
+  namespace 'projects/:project_id' do
     resources :project_users do
       desc "Returns project's users"
 
