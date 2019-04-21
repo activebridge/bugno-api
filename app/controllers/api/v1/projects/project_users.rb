@@ -19,13 +19,11 @@ class API::V1::Projects::ProjectUsers < Grape::API
     end
 
     def user
-      if role == "owner"
-        @user ||= project.project_users.create(user: user_by_email, role: 1)
-      end
+      @user ||= project.project_users.create(user: user_by_email, role: 1) if role == 'owner'
     end
   end
 
-   namespace 'projects/:project_id' do
+  namespace 'projects/:project_id' do
     resources :project_users do
       desc "Returns project's users"
 
@@ -34,13 +32,13 @@ class API::V1::Projects::ProjectUsers < Grape::API
         render(project_users)
       end
 
-      desc "Sets user to project"
+      desc 'Sets user to project'
       params do
         requires :email, type: String
       end
 
       post do
-        if user && user.persisted?
+        if user&.persisted?
           status 201
         else
           render_error(user)
