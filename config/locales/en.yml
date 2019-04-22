@@ -2,3 +2,5 @@ en:
   api:
     errors:
       not_found: 'not found'
+  pundit:
+    default: 'You cannot perform this action.'

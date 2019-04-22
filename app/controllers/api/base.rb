@@ -5,6 +5,10 @@ class API::Base < Grape::API
     error_response(message: I18n.t('api.errors.not_found'), status: 404)
   end
 
+  rescue_from Pundit::NotAuthorizedError do
+   error_response(message: I18n.t('pundit.default'), status: 403)
+ end
+
   mount API::V1::Base
   mount API::V2::Base
   mount API::V3::Base
