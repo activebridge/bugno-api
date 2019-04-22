@@ -14,12 +14,12 @@ class API::V1::Projects::ProjectUsers < Grape::API
       @user_by_email ||= User.find_by(email: declared_params[:email])
     end
 
-    def role
-      @role ||= current_user.project_users.find_by(project: project).role
+    def owner?
+      current_user.project_users.find_by(project: project).role == 'owner'
     end
 
     def user
-      @user ||= project.project_users.create(user: user_by_email, role: 1) if role == 'owner'
+      @user ||= project.project_users.create(user: user_by_email, role: 1) if owner?
     end
   end
 
