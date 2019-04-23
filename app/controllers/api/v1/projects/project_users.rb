@@ -7,7 +7,7 @@ class API::V1::Projects::ProjectUsers < Grape::API
     end
 
     def project_users
-      @project_users ||= project.project_users
+      @project_users ||= project.project_users.includes(:user)
     end
 
     def user_by_email
