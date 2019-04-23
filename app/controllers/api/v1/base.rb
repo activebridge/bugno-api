@@ -29,4 +29,5 @@ class API::V1::Base < Grape::API
   before { authenticate_user! unless env[Grape::Env::GRAPE_ROUTING_ARGS] && route.settings.dig(:auth, :disabled) }
   mount API::V1::Projects
   mount API::V1::Projects::Events
+  mount API::V1::Projects::ProjectUsers
 end
