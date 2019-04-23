@@ -6,4 +6,6 @@ class ProjectUser < ApplicationRecord
   enum role: %i[owner collaborator]
 
   validates :project_id, uniqueness: { scope: :user_id }
+
+  delegate :user_owner?, :user_collaborator?, to: :project, allow_nil: true, prefix: true
 end

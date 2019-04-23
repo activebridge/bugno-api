@@ -14,12 +14,12 @@ class API::V1::Projects::ProjectUsers < Grape::API
       @user_by_email ||= User.find_by(email: declared_params[:email])
     end
 
-    def owner?
-      current_user.project_users.find_by(project: project).role == 'owner'
+    def project_user
+      @project_user ||= project.project_users.new(user: user_by_email, role: 1)
     end
 
-    def user
-      @user ||= project.project_users.create(user: user_by_email, role: 1) if owner?
+    def matched_project_user
+      @matched_project_user ||= project.project_users.find(params[:id])
     end
   end
 
@@ -32,16 +32,28 @@ class API::V1::Projects::ProjectUsers < Grape::API
         render(project_users)
       end
 
-      desc 'Sets user to project'
+      desc 'Adds user to project'
       params do
         requires :email, type: String
       end
 
       post do
-        if user&.persisted?
+        authorize(project_user, :create?)
+        if project_user.save
           status 201
+          render(project_user)
         else
-          render_error(user)
+          render_error(project_user)
+        end
+      end
+
+      desc 'Removes user from project'
+      delete ':id' do
+        authorize(matched_project_user, :delete?)
+        if matched_project_user.destroy
+          status 200
+        else
+          render_error(matched_project_user)
         end
       end
     end

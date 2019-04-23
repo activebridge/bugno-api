@@ -8,4 +8,10 @@ class Project < ApplicationRecord
   has_many :events, dependent: :destroy
 
   validates :name, presence: true
+
+  ProjectUser.roles.keys.each do |role|
+    define_method "user_#{role}?" do |user|
+      project_users.send(role).exists?(user: user)
+    end
+  end
 end
