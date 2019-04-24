@@ -24,10 +24,9 @@ describe API::V1::Projects::Events, type: :request do
       let!(:muted_events) { create_list(:event, 3, project: project, status: 'muted') }
       let(:params) { { status: 'muted' } }
 
-        it { is_expected.to eq(muted_events.count) }
+      it { is_expected.to eq(muted_events.count) }
     end
   end
-
 
   context '#create' do
     let(:headers) { nil }
@@ -50,7 +49,6 @@ describe API::V1::Projects::Events, type: :request do
       it { is_expected.to have_http_status(401) }
     end
   end
-
 
   context '#show' do
     let!(:event) { create(:event, project: project) }
