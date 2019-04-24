@@ -5,10 +5,8 @@ require 'rails_helper'
 describe API::V1::Base::Projects, type: :request do
   let!(:user) { create(:user) }
   let(:valid_params) { attributes_for(:project) }
-
   let(:base_url) { '/api/v1/projects' }
   let(:url) { base_url }
-
   let(:headers) { user.create_new_auth_token }
   let(:params) { {} }
   let(:request_params) { [url, { params: params, headers: headers }] }
