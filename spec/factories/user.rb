@@ -10,5 +10,11 @@ FactoryBot.define do
         create(:project_user, user: user)
       end
     end
+
+    trait :with_projects_as_collaborator do
+      after(:create) do |user|
+        create(:project_user, user: user, role: 'collaborator')
+      end
+    end
   end
 end

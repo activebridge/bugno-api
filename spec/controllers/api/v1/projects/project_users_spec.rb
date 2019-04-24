@@ -3,51 +3,47 @@
 require 'rails_helper'
 
 describe API::V1::Projects::ProjectUsers, type: :request do
-  let!(:project) { create(:project) }
-  let!(:project_users) { create_list(:project_user, 3, project: project) }
-  let!(:user_without_project) { create(:user) }
+  let(:user) { create(:user, :with_projects) }
+  let(:project) { user.projects.first }
   let(:base_url) { "/api/v1/projects/#{project.id}/project_users" }
   let(:url) { base_url }
-  let(:headers) { project.users.first.create_new_auth_token }
+  let(:headers) { user.create_new_auth_token }
   let(:params) { {} }
   let(:request_params) { [url, { params: params, headers: headers }] }
 
   context '#index' do
+    let!(:project_users) { create_list(:project_user, 3, project: project) }
+
     subject do
       get(*request_params)
-      response
+      json['data'].count
     end
 
-    it { is_expected.to have_http_status(200) }
+    it { is_expected.to eq(project.users.count) }
   end
 
   context '#create' do
+    let!(:user_without_project) { create(:user) }
     let(:params) { { email: user_without_project.email } }
 
-    subject do
-      post(*request_params)
-      response
-    end
+    subject { -> { post(*request_params) } }
 
-    it { is_expected.to have_http_status(201) }
+    it { is_expected.to change(project.users, :count).by(1) }
 
     context 'not being project owner' do
-      let(:user) { create(:user) }
-      let(:ineligible_user) { project.project_users.create(user: user, role: 'collaborator') }
-      let(:headers) { ineligible_user.user.create_new_auth_token }
+      let(:user) { create(:user, :with_projects_as_collaborator) }
+      let(:project) { user.projects.first }
 
-      it { is_expected.not_to have_http_status(201) }
+      it { is_expected.not_to change(project.users, :count) }
     end
   end
 
   context '#delete' do
-    let(:url) { "#{base_url}/#{project_users.last.id}" }
+    let!(:project_user) { create(:project_user, project: project) }
+    let(:url) { "#{base_url}/#{project_user.id}" }
 
-    subject do
-      delete(*request_params)
-      response
-    end
+    subject { -> { delete(*request_params) } }
 
-    it { is_expected.to have_http_status(200) }
+    it { is_expected.to change(project.users, :count).by(-1) }
   end
 end

@@ -5,60 +5,48 @@ require 'rails_helper'
 describe API::V1::Projects::Events, type: :request do
   let(:user) { create(:user, :with_projects) }
   let(:project) { user.projects.first }
-  let!(:events) { create_list(:event, 3, project: project) }
   let(:base_url) { "/api/v1/projects/#{project.id}/events" }
+  let(:url) { base_url }
   let(:headers) { user.create_new_auth_token }
   let(:params) { {} }
   let(:request_params) { [url, { params: params, headers: headers }] }
 
   context '#index' do
-    let(:url) { base_url }
-    before { get(*request_params) }
-
-    it '200 OK' do
-      expect(response).to have_http_status(200)
-    end
-
-    it "project's events" do
-      expect(json['data'].count).to eq(events.count)
-    end
-  end
-
-  context '#index by status' do
-    let!(:other_status_events) { create_list(:event, 3, project: project, status: 'muted') }
-    let(:params) { { status: 'active' } }
-    let(:url) { base_url }
-
-    it do
+    let!(:events) { create_list(:event, 3, project: project) }
+    subject do
       get(*request_params)
-      expect(json['data'].count).to eq(events.count)
+      json['data'].count
+    end
+
+    it { is_expected.to eq(events.count) }
+
+    context '#index by status' do
+      let!(:muted_events) { create_list(:event, 3, project: project, status: 'muted') }
+      let(:params) { { status: 'muted' } }
+
+      it { is_expected.to eq(muted_events.count) }
     end
   end
 
   context '#create' do
+    let(:headers) { nil }
     let(:url) { "/api/v1/projects/#{project.api_key}/events" }
     let(:params) { attributes_for(:event) }
-    let(:headers) { nil }
 
     subject { -> { post(*request_params) } }
 
-    it do
-      post(*request_params)
-      expect(response.status).to eq(201)
-    end
-
     it { is_expected.to change(project.events, :count).by(1) }
-  end
 
-  context '#create with empty api key' do
-    let(:api_key) { nil }
-    let(:url) { "/api/v1/projects/#{api_key}/events" }
-    let(:params) { attributes_for(:event) }
-    let(:headers) { nil }
+    context 'without API key' do
+      let(:api_key) { nil }
+      let(:url) { "/api/v1/projects/#{api_key}/events" }
 
-    it do
-      post(*request_params)
-      expect(response.status).to eq(401)
+      subject do
+        post(*request_params)
+        response
+      end
+
+      it { is_expected.to have_http_status(401) }
     end
   end
 
@@ -77,12 +65,10 @@ describe API::V1::Projects::Events, type: :request do
   context '#update' do
     let!(:event) { create(:event, project: project) }
     let(:url) { "#{base_url}/#{event.id}" }
-    let(:assign_user) { create(:user) }
-    let(:params) { { event: { status: 'muted', user_id: assign_user.id } } }
+    let(:params) { { event: { status: 'muted' } } }
 
-    it do
-      patch(*request_params)
-      expect(response.status).to eq(200)
-    end
+    subject { -> { patch(*request_params) } }
+
+    it { is_expected.to change { event.reload.status } }
   end
 end
