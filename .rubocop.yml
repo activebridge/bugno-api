@@ -7,6 +7,9 @@ AllCops:
     - 'vendor/**/*'
     - 'log/**/*'
     - 'spec/support/**/*'
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - 'spec/**/*'
 Metrics/LineLength:
   Max: 120
 Metrics/BlockLength:
