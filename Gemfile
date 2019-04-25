@@ -21,6 +21,7 @@ gem 'rack-cors', require: 'rack/cors'
 gem 'rails', '~> 5.2.2', '>= 5.2.2.1'
 
 group :development, :test do
+  gem 'bullet'
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'factory_bot_rails'
   gem 'faker'
