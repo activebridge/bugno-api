@@ -11,6 +11,12 @@ Rails.application.configure do
   # Do not eager load code on boot.
   config.eager_load = false
 
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.bullet_logger = true
+    Bullet.raise = true
+  end
+
   # Show full error reports.
   config.consider_all_requests_local = true
 
