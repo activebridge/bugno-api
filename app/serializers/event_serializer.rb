@@ -3,5 +3,5 @@
 class EventSerializer < ApplicationSerializer
   attributes :id, :title, :environment, :status, :user_id, :project_id,
              :message, :backtrace, :framework, :url, :ip_address, :headers,
-             :http_method, :params, :position
+             :http_method, :params, :position, :server_data
 end
