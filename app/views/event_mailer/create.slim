@@ -1,0 +1,22 @@
+table
+  tr
+    td
+      | Project:
+    td
+      = @event.project.name
+  tr
+    td
+      | Environment:
+    td
+      = @event.environment
+  tr
+    td
+      | Host:
+    td
+      = @event.server_data['host']
+h3 Message:
+p = "#{@event.title}: #{@event.message}"
+h3
+  | Traceback:
+- @event.backtrace.each do |line|
+  p = "#{line['method']} at line #{line['lineno']} of \"#{line['filename']}\""
