@@ -39,7 +39,12 @@ class API::V1::Projects::ProjectUsers < Grape::API
 
       post do
         authorize(project_user, :create?)
+        unless user_by_email
+          ProjectUserMailer.invite(declared_params[:email], project, current_user).deliver_now
+          return(status 201)
+        end
         if project_user.save
+          ProjectUserMailer.create(project_user, current_user).deliver_now
           status 201
           render(project_user)
         else
@@ -51,6 +56,7 @@ class API::V1::Projects::ProjectUsers < Grape::API
       delete ':id' do
         authorize(matched_project_user, :delete?)
         if matched_project_user.destroy
+          ProjectUserMailer.delete(matched_project_user, current_user).deliver_now
           status 200
         else
           render_error(matched_project_user)
