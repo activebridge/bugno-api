@@ -58,6 +58,7 @@ class API::V1::Projects < Grape::API
     end
 
     patch ':id' do
+      authorize(matched_project, :update?)
       if matched_project.update(declared_params[:project])
         status 200
         render(matched_project)
@@ -72,6 +73,7 @@ class API::V1::Projects < Grape::API
     end
 
     delete ':id' do
+      authorize(matched_project, :delete?)
       if matched_project.destroy
         status 200
       else
