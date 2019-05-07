@@ -1,0 +1,3 @@
+h4 = t('project_user_mailer.invite.template.header', project_name: @project.name)
+p = link_to(I18n.t('project_user_mailer.invite.template.sign_up_button_name'), @sign_up_url)
+p = t('project_user_mailer.invite.template.matched_token_warning')

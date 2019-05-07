@@ -36,6 +36,12 @@ describe API::V1::Projects::ProjectUsers, type: :request do
 
       it { is_expected.not_to change(project.users, :count) }
     end
+
+    context 'invite by email should not add new project_user' do
+      let(:params) { { email: Faker::Internet.email } }
+
+      it { is_expected.not_to change(project.users, :count) }
+    end
   end
 
   context '#delete' do
