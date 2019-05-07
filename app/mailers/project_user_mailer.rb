@@ -7,7 +7,7 @@ class ProjectUserMailer < ApplicationMailer
     @project = project
     @invited_by = invited_by
     @registration_token = verifier.generate(@project.id, expires_in: 1.day)
-    @sign_up_url = "#{I18n.t('web_client_url')}/register?registration_token=#{@registration_token}"
+    @sign_up_url = "#{I18n.t("web_client_url.#{Rails.env}")}/register?registration_token=#{@registration_token}"
     mail(to: @email, subject: I18n.t('project_user_mailer.invite.subject',
                                      project_name: @project.name, inviter: @invited_by.email))
   end

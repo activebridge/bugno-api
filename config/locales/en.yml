@@ -1,5 +1,7 @@
 en:
-  web_client_url: 'http://localhost:4200'
+  web_client_url:
+    development: 'http://localhost:4200'
+    production: 'https://radar-webapp.firebaseapp.com'
   api:
     errors:
       not_found: 'not found'
