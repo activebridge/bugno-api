@@ -13,18 +13,26 @@ describe API::V1::Projects::Events, type: :request do
 
   context '#index' do
     let!(:events) { create_list(:event, 3, project: project) }
+    let!(:event_twins) { create_list(:event, 2, :with_static_attributes, project: project) }
+
     subject do
       get(*request_params)
       json['data'].count
     end
 
-    it { is_expected.to eq(events.count) }
+    it { is_expected.to eq(4) }
 
     context '#index by status' do
       let!(:muted_events) { create_list(:event, 3, project: project, status: 'muted') }
+      let!(:muted_event_twins) do
+        create_list(:event, 2, :with_static_attributes,
+                    project: project, status: 'muted',
+                    title: 'slightly',
+                    backtrace: 'different error')
+      end
       let(:params) { { status: 'muted' } }
 
-      it { is_expected.to eq(muted_events.count) }
+      it { is_expected.to eq(4) }
     end
   end
 
