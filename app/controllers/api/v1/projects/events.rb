@@ -11,7 +11,8 @@ class API::V1::Projects::Events < Grape::API
     end
 
     def events
-      @events ||= project.events.by_status(declared_params[:status]).order(position: :asc)
+      @events ||= project.events.where(parent_id: nil).by_status(declared_params[:status])
+                         .order(position: :asc)
     end
 
     def matched_event

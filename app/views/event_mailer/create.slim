@@ -6,6 +6,11 @@ table
       = @event.project.name
   tr
     td
+      | Time:
+    td
+      = @event.created_at
+  tr
+    td
       | Environment:
     td
       = @event.environment

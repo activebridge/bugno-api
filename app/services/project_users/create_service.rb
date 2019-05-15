@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class ProjectUsers::CreateService < ApplicationService
-  def initialize(opts = {})
-    super
-  end
-
   def call
     if user_by_email
       ProjectUserMailer.create(project_user, user).deliver_later if project_user.save

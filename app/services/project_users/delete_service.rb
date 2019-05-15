@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class ProjectUsers::DeleteService < ApplicationService
-  def initialize(opts = {})
-    super
-  end
-
   def call
     ProjectUserMailer.delete(project_user, user).deliver_now if project_user.destroy
     project_user
