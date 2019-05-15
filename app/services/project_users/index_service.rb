@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class ProjectUsers::IndexService < ApplicationService
-  def initialize(opts = {})
-    super
-  end
-
   def call
     project_users
   end

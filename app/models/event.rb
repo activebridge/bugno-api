@@ -10,11 +10,10 @@ class Event < ApplicationRecord
 
   acts_as_list scope: %i[status project_id]
   scope :by_status, ->(status) { where(status: status) if status.present? }
-  scope :by_parent, -> { where('parent_id IS NULL') }
 
-  before_create :set_parent
+  before_create :assign_parent
 
-  def set_parent
-    self.parent_id = ::Events::SetParentEventService.call(event: self, project: project)
+  def assign_parent
+    self.parent_id = ::Events::ParentCreateService.call(event: self, project: project)
   end
 end

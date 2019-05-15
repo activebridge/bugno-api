@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
-class Events::SetParentEventService < ApplicationService
-  def initialize(opts = {})
-    super
-  end
-
+class Events::ParentCreateService < ApplicationService
   def call
     if project_error_trace && project_error_trace['code']
       parent_by_backtrace&.id
@@ -16,11 +12,12 @@ class Events::SetParentEventService < ApplicationService
   private
 
   def parent_by_backtrace
-    error_line = project_error_trace['code'].gsub!('"', '%"')
+    error_line = project_error_trace['code'].gsub('"', '%"')
     filename = project_error_trace['filename']
-    query = 'title = ? AND backtrace::text ILIKE ? AND backtrace::text ILIKE ?'
+    query = 'parent_id IS NULL AND title = ? AND'\
+            ' backtrace::text ILIKE ? AND backtrace::text ILIKE ?'
     project.events.where(query, event['title'], "%#{error_line}%", "%#{filename}%")
-           .by_parent&.first
+           &.first
   end
 
   def parent_by_title
