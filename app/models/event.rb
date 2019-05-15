@@ -12,6 +12,8 @@ class Event < ApplicationRecord
   scope :by_status, ->(status) { where(status: status) if status.present? }
 
   before_create :assign_parent
+  
+  private
 
   def assign_parent
     self.parent_id = ::Events::ParentCreateService.call(event: self, project: project)
