@@ -13,6 +13,8 @@ class User < ActiveRecord::Base
          :omniauthable
   include DeviseTokenAuth::Concerns::User
 
+  validates :email, uniqueness: true
+
   has_many :project_users
   has_many :projects, through: :project_users
 
