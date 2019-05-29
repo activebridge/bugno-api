@@ -8,11 +8,11 @@ default: &default
 
 development:
   <<: *default
-  database: radar_development
+  database: bughub_development
 
 test:
   <<: *default
-  database: radar_test
+  database: bughub_test
 
 production:
   url: <%= ENV['DATABASE_URL'] %>

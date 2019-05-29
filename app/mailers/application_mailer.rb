@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
 class ApplicationMailer < ActionMailer::Base
-  default from: 'Radar Notification'
+  default from: 'BugHub Notification'
   layout 'mailer'
 end
