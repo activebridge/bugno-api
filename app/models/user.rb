@@ -6,16 +6,13 @@ class User < ActiveRecord::Base
   extend Devise::Models
   devise :database_authenticatable,
          :registerable,
-         :recoverable,
-         :rememberable,
-         :trackable,
          :validatable,
          :omniauthable
   include DeviseTokenAuth::Concerns::User
 
-  validates :email, uniqueness: true
+  validates :email, uniqueness: true, allow_nil: true
 
-  has_many :project_users
+  has_many :project_users, dependent: :destroy
   has_many :projects, through: :project_users
 
   after_create :verify_registration_token
