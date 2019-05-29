@@ -56,7 +56,7 @@ class API::V1::Projects::Events < Grape::API
         return(status 401) unless project_by_api_key
 
         if event.persisted?
-          EventMailer.create(event).deliver_now
+          EventMailer.create(event).deliver_later
           status 201
         else
           render_error(event)
