@@ -1,7 +1,7 @@
 en:
   web_client_url:
     development: 'http://localhost:4200'
-    production: 'https://radar-webapp.firebaseapp.com'
+    production: 'https://bughub-tracker.firebaseapp.com'
   api:
     errors:
       not_found: 'not found'
@@ -15,7 +15,7 @@ en:
         matched_token_warning: 'Before finishing your registration make sure url in your address bar is matched to one down below in
                                 this message. Otherwise, in case you registered account without token you need to ask your project
                                 owner to invite you once more.'
-        sign_up_button_name: 'Sign up to Radar'
+        sign_up_button_name: 'Sign up to BugHub'
     create:
       subject: 'Added to project'
       template:
