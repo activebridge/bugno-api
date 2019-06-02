@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Project do
-  permit_params Project.new.attributes.keys
+  permit_params :name, :api_key, :description
 end
