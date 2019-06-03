@@ -7,8 +7,8 @@ module Accessible
 
   def authenticate_admin
     authenticate_or_request_with_http_basic do |username, password|
-      username == Rails.application.credentials[:admin_username] && \
-        password == Rails.application.credentials[:admin_password]
+      username == ENV['ADMIN_USERNAME'] && \
+        password == ENV['ADMIN_PASSWORD']
     end
     warden.custom_failure! if performed?
   end
