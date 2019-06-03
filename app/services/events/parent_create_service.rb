@@ -12,11 +12,9 @@ class Events::ParentCreateService < ApplicationService
   private
 
   def parent_by_backtrace
-    error_line = project_error_trace['code'].gsub('"', '%"')
-    filename = project_error_trace['filename']
     query = 'parent_id IS NULL AND title = ? AND'\
-            ' backtrace::text ILIKE ? AND backtrace::text ILIKE ?'
-    project.events.where(query, event['title'], "%#{error_line}%", "%#{filename}%")
+            ' backtrace @> ARRAY[?]::jsonb[]'
+    project.events.where(query, event['title'], project_error_trace.to_json)
            &.first
   end
 
