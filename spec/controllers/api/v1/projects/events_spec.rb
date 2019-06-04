@@ -13,7 +13,7 @@ describe API::V1::Projects::Events, type: :request do
 
   context '#index' do
     let!(:events) { create_list(:event, 3, project: project) }
-    let!(:event_duplicates) { create_list(:event, 2, :with_static_attributes, project: project) }
+    let!(:occurrences) { create_list(:event, 2, :with_equal_attributes, project: project) }
 
     subject do
       get(*request_params)
@@ -24,8 +24,8 @@ describe API::V1::Projects::Events, type: :request do
 
     context '#index by status' do
       let!(:muted_events) { create_list(:event, 3, project: project, status: 'muted') }
-      let!(:muted_event_duplicates) do
-        create_list(:event, 2, :with_static_attributes,
+      let!(:muted_occurrences) do
+        create_list(:event, 2, :with_equal_attributes,
                     project: project, status: 'muted',
                     title: 'slightly',
                     backtrace: 'different error')
@@ -34,6 +34,18 @@ describe API::V1::Projects::Events, type: :request do
 
       it { is_expected.to eq(4) }
     end
+  end
+
+  context '#occurrences' do
+    let!(:occurrences) { create_list(:event, 3, :with_equal_attributes, project: project) }
+    let(:url) { "#{base_url}/occurrences/#{occurrences.first.id}" }
+
+    subject do
+      get(*request_params)
+      json['data'].count
+    end
+
+    it { is_expected.to eq(2) }
   end
 
   context '#create' do

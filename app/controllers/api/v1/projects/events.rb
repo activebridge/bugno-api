@@ -1,47 +1,21 @@
 # frozen_string_literal: true
 
 class API::V1::Projects::Events < Grape::API
-  helpers do
-    def project
-      @project ||= current_user.projects.find(params[:project_id])
-    end
-
-    def project_by_api_key
-      @project_by_api_key ||= Project.find_by(api_key: params[:project_id])
-    end
-
-    def events
-      @events ||= project.events.where(parent_id: nil)
-                                .by_status(declared_params[:status])
-                                .order(position: :asc)
-    end
-
-    def matched_events
-      @matched_events ||= project.events.by_parent(declared_params[:parent_id])
-    end
-
-    def matched_event
-      @matched_event ||= project.events.find(params[:id])
-    end
-
-    def event
-      @event ||= project_by_api_key.events.create(declared_params)
-    end
-  end
-
   namespace 'projects/:project_id' do
     resources :events do
-      desc 'Returns events'
+      desc 'Returns all or parent events if status specified'
       params do
         optional :status, type: String, values: Event.statuses.keys
       end
 
       get do
-        status 200
-        render(events)
+        events = ::Events::IndexService.call(params: params,
+                                             declared_params: declared_params,
+                                             user: current_user)
+        render_api(events)
       end
 
-      desc 'Create event'
+      desc 'Creates event'
       route_setting :auth, disabled: true
       params do
         requires :title, type: String
@@ -58,34 +32,30 @@ class API::V1::Projects::Events < Grape::API
       end
 
       post do
-        return(status 401) unless project_by_api_key
-
-        if event.persisted?
-          EventMailer.create(event).deliver_later
-          status 201
-        else
-          render_error(event)
-        end
+        event = ::Events::CreateService.call(params: params,
+                                             declared_params: declared_params)
+        status 201
+        render_api(event)
       end
 
       desc 'Returns event'
-      params do
-        requires :id, type: String
-      end
 
       get ':id' do
-        status 200
-        render(matched_event)
+        event = ::Events::ShowService.call(params: params,
+                                           user: current_user)
+        render_api(event)
       end
 
-      desc "Returns parent's event group"
+      desc 'Returns occurrences'
       params do
         requires :parent_id, type: String
       end
 
-      get 'group/:parent_id' do
-        status 200
-        render(matched_events)
+      get 'occurrences/:parent_id' do
+        events = ::Events::OccurrencesService.call(params: params,
+                                                   declared_params: declared_params,
+                                                   user: current_user)
+        render_api(events)
       end
 
       desc 'Updates event'
@@ -98,12 +68,10 @@ class API::V1::Projects::Events < Grape::API
       end
 
       patch ':id' do
-        if matched_event.update(declared_params[:event])
-          status 200
-          render(matched_event)
-        else
-          render_error(matched_event)
-        end
+        event = ::Events::UpdateService.call(params: params,
+                                             declared_params: declared_params,
+                                             user: current_user)
+        render_api(event)
       end
     end
   end
