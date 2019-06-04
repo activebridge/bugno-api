@@ -11,8 +11,13 @@ class API::V1::Projects::Events < Grape::API
     end
 
     def events
-      @events ||= project.events.where(parent_id: nil).by_status(declared_params[:status])
-                         .order(position: :asc)
+      @events ||= project.events.where(parent_id: nil)
+                                .by_status(declared_params[:status])
+                                .order(position: :asc)
+    end
+
+    def matched_events
+      @matched_events ||= project.events.by_parent(declared_params[:parent_id])
     end
 
     def matched_event
@@ -71,6 +76,16 @@ class API::V1::Projects::Events < Grape::API
       get ':id' do
         status 200
         render(matched_event)
+      end
+
+      desc "Returns parent's event group"
+      params do
+        requires :parent_id, type: String
+      end
+
+      get 'group/:parent_id' do
+        status 200
+        render(matched_events)
       end
 
       desc 'Updates event'
