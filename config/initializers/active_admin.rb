@@ -8,6 +8,11 @@ ActiveAdmin.setup do |config|
   #
   config.site_title = 'Bughub'
 
+  config.namespace :admin do |admin|
+    admin.build_menu :utility_navigation do |menu|
+      menu.add label: 'API documentation', url: '/documentation', html_options: { target: :blank }
+    end
+  end
   # Set the link url for the title. For example, to take
   # users to your main site. Defaults to no link.
   #

@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     ActiveAdmin::DatabaseHitDuringLoad
 end
   mount API::Base, at: '/api'
+  mount GrapeSwaggerRails::Engine, at: '/documentation'
   mount_devise_token_auth_for 'User', at: '/auth', controllers: {
     omniauth_callbacks: 'omniauth_callbacks'
   }
