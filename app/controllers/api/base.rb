@@ -18,4 +18,11 @@ class API::Base < Grape::API
   get 'status' do
     { status: 'OK' }
   end
+
+  add_swagger_documentation(
+    info: {
+      title: 'BugHub API'
+    },
+    doc_version: '1.0.0'
+  )
 end
