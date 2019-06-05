@@ -5,12 +5,12 @@ class API::V1::Projects::Events < Grape::API
     resources :events do
       desc 'Returns all or parent events if status specified'
       params do
+        requires :project_id, type: Integer
         optional :status, type: String, values: Event.statuses.keys
       end
 
       get do
-        events = ::Events::IndexService.call(params: params,
-                                             declared_params: declared_params,
+        events = ::Events::IndexService.call(declared_params: declared_params,
                                              user: current_user)
         render_api(events)
       end
@@ -18,6 +18,7 @@ class API::V1::Projects::Events < Grape::API
       desc 'Creates event'
       route_setting :auth, disabled: true
       params do
+        requires :project_id, type: String
         requires :title, type: String
         optional :environment, type: String
         optional :message, type: String
@@ -32,8 +33,7 @@ class API::V1::Projects::Events < Grape::API
       end
 
       post do
-        event = ::Events::CreateService.call(params: params,
-                                             declared_params: declared_params)
+        event = ::Events::CreateService.call(declared_params: declared_params)
         status 201
         render_api(event)
       end
@@ -48,18 +48,20 @@ class API::V1::Projects::Events < Grape::API
 
       desc 'Returns occurrences'
       params do
+        requires :project_id, type: Integer
         requires :parent_id, type: String
       end
 
       get 'occurrences/:parent_id' do
-        events = ::Events::OccurrencesService.call(params: params,
-                                                   declared_params: declared_params,
+        events = ::Events::OccurrencesService.call(declared_params: declared_params,
                                                    user: current_user)
         render_api(events)
       end
 
       desc 'Updates event'
       params do
+        requires :project_id, type: Integer
+        requires :id, type: Integer
         requires :event, type: Hash do
           optional :status, type: String, values: Event.statuses.keys
           optional :position, type: Integer
@@ -68,8 +70,7 @@ class API::V1::Projects::Events < Grape::API
       end
 
       patch ':id' do
-        event = ::Events::UpdateService.call(params: params,
-                                             declared_params: declared_params,
+        event = ::Events::UpdateService.call(declared_params: declared_params,
                                              user: current_user)
         render_api(event)
       end

@@ -8,7 +8,7 @@ class Events::CreateService < ApplicationService
   private
 
   def project_by_api_key
-    @project_by_api_key ||= Project.find_by(api_key: params[:project_id])
+    @project_by_api_key ||= Project.find_by(api_key: declared_params[:project_id])
   end
 
   def event

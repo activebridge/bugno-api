@@ -14,6 +14,6 @@ class Events::IndexService < ApplicationService
   end
 
   def project
-    @project ||= user.projects.find(params[:project_id])
+    @project ||= user.projects.find(declared_params[:project_id])
   end
 end

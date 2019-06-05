@@ -8,10 +8,10 @@ class Events::UpdateService < ApplicationService
   private
 
   def event
-    @event ||= project.events.find(params[:id])
+    @event ||= project.events.find(declared_params[:id])
   end
 
   def project
-    @project ||= user.projects.find(params[:project_id])
+    @project ||= user.projects.find(declared_params[:project_id])
   end
 end
