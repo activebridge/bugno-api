@@ -20,7 +20,7 @@ FactoryBot.define do
     environment { ActiveRecord::Base.configurations.keys.sample }
     ip_address { Faker::Internet.ip_v4_address }
 
-    trait :with_static_attributes do
+    trait :with_equal_attributes do
       association :project
       association :user
       title { 'NameError' }

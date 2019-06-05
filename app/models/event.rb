@@ -10,6 +10,7 @@ class Event < ApplicationRecord
 
   acts_as_list scope: %i[status project_id]
   scope :by_status, ->(status) { where(status: status) if status.present? }
+  scope :by_parent, ->(parent_id) { where(parent_id: parent_id) if parent_id.present? }
 
   before_create :assign_parent
 

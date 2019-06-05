@@ -17,7 +17,6 @@ class API::V1::Projects::ProjectUsers < Grape::API
 
       get do
         project_users = ::ProjectUsers::IndexService.call(params: params, user: current_user)
-        status 200
         render(project_users)
       end
 
