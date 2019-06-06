@@ -11,6 +11,7 @@ class Events::IndexService < ApplicationService
     @events ||= project.events.where(parent_id: nil)
                        .by_status(declared_params[:status])
                        .order(position: :asc)
+                       .page(declared_params[:page])
   end
 
   def project

@@ -6,6 +6,7 @@ class API::V1::Projects::Events < Grape::API
       desc 'Returns all or parent events if status specified'
       params do
         requires :project_id, type: Integer
+        requires :page, type: Integer
         optional :status, type: String, values: Event.statuses.keys
       end
 
