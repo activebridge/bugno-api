@@ -6,6 +6,5 @@ class Subscription < ApplicationRecord
 
   enum status: %i[active expired]
 
-  validates :status, presence: true
-  validates :expires_at, presence: true
+  validates :status, :expires_at, presence: true
 end
