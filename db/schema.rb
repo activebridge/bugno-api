@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_31_080559) do
+ActiveRecord::Schema.define(version: 2019_06_07_083535) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,14 @@ ActiveRecord::Schema.define(version: 2019_05_31_080559) do
     t.index ["user_id"], name: "index_events_on_user_id"
   end
 
+  create_table "plans", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.decimal "price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "project_users", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "project_id"
@@ -68,6 +76,22 @@ ActiveRecord::Schema.define(version: 2019_05_31_080559) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "projects_subscriptions", id: false, force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.bigint "subscription_id", null: false
+    t.index ["project_id", "subscription_id"], name: "index_projects_subscriptions_on_project_id_and_subscription_id"
+    t.index ["subscription_id", "project_id"], name: "index_projects_subscriptions_on_subscription_id_and_project_id"
+  end
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.date "expires_at"
+    t.integer "status", default: 0
+    t.bigint "plan_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["plan_id"], name: "index_subscriptions_on_plan_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -104,4 +128,5 @@ ActiveRecord::Schema.define(version: 2019_05_31_080559) do
   add_foreign_key "events", "users"
   add_foreign_key "project_users", "projects"
   add_foreign_key "project_users", "users"
+  add_foreign_key "subscriptions", "plans"
 end
