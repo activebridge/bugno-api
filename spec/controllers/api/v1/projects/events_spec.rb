@@ -12,7 +12,6 @@ describe API::V1::Projects::Events, type: :request do
   let(:request_params) { [url, { params: params, headers: headers }] }
 
   context '#index parent events' do
-    let(:url) { "#{base_url}?page=1" }
     let!(:events) { create_list(:event, 3, project: project) }
     let!(:occurrences) { create_list(:event, 2, :with_equal_attributes, project: project) }
 
