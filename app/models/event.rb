@@ -6,6 +6,8 @@ class Event < ApplicationRecord
 
   enum status: %i[active resolved muted]
 
+  paginates_per 25
+
   validates :title, :status, presence: true
 
   acts_as_list scope: %i[status project_id]
