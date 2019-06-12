@@ -12,8 +12,11 @@ describe Subscriptions do
         project_id: project.id }
     end
 
-    subject { -> { Subscriptions::CreateService.call(params: params) } }
+    subject do
+      Subscriptions::CreateService.call(params: params)
+      project.subscription
+    end
 
-    it { is_expected.to change(project.subscriptions, :count).by(1) }
+    it { is_expected.not_to be_nil }
   end
 end

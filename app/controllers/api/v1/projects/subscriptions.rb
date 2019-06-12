@@ -9,10 +9,10 @@ class API::V1::Projects::Subscriptions < Grape::API
 
   namespace 'projects/:project_id' do
     resources :subscriptions do
-      desc "Returns project's active subscriptions"
+      desc 'Returns project subscription'
       get do
-        @subscriptions = project.subscriptions.active.includes(:plan)
-        render_api(@subscriptions)
+        @subscription = project.subscription
+        render_api(@subscription)
       end
 
       desc 'Adds subscription to project'
@@ -23,6 +23,8 @@ class API::V1::Projects::Subscriptions < Grape::API
       end
 
       post do
+        error!(I18n.t('api.errors.subscription_exists'), 422) if project.subscription&.status == 'active'
+
         transaction = ::Transactions::ChargeService.call(params: declared_params, user: current_user)
         error!(transaction.message, transaction.http_status) if transaction.is_a?(Stripe::StripeError)
 

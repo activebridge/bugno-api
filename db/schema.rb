@@ -79,20 +79,15 @@ ActiveRecord::Schema.define(version: 2019_06_11_085012) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "projects_subscriptions", id: false, force: :cascade do |t|
-    t.bigint "project_id", null: false
-    t.bigint "subscription_id", null: false
-    t.index ["project_id", "subscription_id"], name: "index_projects_subscriptions_on_project_id_and_subscription_id"
-    t.index ["subscription_id", "project_id"], name: "index_projects_subscriptions_on_subscription_id_and_project_id"
-  end
-
   create_table "subscriptions", force: :cascade do |t|
     t.date "expires_at"
     t.integer "status", default: 0
+    t.bigint "project_id"
     t.bigint "plan_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["plan_id"], name: "index_subscriptions_on_plan_id"
+    t.index ["project_id"], name: "index_subscriptions_on_project_id", unique: true
   end
 
   create_table "users", force: :cascade do |t|
@@ -131,4 +126,5 @@ ActiveRecord::Schema.define(version: 2019_06_11_085012) do
   add_foreign_key "project_users", "projects"
   add_foreign_key "project_users", "users"
   add_foreign_key "subscriptions", "plans"
+  add_foreign_key "subscriptions", "projects"
 end
