@@ -25,6 +25,7 @@ gem 'pundit'
 gem 'rack-cors', require: 'rack/cors'
 gem 'rails', '~> 5.2.2', '>= 5.2.2.1'
 gem 'slim'
+gem 'stripe'
 
 group :development, :test do
   gem 'bullet'

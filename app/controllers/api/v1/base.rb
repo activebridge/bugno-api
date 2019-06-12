@@ -39,4 +39,6 @@ class API::V1::Base < Grape::API
   mount API::V1::Projects
   mount API::V1::Projects::Events
   mount API::V1::Projects::ProjectUsers
+  mount API::V1::Projects::Subscriptions
+  mount API::V1::Plans
 end
