@@ -11,11 +11,11 @@ class Events::CreateService < ApplicationService
 
   def handle_event_create
     EventMailer.create(event).deliver_later if project && event.persisted?
-    Subscription.update_counters(subscription.id, events: +1)
+    Subscription.decrement_counter(:events, subscription.id)
   end
 
   def missing_subscription
-    subscription.status == 'expired' || subscription.events >= subscription.plan.event_limit
+    subscription.status == 'expired' || subscription.events.negative?
   end
 
   def project
