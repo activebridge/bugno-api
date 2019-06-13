@@ -2,8 +2,7 @@
 
 class Subscriptions::CreateService < ApplicationService
   def call
-    project.create_subscription(plan_id: params[:plan_id],
-                                expires_at: 1.month.from_now)
+    project.create_subscription(plan_id: params[:plan_id], expires_at: 1.month.from_now)
   end
 
   private

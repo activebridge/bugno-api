@@ -4,11 +4,15 @@ class Events::CreateService < ApplicationService
   def call
     return if missing_subscription
 
-    EventMailer.create(event).deliver_later if project && event.persisted?
-    Subscription.update_counters(subscription.id, events: +1)
+    handle_event_create
   end
 
   private
+
+  def handle_event_create
+    EventMailer.create(event).deliver_later if project && event.persisted?
+    Subscription.update_counters(subscription.id, events: +1)
+  end
 
   def missing_subscription
     subscription.status == 'expired' || subscription.events >= subscription.plan.event_limit

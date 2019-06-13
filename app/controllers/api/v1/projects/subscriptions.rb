@@ -2,6 +2,10 @@
 
 class API::V1::Projects::Subscriptions < Grape::API
   helpers do
+    def subscription
+      @subscription ||= project.subscription
+    end
+
     def project
       @project ||= current_user.projects.find(params[:project_id])
     end
@@ -11,8 +15,7 @@ class API::V1::Projects::Subscriptions < Grape::API
     resources :subscriptions do
       desc 'Returns project subscription'
       get do
-        @subscription = project.subscription
-        render_api(@subscription)
+        render_api(subscription)
       end
 
       desc 'Adds subscription to project'
