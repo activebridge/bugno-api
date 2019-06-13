@@ -5,7 +5,6 @@ require 'rails_helper'
 describe API::V1::Projects::Events, type: :request do
   let(:user) { create(:user, :with_projects) }
   let(:project) { user.projects.first }
-  let!(:subscription) { create(:subscription, project_id: project.id) }
   let(:base_url) { "/api/v1/projects/#{project.id}/events" }
   let(:url) { base_url }
   let(:headers) { user.create_new_auth_token }
@@ -54,9 +53,13 @@ describe API::V1::Projects::Events, type: :request do
     let(:url) { "/api/v1/projects/#{project.api_key}/events" }
     let(:params) { attributes_for(:event) }
 
-    subject { -> { post(*request_params) } }
+    context do
+      let!(:subscription) { create(:subscription, project_id: project.id) }
 
-    it { is_expected.to change(project.events, :count).by(1) }
+      subject { -> { post(*request_params) } }
+
+      it { is_expected.to change(project.events, :count).by(1) }
+    end
 
     context 'without API key' do
       let(:api_key) { nil }
@@ -68,6 +71,12 @@ describe API::V1::Projects::Events, type: :request do
       end
 
       it { is_expected.to have_http_status(401) }
+    end
+
+    context 'without subscription or expired one' do
+      subject { -> { post(*request_params) } }
+
+      it { is_expected.not_to change(project.events, :count) }
     end
   end
 

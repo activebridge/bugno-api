@@ -2,7 +2,7 @@
 
 class Events::CreateService < ApplicationService
   def call
-    return if missing_subscription
+    return if subscription.nil? || expired_subscription
 
     handle_event_create
   end
@@ -14,7 +14,7 @@ class Events::CreateService < ApplicationService
     Subscription.decrement_counter(:events, subscription.id)
   end
 
-  def missing_subscription
+  def expired_subscription
     subscription.status == 'expired' || subscription.events.negative?
   end
 
@@ -27,6 +27,6 @@ class Events::CreateService < ApplicationService
   end
 
   def subscription
-    @subscription ||= project&.subscription
+    @subscription ||= project.subscription
   end
 end
