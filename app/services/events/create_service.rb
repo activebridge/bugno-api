@@ -2,16 +2,27 @@
 
 class Events::CreateService < ApplicationService
   def call
-    EventMailer.create(event).deliver_later if project_by_api_key && event.persisted?
+    return if missing_subscription
+
+    EventMailer.create(event).deliver_later if project && event.persisted?
+    Subscription.update_counters(subscription.id, events: +1)
   end
 
   private
 
-  def project_by_api_key
-    @project_by_api_key ||= Project.find_by(api_key: declared_params[:project_id])
+  def missing_subscription
+    subscription.status == 'expired' || subscription.events >= subscription.plan.event_limit
+  end
+
+  def project
+    @project ||= Project.find_by(api_key: declared_params[:project_id])
   end
 
   def event
-    @event ||= project_by_api_key.events.create(declared_params)
+    @event ||= project.events.create(declared_params)
+  end
+
+  def subscription
+    @subscription ||= project&.subscription
   end
 end

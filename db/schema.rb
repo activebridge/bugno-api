@@ -82,6 +82,7 @@ ActiveRecord::Schema.define(version: 2019_06_11_085012) do
   create_table "subscriptions", force: :cascade do |t|
     t.date "expires_at"
     t.integer "status", default: 0
+    t.integer "events", default: 0
     t.bigint "project_id"
     t.bigint "plan_id"
     t.datetime "created_at", null: false

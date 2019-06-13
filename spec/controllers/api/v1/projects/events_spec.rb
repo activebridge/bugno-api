@@ -5,6 +5,7 @@ require 'rails_helper'
 describe API::V1::Projects::Events, type: :request do
   let(:user) { create(:user, :with_projects) }
   let(:project) { user.projects.first }
+  let!(:subscription) { create(:subscription, project_id: project.id) }
   let(:base_url) { "/api/v1/projects/#{project.id}/events" }
   let(:url) { base_url }
   let(:headers) { user.create_new_auth_token }
