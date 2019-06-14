@@ -7,7 +7,7 @@ class ProjectUsers::CreateService < ApplicationService
       return project_user
     end
     ProjectUserMailer.invite(declared_params[:email], project, user).deliver_later
-    nil
+    false
   end
 
   private

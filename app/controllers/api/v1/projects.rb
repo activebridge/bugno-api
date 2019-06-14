@@ -46,7 +46,7 @@ class API::V1::Projects < Grape::API
 
     get ':id' do
       status 200
-      render(matched_project, params: { include_stripe: true })
+      render(matched_project, params: { include_stripe_api_key: true })
     end
 
     desc 'Updates project'

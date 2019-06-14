@@ -18,7 +18,7 @@ class API::V1::Base < Grape::API
     end
 
     def render_api(object, status = 200)
-      if object.respond_to?(:errors) && object.errors.present?
+      if object.nil? || object.respond_to?(:errors) && object.errors.present?
         render_error(object)
       else
         status(status)

@@ -15,7 +15,7 @@ class Events::CreateService < ApplicationService
   end
 
   def expired_subscription
-    subscription.status == 'expired' || subscription.events.negative?
+    subscription.expired? || subscription.events.negative?
   end
 
   def project
