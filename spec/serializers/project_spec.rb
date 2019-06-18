@@ -6,8 +6,7 @@ RSpec.describe ProjectSerializer do
   let(:project) { create(:project) }
 
   subject do
-    serialized_project = ProjectSerializer.new(project).serializable_hash
-    data_attributes(serialized_project)
+    ProjectSerializer.new(project).as_json
   end
 
   it {

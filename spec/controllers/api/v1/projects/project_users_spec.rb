@@ -16,7 +16,7 @@ describe API::V1::Projects::ProjectUsers, type: :request do
 
     subject do
       get(*request_params)
-      json['data'].count
+      json.count
     end
 
     it { is_expected.to eq(project.users.count) }

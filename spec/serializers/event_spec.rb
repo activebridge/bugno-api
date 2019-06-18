@@ -6,8 +6,7 @@ RSpec.describe EventSerializer do
   let(:event) { create(:event) }
 
   subject do
-    serialized_event = EventSerializer.new(event).serializable_hash
-    data_attributes(serialized_event)
+    EventSerializer.new(event).as_json
   end
 
   it {

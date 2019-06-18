@@ -6,8 +6,7 @@ RSpec.describe UserSerializer do
   let(:user) { create(:user) }
 
   subject do
-    serialized_user = UserSerializer.new(user).serializable_hash
-    data_attributes(serialized_user)
+    UserSerializer.new(user).as_json
   end
 
   it { is_expected.to include(id: user.id, name: user.name, email: user.email) }
