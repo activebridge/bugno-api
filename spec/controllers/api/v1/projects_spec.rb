@@ -40,13 +40,14 @@ describe API::V1::Projects, type: :request do
     let!(:project_user) { create(:project_user, user: user) }
     let(:url) { "#{base_url}/#{project_user.project_id}" }
     let(:serializer_options) { { include_stripe_api_key: true } }
+    let(:result) { ProjectSerializer.new(project_user.project, serializer_options).to_json }
 
     subject do
       get(*request_params)
       response.body
     end
 
-    it { is_expected.to eq(ProjectSerializer.new(project_user.project, serializer_options).to_json) }
+    it { is_expected.to eq(result) }
   end
 
   context '#update' do

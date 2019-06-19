@@ -91,6 +91,7 @@ GEM
     concurrent-ruby (1.1.5)
     connection_pool (2.2.2)
     crass (1.0.4)
+    dante (0.2.0)
     database_cleaner (1.7.0)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
@@ -338,6 +339,10 @@ GEM
     stripe (4.19.0)
       faraday (~> 0.13)
       net-http-persistent (~> 3.0)
+    stripe-ruby-mock (2.5.7)
+      dante (>= 0.2.0)
+      multi_json (~> 1.0)
+      stripe (>= 2.0.3)
     temple (0.8.1)
     thor (0.20.3)
     thread_safe (0.3.6)
@@ -396,6 +401,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   stripe
+  stripe-ruby-mock (~> 2.5.7)
   tzinfo-data
 
 RUBY VERSION
