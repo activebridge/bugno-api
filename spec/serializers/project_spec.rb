@@ -6,7 +6,7 @@ RSpec.describe ProjectSerializer do
   let(:project) { create(:project) }
 
   subject do
-    ProjectSerializer.new(project).as_json
+    described_class.new(project).as_json
   end
 
   it {
