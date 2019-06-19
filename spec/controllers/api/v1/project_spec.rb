@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe API::V1::Base::Projects, type: :request do
+describe API::V1::Projects, type: :request do
   let!(:user) { create(:user) }
   let(:valid_params) { attributes_for(:project) }
   let(:base_url) { '/api/v1/projects' }
@@ -16,7 +16,7 @@ describe API::V1::Base::Projects, type: :request do
 
     subject do
       get(*request_params)
-      json['data'].count
+      json.count
     end
 
     it { is_expected.to eq(project_users.count) }
@@ -39,14 +39,14 @@ describe API::V1::Base::Projects, type: :request do
   context '#show' do
     let!(:project_user) { create(:project_user, user: user) }
     let(:url) { "#{base_url}/#{project_user.project_id}" }
-    let(:serializer_params) { { include_stripe_api_key: true } }
+    let(:serializer_options) { { include_stripe_api_key: true } }
 
     subject do
       get(*request_params)
       response.body
     end
 
-    it { is_expected.to eq(ProjectSerializer.new(project_user.project, params: serializer_params).serialized_json) }
+    it { is_expected.to eq(ProjectSerializer.new(project_user.project, serializer_options).to_json) }
   end
 
   context '#update' do

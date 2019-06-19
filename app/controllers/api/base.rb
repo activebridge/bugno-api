@@ -2,6 +2,8 @@
 
 class API::Base < Grape::API
   helpers Pundit
+  format :json
+  formatter :json, Grape::Formatter::ActiveModelSerializers
   rescue_from ActiveRecord::RecordNotFound do |_e|
     error_response(message: I18n.t('api.errors.not_found'), status: 404)
   end

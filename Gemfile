@@ -5,17 +5,17 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.6.3'
 
+gem 'active_model_serializers', '~> 0.10.0'
 gem 'activeadmin'
 gem 'acts_as_list'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'devise'
 gem 'devise_token_auth'
-gem 'fast_jsonapi'
 gem 'grape'
+gem 'grape-active_model_serializers'
 gem 'grape-swagger'
 gem 'grape-swagger-rails'
 gem 'grape_devise_token_auth'
-gem 'grape_fast_jsonapi'
 gem 'kaminari'
 gem 'omniauth'
 gem 'omniauth-github'

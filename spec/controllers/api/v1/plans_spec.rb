@@ -12,7 +12,7 @@ describe API::V1::Plans, type: :request do
   context '#index' do
     subject do
       get(*request_params)
-      json['data'].count
+      json.count
     end
 
     it { is_expected.to eq(plans.count) }
