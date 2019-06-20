@@ -3,6 +3,7 @@
 class Subscription < ApplicationRecord
   belongs_to :plan
   belongs_to :project
+  attribute :expires_at, :date, default: 1.month.from_now
 
   enum status: %i[active expired]
 

@@ -26,17 +26,11 @@ class API::V1::Projects::Subscriptions < Grape::API
       end
 
       post do
-        transaction = nil
-        subscription = nil
         return error!(I18n.t('api.errors.subscription_exists'), 422) if project.subscription&.active?
 
-        ActiveRecord::Base.transaction do
-          subscription = ::Subscriptions::CreateService.call(params: declared_params)
-          transaction = ::Transactions::ChargeService.call(params: declared_params, user: current_user)
-          raise ActiveRecord::Rollback if transaction.is_a?(Stripe::StripeError)
-        end
+        subscription = ::Subscriptions::CreateService.call(params: declared_params, user: current_user)
 
-        return error!(transaction.message, transaction.http_status) if transaction.is_a?(Stripe::StripeError)
+        return error!(subscription.message, subscription.http_status) if subscription.is_a?(Stripe::StripeError)
 
         render_api(subscription)
       end
