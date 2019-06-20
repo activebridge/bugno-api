@@ -6,7 +6,7 @@ class Project < ApplicationRecord
   has_many :project_users, dependent: :destroy
   has_many :users, through: :project_users
   has_many :events, dependent: :destroy
-  has_and_belongs_to_many :subscriptions
+  has_one :subscription, dependent: :destroy
 
   validates :name, presence: true
 

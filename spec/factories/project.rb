@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :project do
-    name { Faker::App.name }
+    name { Faker::App.unique.name }
     api_key { SecureRandom.urlsafe_base64(nil, false) }
     description { Faker::Books::Lovecraft.sentence }
   end

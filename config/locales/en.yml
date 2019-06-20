@@ -4,24 +4,25 @@ en:
     production: 'https://bughub-tracker.firebaseapp.com'
   api:
     errors:
-      not_found: 'not found'
+      not_found: not found
+      subscription_exists: You have an active subscription already
   pundit:
-    default: 'You cannot perform this action.'
+    default: You cannot perform this action.
   project_user_mailer:
     invite:
       subject: 'You have been invited to join %{project_name} project by %{inviter}'
       template:
         header: 'Follow this url to be immediately added to %{project_name} after registration.'
-        matched_token_warning: 'Before finishing your registration make sure url in your address bar is matched to one down below in
+        matched_token_warning: Before finishing your registration make sure url in your address bar is matched to one down below in
                                 this message. Otherwise, in case you registered account without token you need to ask your project
-                                owner to invite you once more.'
-        sign_up_button_name: 'Sign up to BugHub'
+                                owner to invite you once more.
+        sign_up_button_name: Sign up to BugHub
     create:
-      subject: 'Added to project'
+      subject: Added to project
       template:
         message: 'You have been added as %{role} to %{project_name} by %{inviter}'
     delete:
-      subject: 'Removed from project'
+      subject: Removed from project
       template:
         message: 'You have been removed from %{project_name} by %{remover}'
   event_mailer:

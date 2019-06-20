@@ -5,17 +5,17 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.6.3'
 
+gem 'active_model_serializers', '~> 0.10.0'
 gem 'activeadmin'
 gem 'acts_as_list'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'devise'
 gem 'devise_token_auth'
-gem 'fast_jsonapi'
 gem 'grape'
+gem 'grape-active_model_serializers'
 gem 'grape-swagger'
 gem 'grape-swagger-rails'
 gem 'grape_devise_token_auth'
-gem 'grape_fast_jsonapi'
 gem 'kaminari'
 gem 'omniauth'
 gem 'omniauth-github'
@@ -25,6 +25,7 @@ gem 'pundit'
 gem 'rack-cors', require: 'rack/cors'
 gem 'rails', '~> 5.2.2', '>= 5.2.2.1'
 gem 'slim'
+gem 'stripe'
 
 group :development, :test do
   gem 'bullet'
@@ -47,6 +48,7 @@ group :test do
   gem 'faker'
   gem 'shoulda-matchers'
   gem 'simplecov', require: false
+  gem 'stripe-ruby-mock', '~> 2.5.7', require: 'stripe_mock'
 end
 
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]

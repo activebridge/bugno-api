@@ -35,7 +35,6 @@ class API::V1::Projects::Events < Grape::API
 
       post do
         event = ::Events::CreateService.call(declared_params: declared_params)
-        status 201
         render_api(event)
       end
 

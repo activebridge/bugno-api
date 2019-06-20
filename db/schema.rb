@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_07_083535) do
+ActiveRecord::Schema.define(version: 2019_06_11_085012) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(version: 2019_06_07_083535) do
   create_table "plans", force: :cascade do |t|
     t.string "name"
     t.string "description"
+    t.integer "event_limit"
     t.decimal "price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -78,20 +79,16 @@ ActiveRecord::Schema.define(version: 2019_06_07_083535) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "projects_subscriptions", id: false, force: :cascade do |t|
-    t.bigint "project_id", null: false
-    t.bigint "subscription_id", null: false
-    t.index ["project_id", "subscription_id"], name: "index_projects_subscriptions_on_project_id_and_subscription_id"
-    t.index ["subscription_id", "project_id"], name: "index_projects_subscriptions_on_subscription_id_and_project_id"
-  end
-
   create_table "subscriptions", force: :cascade do |t|
     t.date "expires_at"
     t.integer "status", default: 0
+    t.integer "events", default: 0
+    t.bigint "project_id"
     t.bigint "plan_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["plan_id"], name: "index_subscriptions_on_plan_id"
+    t.index ["project_id"], name: "index_subscriptions_on_project_id", unique: true
   end
 
   create_table "users", force: :cascade do |t|
@@ -118,6 +115,7 @@ ActiveRecord::Schema.define(version: 2019_06_07_083535) do
     t.json "tokens"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "customer_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -129,4 +127,5 @@ ActiveRecord::Schema.define(version: 2019_06_07_083535) do
   add_foreign_key "project_users", "projects"
   add_foreign_key "project_users", "users"
   add_foreign_key "subscriptions", "plans"
+  add_foreign_key "subscriptions", "projects"
 end

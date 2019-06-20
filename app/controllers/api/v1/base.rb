@@ -4,9 +4,6 @@ class API::V1::Base < Grape::API
   auth :grape_devise_token_auth, resource_class: :user
   helpers GrapeDeviseTokenAuth::AuthHelpers
 
-  formatter :json, Grape::Formatter::FastJsonapi
-  formatter :jsonapi, Grape::Formatter::FastJsonapi
-
   helpers do
     def declared_params
       declared(params, include_missing: false)
@@ -18,7 +15,7 @@ class API::V1::Base < Grape::API
     end
 
     def render_api(object, status = 200)
-      if object.respond_to?(:errors) && object.errors.present?
+      if object.nil? || object.respond_to?(:errors) && object.errors.present?
         render_error(object)
       else
         status(status)
@@ -28,7 +25,6 @@ class API::V1::Base < Grape::API
   end
 
   version 'v1'
-  format :json
 
   desc 'Returns the current API version, v1.'
   get 'version' do
@@ -39,4 +35,6 @@ class API::V1::Base < Grape::API
   mount API::V1::Projects
   mount API::V1::Projects::Events
   mount API::V1::Projects::ProjectUsers
+  mount API::V1::Projects::Subscriptions
+  mount API::V1::Plans
 end

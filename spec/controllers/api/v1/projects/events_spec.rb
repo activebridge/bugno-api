@@ -17,7 +17,7 @@ describe API::V1::Projects::Events, type: :request do
 
     subject do
       get(*request_params)
-      json['data'].count
+      json.count
     end
 
     it { is_expected.to eq(4) }
@@ -42,7 +42,7 @@ describe API::V1::Projects::Events, type: :request do
 
     subject do
       get(*request_params)
-      json['data'].count
+      json.count
     end
 
     it { is_expected.to eq(2) }
@@ -53,9 +53,13 @@ describe API::V1::Projects::Events, type: :request do
     let(:url) { "/api/v1/projects/#{project.api_key}/events" }
     let(:params) { attributes_for(:event) }
 
-    subject { -> { post(*request_params) } }
+    context do
+      let!(:subscription) { create(:subscription, project_id: project.id) }
 
-    it { is_expected.to change(project.events, :count).by(1) }
+      subject { -> { post(*request_params) } }
+
+      it { is_expected.to change(project.events, :count).by(1) }
+    end
 
     context 'without API key' do
       let(:api_key) { nil }
@@ -67,6 +71,12 @@ describe API::V1::Projects::Events, type: :request do
       end
 
       it { is_expected.to have_http_status(401) }
+    end
+
+    context 'without subscription or expired one' do
+      subject { -> { post(*request_params) } }
+
+      it { is_expected.not_to change(project.events, :count) }
     end
   end
 
