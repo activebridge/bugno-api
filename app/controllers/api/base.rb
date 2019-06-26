@@ -23,7 +23,7 @@ class API::Base < Grape::API
 
   add_swagger_documentation(
     info: {
-      title: 'BugHub API'
+      title: 'Bugno API'
     },
     doc_version: '1.0.0'
   )

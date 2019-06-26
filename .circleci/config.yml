@@ -13,7 +13,7 @@ jobs:
          POSTGRES_USER: postgres
          POSTGRES_DB: ab_test
          POSTGRES_PASSWORD: ''
-   working_directory: ~/bughub-api/bughub-api
+   working_directory: ~/bugno-api/bugno-api
    steps:
      - checkout
      - run:
@@ -24,12 +24,12 @@ jobs:
            gem install bundler
      # Restore bundle cache
      - type: cache-restore
-       key: bughub-api-{{ checksum "Gemfile.lock" }}
+       key: bugno-api-{{ checksum "Gemfile.lock" }}
      # Bundle install dependencies
      - run: bundle install --path vendor/bundle
      # Store bundle cache
      - type: cache-save
-       key: bughub-api-{{ checksum "Gemfile.lock" }}
+       key: bugno-api-{{ checksum "Gemfile.lock" }}
        paths:
          - vendor/bundle
      - run: bundle exec rake db:create
