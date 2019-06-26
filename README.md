@@ -1,11 +1,11 @@
-## BugHub
+## Bugno
 
 Simple bugs tracking.
 
 #### Code status
 
-[![CircleCI](https://circleci.com/gh/activebridge/bughub-api.svg?style=svg)](https://circleci.com/gh/activebridge/bughub-api)
+[![CircleCI](https://circleci.com/gh/activebridge/bugno-api.svg?style=svg)](https://circleci.com/gh/activebridge/bugno-api)
 
 #### API Docs
 
-[https://bughub-api.herokuapp.com/documentation](https://bughub-api.herokuapp.com/documentation)
+[https://api.bugno.io/documentation](https://api.bugno.io/documentation)

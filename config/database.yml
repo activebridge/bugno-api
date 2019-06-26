@@ -8,11 +8,11 @@ default: &default
 
 development:
   <<: *default
-  database: bughub_development
+  database: bugno_development
 
 test:
   <<: *default
-  database: bughub_test
+  database: bugno_test
 
 production:
   url: <%= ENV['DATABASE_URL'] %>
