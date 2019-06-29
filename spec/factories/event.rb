@@ -5,6 +5,7 @@ FactoryBot.define do
     association :project
     association :user
     title { Faker::Lorem.word }
+    framework { 'rails' }
     message { Faker::Lorem.sentence }
     server_data { { host: Faker::Lorem.word, root: Faker::Lorem.word } }
     backtrace do
@@ -24,6 +25,7 @@ FactoryBot.define do
       association :project
       association :user
       title { 'NameError' }
+      framework { 'rails' }
       message { 'undefined local variable or method' }
       server_data { { host: 'ancient-pc', root: 'user/my_app' } }
       backtrace do

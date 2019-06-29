@@ -14,11 +14,12 @@ table
       | Environment:
     td
       = @event.environment
-  tr
-    td
-      | Host:
-    td
-      = @event.server_data['host']
+  - unless @event.framework == 'browser-js'
+    tr
+      td
+        | Host:
+      td
+        = @event.server_data['host']
 h3 Message:
 p = "#{@event.title}: #{@event.message}"
 - if @event.backtrace.present?
