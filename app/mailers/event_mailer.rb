@@ -14,6 +14,8 @@ class EventMailer < ApplicationMailer
   private
 
   def first_chunk_of_code
+    return if @event.framework == 'browser-js'
+
     @first_chunk_of_code ||= @event.backtrace.find do |trace_line|
       trace_line['filename'].include?(@event.server_data['root'])
     end
