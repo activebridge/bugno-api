@@ -20,7 +20,7 @@ class API::V1::Projects::Subscriptions < Grape::API
 
       desc 'Adds subscription to project'
       params do
-        requires :project_id, type: Integer
+        requires :project_id, type: String
         requires :stripe_token, type: String
         requires :plan_id, type: Integer
       end
