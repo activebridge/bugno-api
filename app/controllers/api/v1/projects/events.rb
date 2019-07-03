@@ -5,7 +5,7 @@ class API::V1::Projects::Events < Grape::API
     resources :events do
       desc 'Returns all or parent events if status specified'
       params do
-        requires :project_id, type: Integer
+        requires :project_id, type: String
         optional :page, type: Integer, default: 1
         optional :status, type: String, values: Event.statuses.keys
       end
@@ -48,7 +48,7 @@ class API::V1::Projects::Events < Grape::API
 
       desc 'Returns occurrences'
       params do
-        requires :project_id, type: Integer
+        requires :project_id, type: String
         requires :parent_id, type: String
       end
 
@@ -60,7 +60,7 @@ class API::V1::Projects::Events < Grape::API
 
       desc 'Updates event'
       params do
-        requires :project_id, type: Integer
+        requires :project_id, type: String
         requires :id, type: Integer
         requires :event, type: Hash do
           optional :status, type: String, values: Event.statuses.keys

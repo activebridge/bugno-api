@@ -11,6 +11,7 @@ gem 'acts_as_list'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'devise'
 gem 'devise_token_auth'
+gem 'friendly_id'
 gem 'grape'
 gem 'grape-active_model_serializers'
 gem 'grape-swagger'
