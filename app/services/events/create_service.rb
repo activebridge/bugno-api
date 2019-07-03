@@ -19,7 +19,7 @@ class Events::CreateService < ApplicationService
   end
 
   def project
-    @project ||= Project.find_by(api_key: declared_params[:project_id])
+    @project ||= Project.find_by!(api_key: declared_params[:project_id])
   end
 
   def event
