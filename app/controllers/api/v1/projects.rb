@@ -19,7 +19,7 @@ class API::V1::Projects < Grape::API
     desc 'Returns projects'
     get do
       status 200
-      render(projects)
+      render(projects.includes(:subscription))
     end
 
     desc 'Creates project'

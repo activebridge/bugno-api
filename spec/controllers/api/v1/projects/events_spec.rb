@@ -53,30 +53,40 @@ describe API::V1::Projects::Events, type: :request do
     let(:url) { "/api/v1/projects/#{project.api_key}/events" }
     let(:params) { attributes_for(:event) }
 
-    context do
-      let!(:subscription) { create(:subscription, project_id: project.id) }
-
-      subject { -> { post(*request_params) } }
-
-      it { is_expected.to change(project.events, :count).by(1) }
+    subject do
+      post(*request_params)
+      response
     end
 
-    context 'without API key' do
+    context do
+      let!(:subscription) { create(:subscription, project_id: project.id) }
+      let(:result) { { 'message' => 'event captured' } }
+
+      it { expect { subject }.to change(project.events, :count).by(1) }
+      it { expect(subject.body).to eq(result.to_json) }
+
+      context 'invalid subscription' do
+        before { project.subscription.update(events: -1) }
+        let(:result) { { 'message' => 'subscription is absent' } }
+
+        it { expect { subject }.not_to change(project.events, :count) }
+        it { is_expected.to have_http_status(422) }
+        it { expect(subject.body).to eq(result.to_json) }
+      end
+    end
+    context 'without api key' do
       let(:api_key) { nil }
       let(:url) { "/api/v1/projects/#{api_key}/events" }
 
-      subject do
-        post(*request_params)
-        response
-      end
-
+      it { expect { subject }.not_to change(project.events, :count) }
       it { is_expected.to have_http_status(401) }
-    end
 
-    context 'without subscription or expired one' do
-      subject { -> { post(*request_params) } }
+      context 'invalid api key' do
+        let(:api_key) { 'invalid_api_key' }
+        let(:result) { { 'message' => 'api-key is invalid' } }
 
-      it { is_expected.not_to change(project.events, :count) }
+        it { expect(subject.body).to eq(result.to_json) }
+      end
     end
   end
 

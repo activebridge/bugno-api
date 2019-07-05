@@ -2,7 +2,8 @@
 
 class Events::CreateService < ApplicationService
   def call
-    return if subscription.nil? || expired_subscription
+    return [{ message: I18n.t('api.errors.invalid_api_key') }, 401] unless project
+    return [{ message: I18n.t('api.errors.subscription_absent') }, 422] if subscription.nil? || expired_subscription
 
     handle_event_create
   end
@@ -12,14 +13,16 @@ class Events::CreateService < ApplicationService
   def handle_event_create
     EventMailer.create(event).deliver_later if project && event.persisted?
     Subscription.decrement_counter(:events, subscription.id)
+    subscription.expired! if subscription.events <= 1
+    [{ message: I18n.t('api.event_captured') }, 201]
   end
 
   def expired_subscription
-    subscription.expired? || subscription.events.negative?
+    subscription.expired? || !subscription.events.positive?
   end
 
   def project
-    @project ||= Project.find_by!(api_key: declared_params[:project_id])
+    @project ||= Project.find_by(api_key: declared_params[:project_id])
   end
 
   def event

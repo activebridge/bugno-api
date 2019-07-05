@@ -35,7 +35,7 @@ class API::V1::Projects::Events < Grape::API
 
       post do
         event = ::Events::CreateService.call(declared_params: declared_params)
-        render_api(event)
+        render_api(*event)
       end
 
       desc 'Returns event'

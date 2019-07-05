@@ -3,9 +3,12 @@ en:
     development: 'http://localhost:4200'
     production: 'https://bugno.io'
   api:
+    event_captured: event captured
     errors:
       not_found: not found
-      subscription_exists: You have an active subscription already
+      subscription_exists: you have an active subscription already
+      subscription_absent: subscription is absent
+      invalid_api_key: api-key is invalid
   pundit:
     default: You cannot perform this action.
   project_user_mailer:
