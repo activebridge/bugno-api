@@ -3,7 +3,7 @@
 class API::V1::Plans < Grape::API
   helpers do
     def plans
-      @plans ||= Plan.all.order(price: :asc)
+      @plans ||= Plan.order(price: :asc)
     end
   end
 

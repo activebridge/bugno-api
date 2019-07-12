@@ -8,9 +8,9 @@ FactoryBot.define do
     trait :expired do
       expires_at { 1.month.ago }
       status { :expired }
-      after :create do |subscription|
-        subscription.events = 0
-      end
+      events { 0 }
+
+      after(:build) { |subscription| subscription.class.skip_callback(:create) }
     end
   end
 end
