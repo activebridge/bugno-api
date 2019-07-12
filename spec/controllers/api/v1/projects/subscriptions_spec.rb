@@ -18,7 +18,7 @@ describe API::V1::Projects::Subscriptions, type: :request do
   after { StripeMock.stop }
 
   context '#create' do
-    let(:params) { { project_id: project.id, plan_id: plan.id, stripe_token: stripe_card_token } }
+    let(:params) { { project_id: project.id, plan_id: plan.id, stripe_source: stripe_card_token } }
     let(:result) { SubscriptionSerializer.new(project.subscription).to_json }
 
     subject do
@@ -32,9 +32,7 @@ describe API::V1::Projects::Subscriptions, type: :request do
       before { StripeMock.prepare_card_error(:card_declined) }
 
       context 'does not create subscription' do
-        subject { -> { post(*request_params) } }
-
-        it { is_expected.not_to change(Subscription, :count) }
+        it { expect { subject }.not_to change(Subscription, :count) }
       end
 
       context 'return appropriate error message' do
@@ -47,6 +45,33 @@ describe API::V1::Projects::Subscriptions, type: :request do
 
         it { is_expected.to eq(result) }
       end
+    end
+  end
+  context '#update' do
+    let(:subscription) { create(:subscription, project: project) }
+    let(:url) { "#{base_url}/#{subscription.id}" }
+
+    before do
+      subscription.customer_id = Stripe::Customer.create(
+        email: user.email,
+        source: stripe_card_token
+      ).id
+      subscription.save
+    end
+
+    subject { -> { patch(*request_params) } }
+
+    context 'change plan' do
+      let(:new_plan) { create(:plan) }
+      let(:params) { { plan_id: new_plan.id, stripe_source: stripe_card_token } }
+
+      it { is_expected.to change { subscription.reload.plan_id } }
+    end
+
+    context 'cancel subscription' do
+      let(:url) { "#{base_url}/#{subscription.id}/cancel" }
+
+      it { is_expected.to change { subscription.reload.plan_id }.to(nil) }
     end
   end
 end

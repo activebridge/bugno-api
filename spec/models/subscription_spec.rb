@@ -14,4 +14,9 @@ RSpec.describe Subscription, type: :model do
   context 'associations' do
     it { expect(subscription).to belong_to(:project) }
   end
+
+  context 'delegate plan' do
+    it { should delegate_method(:name).to(:plan).with_prefix.allow_nil }
+    it { should delegate_method(:cent_price).to(:plan).with_prefix.allow_nil }
+  end
 end
