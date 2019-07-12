@@ -3,7 +3,14 @@
 FactoryBot.define do
   factory :subscription do
     association :plan
-    expires_at { Faker::Date.between(1.year.ago, 1.year.from_now) }
-    events { Faker::Number.number(3) }
+    expires_at { 1.month.from_now }
+
+    trait :expired do
+      expires_at { 1.month.ago }
+      status { :expired }
+      after :create do |subscription|
+        subscription.events = 0
+      end
+    end
   end
 end

@@ -21,7 +21,7 @@ class API::V1::Projects::Subscriptions < Grape::API
       desc 'Adds subscription to project'
       params do
         requires :project_id, type: String
-        requires :stripe_token, type: String
+        requires :stripe_source, type: String
         requires :plan_id, type: Integer
       end
 
@@ -32,6 +32,28 @@ class API::V1::Projects::Subscriptions < Grape::API
 
         return error!(subscription.message, subscription.http_status) if subscription.is_a?(Stripe::StripeError)
 
+        render_api(subscription)
+      end
+
+      desc 'Updates plan'
+      params do
+        requires :id, type: String
+        requires :stripe_source, type: String
+        requires :plan_id, type: Integer
+      end
+
+      patch ':id' do
+        subscription = ::Subscriptions::UpdateService.call(params: declared_params, user: current_user)
+        render_api(subscription)
+      end
+
+      desc 'Cancel subscription'
+      params do
+        requires :id, type: Integer
+      end
+
+      patch ':id/cancel' do
+        subscription = ::Subscriptions::CancelSubscriptionService.call(params: declared_params)
         render_api(subscription)
       end
     end

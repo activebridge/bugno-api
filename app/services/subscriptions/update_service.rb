@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
-class Subscriptions::CreateService < ApplicationService
+class Subscriptions::UpdateService < ApplicationService
   CENTS_MULTIPLIER = 100
 
   def call
-    result = nil
+    result = subscription
     ActiveRecord::Base.transaction do
-      result = project.create_subscription(plan_id: plan.id, customer_id: customer.id)
+      subscription.update(plan_id: plan.id, events: events, status: :active,
+                          expires_at: 1.month.from_now, customer_id: customer_id)
       charge
     rescue Stripe::StripeError => e
       result = e
@@ -17,19 +18,24 @@ class Subscriptions::CreateService < ApplicationService
 
   private
 
-  def project
-    @project ||= Project.find(params[:project_id])
+  def subscription
+    @subscription ||= Subscription.find(params[:id])
   end
 
   def plan
     @plan ||= Plan.find(params[:plan_id])
   end
 
-  def customer
-    @customer ||= Stripe::Customer.create(
-      source: params[:stripe_source],
-      email: user.email
-    )
+  def events
+    @events ||= plan.event_limit + subscription.events
+  end
+
+  def customer_id
+    @customer_id ||= Stripe::Customer.update(
+      subscription.customer_id,
+      email: user.email,
+      source: params[:stripe_source]
+    ).id
   end
 
   def charge
@@ -37,7 +43,7 @@ class Subscriptions::CreateService < ApplicationService
       amount: subscription_price,
       currency: 'usd',
       description: "#{plan.name} plan",
-      customer: customer.id
+      customer: customer_id
     )
   end
 
