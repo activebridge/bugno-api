@@ -31,6 +31,8 @@ class API::V1::Projects::Events < Grape::API
         optional :http_method, type: String
         optional :params, type: Hash
         optional :server_data, type: Hash
+        optional :person_data, type: Hash
+        optional :route_params, type: Hash
       end
 
       post do

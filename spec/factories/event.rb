@@ -18,6 +18,13 @@ FactoryBot.define do
            post: Faker::Lorem.sentences(4)
          } }]
     end
+    url { Faker::Internet.url }
+    http_method { 'POST' }
+    person_data do
+      { id: Faker::Number.number(1),
+        email: Faker::Internet.email,
+        username: Faker::Internet.username }
+    end
     environment { ActiveRecord::Base.configurations.keys.sample }
     ip_address { Faker::Internet.ip_v4_address }
 
