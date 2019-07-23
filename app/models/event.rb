@@ -25,6 +25,8 @@ class Event < ApplicationRecord
 
   def brodcast
     action = saved_change_to_id? ? UserChannel::ACTIONS::CREATE_EVENT : UserChannel::ACTIONS::UPDATE_EVENT
+    return if parent_id
+
     project.project_users.each do |project_user|
       ActionCable.server.broadcast("user_#{project_user.user_id}",
                                    EventSerializer.new(self, action: action).as_json)
