@@ -2,7 +2,7 @@
 
 module Verifiable
   def verifier
-    @verifier = ActiveSupport::MessageVerifier.new(Rails.application.credentials.secret_key_base,
+    @verifier = ActiveSupport::MessageVerifier.new(ENV['SECRET_KEY_BASE'],
                                                    digest: 'SHA256', serializer: YAML)
   end
 end
