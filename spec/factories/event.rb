@@ -37,7 +37,7 @@ FactoryBot.define do
       server_data { { host: 'ancient-pc', root: 'user/my_app' } }
       backtrace do
         [{ filename: 'user/my_app/models/post',
-           lineno: 33,
+           lineno: '33',
            method: 'class ApplicationRecord',
            code: 'call',
            context: {
@@ -47,6 +47,9 @@ FactoryBot.define do
       end
       environment { 'test' }
       ip_address { '127.0.0.1' }
+      person_data { nil }
+      url { 'http://localhost:3000' }
+      http_method { 'POST' }
     end
   end
 end

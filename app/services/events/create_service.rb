@@ -11,7 +11,8 @@ class Events::CreateService < ApplicationService
   private
 
   def handle_event_create
-    EventMailer.create(event).deliver_later if project && event.persisted?
+    EventMailer.create(event).deliver_later if notify?
+    check_parent_status
     Subscription.decrement_counter(:events, subscription.id)
     subscription.expired! if subscription.events <= 1
     [{ message: I18n.t('api.event_captured') }, 201]
@@ -31,5 +32,17 @@ class Events::CreateService < ApplicationService
 
   def subscription
     @subscription ||= project.subscription
+  end
+
+  def parent_event
+    @parent_event ||= Event.find(event.parent_id)
+  end
+
+  def check_parent_status
+    parent_event.active! if event.parent_id && !parent_event.active?
+  end
+
+  def notify?
+    project && event.persisted? && (event.parent_id.nil? || !parent_event.active?)
   end
 end
