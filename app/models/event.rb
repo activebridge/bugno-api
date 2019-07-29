@@ -4,6 +4,8 @@ class Event < ApplicationRecord
   belongs_to :project
   belongs_to :user, optional: true
 
+  attribute :framework, :string, default: :plain
+
   enum status: %i[active resolved muted]
 
   paginates_per 25
