@@ -21,10 +21,10 @@ class API::V1::Projects::Events < Grape::API
       params do
         requires :project_id, type: String
         requires :title, type: String
-        optional :environment, type: String
-        optional :message, type: String
-        optional :backtrace, type: Array
+        requires :message, type: String
         optional :framework, type: String
+        optional :environment, type: String
+        optional :backtrace, type: Array
         optional :url, type: String
         optional :ip_address, type: String
         optional :headers, type: Hash
