@@ -35,7 +35,7 @@ class Events::CreateService < ApplicationService
   end
 
   def parent_event
-    @parent_event ||= Event.find(event.parent_id)
+    @parent_event ||= event.parent
   end
 
   def check_parent_status
