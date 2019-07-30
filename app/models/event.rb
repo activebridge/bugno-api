@@ -20,8 +20,15 @@ class Event < ApplicationRecord
 
   before_create :assign_parent
   after_save :brodcast
+  after_save :update_active_parent_count
 
   private
+
+  def update_active_parent_count
+    return if parent_id
+
+    project.update!(active_parent_event_count: project.active_parent_events.size)
+  end
 
   def assign_parent
     self.parent_id = ::Events::ParentCreateService.call(event: self, project: project)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ProjectSerializer < ApplicationSerializer
-  attributes :id, :name, :description, :api_key, :slug
+  attributes :id, :name, :description, :api_key, :slug, :active_parent_event_count
   attribute :stripe_public_key, if: proc { instance_options[:include_stripe_api_key] }
   has_one :subscription
 
