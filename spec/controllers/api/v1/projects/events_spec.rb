@@ -17,7 +17,7 @@ describe API::V1::Projects::Events, type: :request do
 
     subject do
       get(*request_params)
-      json.count
+      json['events'].count
     end
 
     it { is_expected.to eq(4) }

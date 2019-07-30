@@ -13,7 +13,8 @@ class API::V1::Projects::Events < Grape::API
       get do
         events = ::Events::IndexService.call(declared_params: declared_params,
                                              user: current_user)
-        render_api(events)
+
+        EventCollectionSerializer.new(events).as_json
       end
 
       desc 'Creates event'
