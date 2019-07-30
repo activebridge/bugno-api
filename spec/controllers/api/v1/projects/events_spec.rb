@@ -66,11 +66,16 @@ describe API::V1::Projects::Events, type: :request do
       it { expect { subject }.to change(project.events, :count).by(1) }
       it { expect(subject.body).to eq(result.to_json) }
 
-      context 'update parent event to active' do
-        let!(:parent_event) { create(:event, :with_equal_attributes, project: project, status: :muted) }
+      context 'update parent event to active if from resolved' do
+        let!(:parent_event) { create(:event, :with_equal_attributes, project: project, status: :resolved) }
         let!(:params) { attributes_for(:event, :with_equal_attributes) }
 
         it { expect { subject }.to change { parent_event.reload.status } }
+
+        context 'should not update muted' do
+          let!(:parent_event) { create(:event, :with_equal_attributes, project: project, status: :muted) }
+          it { expect { subject }.not_to change { parent_event.reload.status } }
+        end
       end
 
       context 'invalid subscription' do
