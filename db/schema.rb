@@ -81,7 +81,7 @@ ActiveRecord::Schema.define(version: 2019_07_30_095924) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "slug"
-    t.integer "active_parent_event_count", default: 0, null: false
+    t.integer "active_event_count", default: 0, null: false
     t.index ["slug"], name: "index_projects_on_slug", unique: true
   end
 

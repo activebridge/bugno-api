@@ -27,7 +27,7 @@ class Event < ApplicationRecord
   def update_active_parent_count
     return if parent_id
 
-    project.update!(active_parent_event_count: project.active_parent_events.size)
+    project.update!(active_event_count: project.active_events.size)
   end
 
   def assign_parent
