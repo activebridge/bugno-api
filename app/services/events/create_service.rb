@@ -39,10 +39,10 @@ class Events::CreateService < ApplicationService
   end
 
   def check_parent_status
-    parent_event.active! if event.parent_id && !parent_event.active?
+    parent_event.active! if event.parent_id && parent_event.resolved?
   end
 
   def notify?
-    project && event.persisted? && (event.parent_id.nil? || !parent_event.active?)
+    project && event.persisted? && (event.parent_id.nil? || parent_event.resolved?)
   end
 end
