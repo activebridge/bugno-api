@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Event < ApplicationRecord
+  include PublicActivity::Common
+
   belongs_to :project
   belongs_to :user, optional: true
   belongs_to :parent, class_name: 'Event', optional: true, counter_cache: :occurence_count
