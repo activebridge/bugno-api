@@ -39,7 +39,18 @@ class Events::CreateService < ApplicationService
   end
 
   def check_parent_status
-    parent_event.active! if event.parent_id && parent_event.resolved?
+    return unless parent_event&.resolved?
+
+    parent_event.active!
+    parent_event.occurrences.update_all(status: :active)
+    create_activity
+  end
+
+  def create_activity
+    parent_event.create_activity(:update, owner: event,
+                                          recipient: project,
+                                          params: { status: { previous: parent_event.saved_changes['status'].first,
+                                                              new: parent_event.saved_changes['status'].last } })
   end
 
   def notify?
