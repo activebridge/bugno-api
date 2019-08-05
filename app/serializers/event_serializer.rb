@@ -5,7 +5,7 @@ class EventSerializer < ApplicationSerializer
              :message, :backtrace, :framework, :url, :ip_address, :headers,
              :http_method, :params, :position, :server_data, :created_at,
              :parent_id, :person_data, :route_params, :action, :updated_at,
-             :occurence_count
+             :occurrence_count
 
   def action
     instance_options[:action]

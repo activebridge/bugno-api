@@ -5,8 +5,8 @@ class Event < ApplicationRecord
 
   belongs_to :project
   belongs_to :user, optional: true
-  belongs_to :parent, class_name: 'Event', optional: true, counter_cache: :occurence_count
-  has_many :occurences, class_name: 'Event', foreign_key: 'parent_id'
+  belongs_to :parent, class_name: 'Event', optional: true, counter_cache: :occurrence_count
+  has_many :occurrences, class_name: 'Event', foreign_key: 'parent_id'
 
   attribute :framework, :string, default: :plain
 
