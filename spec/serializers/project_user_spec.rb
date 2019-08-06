@@ -9,14 +9,17 @@ RSpec.describe ProjectUserSerializer do
   subject do
     described_class.new(project_user).as_json
   end
+
   it {
     is_expected.to include(id: project_user.id, project_id: project_user.project_id, user_id: project_user.user_id,
                            role: project_user.role)
   }
-  context 'user attribute' do
+
+  context 'belongs to user' do
     subject do
       described_class.new(project_user).as_json[:user]
     end
+
     it { is_expected.to include(id: user.id, name: user.name, email: user.email) }
   end
 end
