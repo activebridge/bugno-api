@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-class Activity::ActivityCollectionSerializer < ApplicationSerializer
+class Activity::CollectionSerializer < ApplicationSerializer
   attribute :total_activity_count
 
-  has_many :activities, each_serializer: ActivitySerializer
+  has_many :activities, serializer: Activity::SingleSerializer
 
   def total_activity_count
     instance_options[:total_count]

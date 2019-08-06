@@ -9,6 +9,7 @@ class API::V1::Activities < Grape::API
     def activities
       @activities ||= PublicActivity::Activity.order(created_at: :desc)
                                               .where(recipient_id: project_ids, recipient_type: 'Project')
+                                              .includes(:owner, :trackable, :recipient)
                                               .page(declared_params[:page]).per(10)
     end
   end
@@ -19,6 +20,6 @@ class API::V1::Activities < Grape::API
   end
 
   get '/activities' do
-    Activity::ActivityCollectionSerializer.new(activities, total_count: activities.total_count).as_json
+    Activity::CollectionSerializer.new(activities, total_count: activities.total_count).as_json
   end
 end
