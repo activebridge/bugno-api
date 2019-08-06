@@ -10,7 +10,7 @@ class API::V1::Activities < Grape::API
       @activities ||= PublicActivity::Activity.order(created_at: :desc)
                                               .where(recipient_id: project_ids, recipient_type: 'Project')
                                               .includes(:owner, :trackable, :recipient)
-                                              .page(declared_params[:page]).per(10)
+                                              .page(declared_params[:page]).per(20)
     end
   end
 
