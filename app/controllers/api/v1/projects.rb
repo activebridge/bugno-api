@@ -13,19 +13,13 @@ class API::V1::Projects < Grape::API
     def matched_project
       @matched_project ||= current_user.projects.find(params[:id])
     end
-
-    def projects_cache_key
-      "users:#{current_user.id}:projects:#{projects.maximum(:updated_at)}"
-    end
   end
 
   resources :projects do
     desc 'Returns projects'
     get do
       status 200
-      Rails.cache.fetch(projects_cache_key) do
-        ProjectCollectionSerializer.new(projects).as_json
-      end
+      render(projects.includes(:subscription))
     end
 
     desc 'Creates project'
