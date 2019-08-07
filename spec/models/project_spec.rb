@@ -11,7 +11,7 @@ RSpec.describe Project, type: :model do
 
   context 'associations' do
     it { expect(project).to have_many(:project_users).dependent(:destroy) }
-    it { expect(project).to have_many(:events).dependent(:destroy) }
+    it { expect(project).to have_many(:events).dependent(:delete_all) }
     it { expect(project).to have_one(:subscription) }
   end
 end
