@@ -6,7 +6,7 @@ class Project < ApplicationRecord
 
   has_many :project_users, dependent: :destroy
   has_many :users, through: :project_users
-  has_many :events, dependent: :destroy
+  has_many :events, dependent: :delete_all
   has_many :active_events, -> { where(status: :active, parent_id: nil) }, class_name: 'Event'
   has_one :subscription, dependent: :destroy
 
