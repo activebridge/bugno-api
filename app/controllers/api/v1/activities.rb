@@ -3,7 +3,7 @@
 class API::V1::Activities < Grape::API
   helpers do
     def project_ids
-      @project_ids ||= current_user.projects.pluck(:id)
+      @project_ids ||= current_user.project_ids
     end
 
     def activities
