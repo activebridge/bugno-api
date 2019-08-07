@@ -7,9 +7,9 @@ class API::V1::Activities < Grape::API
     end
 
     def activities
-      @activities ||= PublicActivity::Activity.order(created_at: :desc)
+      @activities ||= PublicActivity::Activity.includes(:owner, :trackable, :recipient)
                                               .where(recipient_id: project_ids, recipient_type: 'Project')
-                                              .includes(:owner, :trackable, :recipient)
+                                              .order(created_at: :desc)
                                               .page(declared_params[:page]).per(20)
     end
   end
