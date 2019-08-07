@@ -4,8 +4,10 @@ class Events::UpdateService < ApplicationService
   def call
     return unless event.update(declared_params[:event])
 
-    create_activity
-    occurrences.update_all(status: declared_params[:event][:status]) if declared_params[:event][:status]
+    if event.saved_changes['status']
+      create_activity
+      occurrences.update_all(status: declared_params.dig(:event, :status))
+    end
     event
   end
 
