@@ -20,6 +20,6 @@ class API::V1::Activities < Grape::API
   end
 
   get '/activities' do
-    Activity::CollectionSerializer.new(activities, total_count: activities.total_count).as_json
+    Activity::CollectionSerializer.new(activities).as_json
   end
 end
