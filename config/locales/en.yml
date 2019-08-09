@@ -2,6 +2,7 @@ en:
   web_client_url:
     development: 'http://localhost:4200'
     production: 'https://bugno.io'
+    staging: 'https://staging.bugno.io'
   api:
     event_captured: event captured
     errors:
