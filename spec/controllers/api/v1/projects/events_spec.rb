@@ -123,6 +123,9 @@ describe API::V1::Projects::Events, type: :request do
     subject { -> { patch(*request_params) } }
 
     it { is_expected.to change { event.reload.status } }
+    it 'creates activity if status changed' do
+      is_expected.to change(PublicActivity::Activity, :count)
+    end
 
     context 'occurrences status' do
       let!(:occurrences) { create_list(:event, 2, :with_equal_attributes, project: project) }
