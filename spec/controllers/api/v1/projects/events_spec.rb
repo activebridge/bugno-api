@@ -38,15 +38,15 @@ describe API::V1::Projects::Events, type: :request do
 
   context '#occurrences' do
     let!(:parent_event) { create(:event, :with_equal_attributes, project: project) }
-    let!(:occurrences) { create_list(:event, 2, :with_equal_attributes, project: project) }
+    let!(:occurrences) { create_list(:event, 3, :with_equal_attributes, project: project) }
     let(:url) { "#{base_url}/occurrences/#{parent_event.id}" }
 
     subject do
       get(*request_params)
-      json.count
+      json['events'].count
     end
 
-    it { is_expected.to eq(2) }
+    it { is_expected.to eq(3) }
   end
 
   context '#create' do

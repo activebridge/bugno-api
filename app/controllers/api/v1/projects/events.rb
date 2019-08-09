@@ -13,7 +13,6 @@ class API::V1::Projects::Events < Grape::API
       get do
         events = ::Events::IndexService.call(declared_params: declared_params,
                                              user: current_user)
-
         EventCollectionSerializer.new(events).as_json
       end
 
@@ -53,12 +52,13 @@ class API::V1::Projects::Events < Grape::API
       params do
         requires :project_id, type: String
         requires :parent_id, type: String
+        optional :page, type: Integer, default: 1
       end
 
       get 'occurrences/:parent_id' do
         events = ::Events::OccurrencesService.call(declared_params: declared_params,
                                                    user: current_user)
-        render_api(events)
+        EventCollectionSerializer.new(events).as_json
       end
 
       desc 'Updates event'
