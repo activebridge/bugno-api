@@ -3,15 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe Project, type: :model do
-  let(:project) { create(:project) }
-
-  context 'name presence' do
-    it { should validate_presence_of(:name) }
-  end
-
-  context 'associations' do
-    it { expect(project).to have_many(:project_users).dependent(:destroy) }
-    it { expect(project).to have_many(:events).dependent(:delete_all) }
-    it { expect(project).to have_one(:subscription) }
-  end
+  it { should validate_presence_of(:name) }
+  it { should have_many(:project_users).dependent(:destroy) }
+  it { should have_many(:users).through(:project_users) }
+  it { should have_many(:events).dependent(:delete_all) }
+  it { should have_many(:active_events).class_name('Event').conditions(status: :active, parent_id: nil) }
+  it { should have_one(:subscription).dependent(:destroy) }
 end
