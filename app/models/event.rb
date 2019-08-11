@@ -14,7 +14,7 @@ class Event < ApplicationRecord
 
   paginates_per 25
 
-  validates :title, :status, presence: true
+  validates :title, :status, :framework, presence: true
 
   acts_as_list scope: %i[status project_id]
   scope :by_status, ->(status) { where(status: status) if status.present? }
