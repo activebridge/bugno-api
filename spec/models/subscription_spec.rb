@@ -3,20 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe Subscription, type: :model do
-  let(:project) { create(:project) }
-  let(:subscription) { create(:subscription, project_id: project.id) }
-
-  context 'validates presence' do
-    it { should validate_presence_of(:status) }
-    it { should validate_presence_of(:expires_at) }
-  end
-
-  context 'associations' do
-    it { expect(subscription).to belong_to(:project) }
-  end
-
-  context 'delegate plan' do
-    it { should delegate_method(:name).to(:plan).with_prefix.allow_nil }
-    it { should delegate_method(:cent_price).to(:plan).with_prefix.allow_nil }
-  end
+  it { should validate_presence_of(:status) }
+  it { should validate_presence_of(:expires_at) }
+  it { should belong_to(:project) }
+  it { should belong_to(:plan).optional }
+  it { should delegate_method(:name).to(:plan).with_prefix.allow_nil }
+  it { should delegate_method(:cent_price).to(:plan).with_prefix.allow_nil }
 end
