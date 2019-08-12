@@ -2,15 +2,11 @@
 
 class API::V1::Activities < Grape::API
   helpers do
-    def project_ids
-      @project_ids ||= current_user.project_ids
-    end
-
     def activities
-      @activities ||= PublicActivity::Activity.includes(:owner, :trackable, :recipient)
-                                              .where(recipient_id: project_ids, recipient_type: 'Project')
-                                              .order(created_at: :desc)
-                                              .page(declared_params[:page]).per(20)
+      @activities ||= current_user.project_activities
+                                  .includes(:owner, :trackable, :recipient)
+                                  .order(created_at: :desc)
+                                  .page(declared_params[:page]).per(20)
     end
   end
 
