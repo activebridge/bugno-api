@@ -8,7 +8,7 @@ class Events::OccurrencesService < ApplicationService
   private
 
   def events
-    @events ||= project.events.by_parent(declared_params[:parent_id])
+    @events ||= project.events.by_parent(declared_params[:parent_id]).page(declared_params[:page])
   end
 
   def project

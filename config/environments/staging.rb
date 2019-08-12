@@ -93,8 +93,8 @@ Rails.application.configure do
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
-  config.web_socket_server_url = 'wss://api.bugno.io/cable'
-  config.action_cable.allowed_request_origins = ['https://bugno.io', 'http://bugno.io']
+  config.web_socket_server_url = 'wss://api-staging.bugno.io/cable'
+  config.action_cable.allowed_request_origins = ['https://staging.bugno.io', 'http://staging.bugno.io']
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 end

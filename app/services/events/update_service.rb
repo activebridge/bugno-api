@@ -4,18 +4,28 @@ class Events::UpdateService < ApplicationService
   def call
     return unless event.update(declared_params[:event])
 
-    occurrences.update_all(status: declared_params[:event][:status]) if declared_params[:event][:status].present?
+    if event.saved_changes['status']
+      create_activity
+      occurrences.update_all(status: declared_params.dig(:event, :status))
+    end
     event
   end
 
   private
+
+  def create_activity
+    event.create_activity(:update, owner: user,
+                                   recipient: project,
+                                   params: { status: { previous: event.saved_changes['status'].first,
+                                                       new: event.saved_changes['status'].last } })
+  end
 
   def event
     @event ||= project.events.find(declared_params[:id])
   end
 
   def occurrences
-    @occurrences ||= project.events.where(parent_id: declared_params[:id])
+    @occurrences ||= event.occurrences
   end
 
   def project

@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class Event < ApplicationRecord
+  include PublicActivity::Common
+
   belongs_to :project
   belongs_to :user, optional: true
-  belongs_to :parent, class_name: 'Event', optional: true, counter_cache: :occurence_count
-  has_many :occurences, class_name: 'Event', foreign_key: 'parent_id'
+  belongs_to :parent, class_name: 'Event', optional: true, counter_cache: :occurrence_count
+  has_many :occurrences, class_name: 'Event', foreign_key: 'parent_id'
 
   attribute :framework, :string, default: :plain
 
@@ -12,7 +14,7 @@ class Event < ApplicationRecord
 
   paginates_per 25
 
-  validates :title, :status, presence: true
+  validates :title, :status, :framework, presence: true
 
   acts_as_list scope: %i[status project_id]
   scope :by_status, ->(status) { where(status: status) if status.present? }
