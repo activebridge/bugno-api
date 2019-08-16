@@ -58,7 +58,7 @@ class API::V1::Projects::Events < Grape::API
       get 'occurrences/:parent_id' do
         events = ::Events::OccurrencesService.call(declared_params: declared_params,
                                                    user: current_user)
-        EventCollectionSerializer.new(events).as_json
+        OccurrenceCollectionSerializer.new(events).as_json
       end
 
       desc 'Updates event'
