@@ -3,7 +3,7 @@
 class OmniauthCallbacks::SlackIntegrationService < ApplicationService
   include Verifiable
   def call
-    project.integrations.create(type: 'Integration::Slack', provider_data: slack_data) if project.user_owner?(user)
+    project.integrations.create(type: 'Integration::Slack', provider_data: omniauth_extra) if project.user_owner?(user)
   end
 
   private

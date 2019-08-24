@@ -10,7 +10,7 @@ class OmniauthCallbacksController < DeviseTokenAuth::OmniauthCallbacksController
 
   def omniauth_success
     if provider == 'slack'
-      ::OmniauthCallbacks::SlackIntegrationService.call(params: omniauth_params, slack_data: slack_data)
+      ::OmniauthCallbacks::SlackIntegrationService.call(params: omniauth_params, omniauth_extra: omniauth_extra)
       return render_data_or_redirect('success', {})
     end
     handle_resource
@@ -26,7 +26,7 @@ class OmniauthCallbacksController < DeviseTokenAuth::OmniauthCallbacksController
     @provider ||= session['dta.omniauth.auth']['provider']
   end
 
-  def slack_data
+  def omniauth_extra
     session['dta.omniauth.extra']
   end
 
