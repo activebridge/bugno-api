@@ -24,6 +24,10 @@ class Event < ApplicationRecord
   after_save :brodcast
   after_save :update_active_parent_count
 
+  def parent?
+    parent_id.nil?
+  end
+
   private
 
   def update_active_parent_count

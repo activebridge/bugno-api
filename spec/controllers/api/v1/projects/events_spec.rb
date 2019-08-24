@@ -83,7 +83,7 @@ describe API::V1::Projects::Events, type: :request do
         let(:result) { { 'message' => 'subscription is absent' } }
 
         it { expect { subject }.not_to change(project.events, :count) }
-        it { is_expected.to have_http_status(422) }
+        it { is_expected.to have_http_status(403) }
         it { expect(subject.body).to eq(result.to_json) }
       end
     end
