@@ -11,7 +11,7 @@ class Events::CreateService < ApplicationService
   private
 
   def handle_event_create
-    return [{ message: 'Event was not captured due unprocessable entity' }, 422] unless event.persisted?
+    return [{ message: I18n.t('api.errors.unprocessable_entity') }, 422] unless event.persisted?
 
     notify if notify?
     update_subscription

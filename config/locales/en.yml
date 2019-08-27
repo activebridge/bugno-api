@@ -6,6 +6,7 @@ en:
   api:
     event_captured: event captured
     errors:
+      unprocessable_entity: unprocessable entity
       not_found: not found
       subscription_exists: you have an active subscription already
       subscription_absent: subscription is absent
