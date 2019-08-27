@@ -10,12 +10,15 @@ FactoryBot.define do
       provider_data do
         {
           raw_info: {
-            url: Faker::Internet.url,
-            team: Faker::Lorem.word
-          },
-          web_hook_info: {
-            url: Faker::Internet.url,
-            channel: Faker::Lorem.word
+            team_info: {
+              team: {
+                name: Faker::Lorem.word,
+                domain: Faker::Lorem.word
+              }
+            },
+            web_hook_info: {
+              channel: Faker::Lorem.word
+            }
           }
         }
       end

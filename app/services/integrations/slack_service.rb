@@ -25,8 +25,8 @@ class Integrations::SlackService < ApplicationService
   private
 
   def notifier
-    @notifier ||= ::Slack::Notifier.new(integration.provider_data['web_hook_info']['url'],
-                                        channel: integration.provider_data['web_hook_info']['channel'])
+    @notifier ||= ::Slack::Notifier.new(integration.provider_data.dig('raw_info', 'web_hook_info', 'url'),
+                                        channel: integration.provider_data.dig('raw_info', 'web_hook_info', 'channel'))
   end
 
   def attachment
