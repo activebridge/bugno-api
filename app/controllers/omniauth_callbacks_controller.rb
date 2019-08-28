@@ -20,6 +20,10 @@ class OmniauthCallbacksController < DeviseTokenAuth::OmniauthCallbacksController
     render_data_or_redirect('deliverCredentials', @auth_params.as_json, @resource.as_json)
   end
 
+  def omniauth_failure
+    render_data_or_redirect('error', {})
+  end
+
   private
 
   def provider
