@@ -6,10 +6,6 @@ class API::V1::Projects::Integrations < Grape::API
       @project ||= Project.find(params[:project_id])
     end
 
-    def integrations
-      @integrations ||= project.integrations
-    end
-
     def integration
       @integration ||= project.integrations.find(params[:id])
     end
@@ -20,14 +16,13 @@ class API::V1::Projects::Integrations < Grape::API
       desc "Returns project's integrations"
 
       get do
-        render(integrations)
+        render(project.integrations)
       end
 
       desc 'Removes integration from project'
       delete ':id' do
         authorize(integration, :delete?)
-        result = integration.destroy
-        render_api(result)
+        render_api(integration.destroy)
       end
     end
   end
