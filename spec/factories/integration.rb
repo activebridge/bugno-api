@@ -3,10 +3,11 @@
 FactoryBot.define do
   factory :integration do
     association :project
-    type { Faker::Lorem.word }
+    type { 'Integration' }
     provider_data { { team: Faker::Lorem.sentence } }
 
     trait :slack do
+      type { 'Integration::Slack' }
       provider_data do
         {
           raw_info: {
