@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class OmniauthCallbacksController < DeviseTokenAuth::OmniauthCallbacksController
+  INTEGRATION_PROVIDERS = %w[slack]
+
   def redirect_callbacks
     devise_mapping = get_devise_mapping
     redirect_route = get_redirect_route(devise_mapping)
@@ -9,8 +11,9 @@ class OmniauthCallbacksController < DeviseTokenAuth::OmniauthCallbacksController
   end
 
   def omniauth_success
-    if provider == 'slack'
-      ::OmniauthCallbacks::SlackIntegrationService.call(params: omniauth_params, omniauth_extra: omniauth_extra)
+    if integration?
+      ::OmniauthCallbacks::IntegrationService.call(params: omniauth_params, omniauth_extra: omniauth_extra,
+                                                   provider: provider)
       return render_data_or_redirect('success', {})
     end
     handle_resource
@@ -25,6 +28,10 @@ class OmniauthCallbacksController < DeviseTokenAuth::OmniauthCallbacksController
   end
 
   private
+
+  def integration?
+    INTEGRATION_PROVIDERS.include?(provider)
+  end
 
   def provider
     @provider ||= session['dta.omniauth.auth']['provider']

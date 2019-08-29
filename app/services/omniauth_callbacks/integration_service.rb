@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
-class OmniauthCallbacks::SlackIntegrationService < ApplicationService
+class OmniauthCallbacks::IntegrationService < ApplicationService
   include Verifiable
   def call
-    project.integrations.create(type: 'Integration::Slack', provider_data: omniauth_extra) if project.user_owner?(user)
+    project.integrations.create(type: integration_type, provider_data: omniauth_extra) if project.user_owner?(user)
   end
 
   private
+
+  def integration_type
+    @integration_type ||= "Integration::#{provider.capitalize}"
+  end
 
   def project
     @project ||= Project.find(params['project_id'])
