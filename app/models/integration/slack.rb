@@ -13,7 +13,7 @@ class Integration::Slack < Integration
     action = UserChannel::ACTIONS::CREATE_SLACK_INTEGRATION
     project.project_users.each do |project_user|
       ActionCable.server.broadcast("user_#{project_user.user_id}",
-                                   Integration::SlackSerializer.new(self, action: action).as_json)
+                                   Integration::SlackSerializer.new(self).as_json.merge(action: action))
     end
   end
 end
