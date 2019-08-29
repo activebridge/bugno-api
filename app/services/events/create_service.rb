@@ -25,7 +25,7 @@ class Events::CreateService < ApplicationService
   def notify
     update_parent_event if parent_event&.resolved?
     EventMailer.create(event).deliver_later
-    project.integrations.find_each { |integration| integration.notify(*notify_attributes) }
+    Integration.notify(notify_attributes)
   end
 
   def notify_attributes

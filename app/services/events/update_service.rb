@@ -23,7 +23,7 @@ class Events::UpdateService < ApplicationService
 
   def notify
     action = UserChannel::ACTIONS::UPDATE_EVENT
-    project.integrations.find_each { |integration| integration.notify(event, action, user.nickname) }
+    Integration.notify([event, action, user.nickname])
   end
 
   def event
