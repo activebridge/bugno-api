@@ -34,3 +34,4 @@ en:
       subject: '[%{project_name}] %{event_environment}: %{event_title} has occured. %{event_message}'
       template:
         trace_line: '%{method} at line %{lineno} of "%{filename}"'
+        view_on_bugno_link_name: View on Bugno.io
