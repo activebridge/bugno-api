@@ -72,7 +72,7 @@ class API::V1::Projects < Grape::API
     end
 
     delete ':id' do
-      authorize(matched_project, :delete?)
+      authorize(matched_project, :destroy?)
       if matched_project.destroy
         status 200
       else

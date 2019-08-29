@@ -21,7 +21,7 @@ class API::V1::Projects::Integrations < Grape::API
 
       desc 'Removes integration from project'
       delete ':id' do
-        authorize(integration, :delete?)
+        authorize(integration, :destroy?)
         render_api(integration.destroy)
       end
     end

@@ -35,7 +35,7 @@ class API::V1::Projects::ProjectUsers < Grape::API
 
       desc 'Removes user from project'
       delete ':id' do
-        authorize(project_user, :delete?)
+        authorize(project_user, :destroy?)
         project_user = ::ProjectUsers::DeleteService.call(params: params, user: current_user)
         render_api(project_user)
       end
