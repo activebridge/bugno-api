@@ -9,7 +9,7 @@ class OmniauthCallbacks::IntegrationService < ApplicationService
   private
 
   def integration_type
-    @integration_type ||= "Integration::#{provider.capitalize}"
+    @integration_type ||= "Integration::#{integration_provider.capitalize}"
   end
 
   def project

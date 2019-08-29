@@ -13,7 +13,7 @@ class OmniauthCallbacksController < DeviseTokenAuth::OmniauthCallbacksController
   def omniauth_success
     if integration?
       ::OmniauthCallbacks::IntegrationService.call(params: omniauth_params, omniauth_extra: omniauth_extra,
-                                                   provider: provider)
+                                                   integration_provider: integration_provider)
       return render_data_or_redirect('success', {})
     end
     handle_resource
@@ -30,11 +30,11 @@ class OmniauthCallbacksController < DeviseTokenAuth::OmniauthCallbacksController
   private
 
   def integration?
-    INTEGRATION_PROVIDERS.include?(provider)
+    INTEGRATION_PROVIDERS.include?(integration_provider)
   end
 
-  def provider
-    @provider ||= session['dta.omniauth.auth']['provider']
+  def integration_provider
+    @integration_provider ||= omniauth_params['integration_provider']
   end
 
   def omniauth_extra
