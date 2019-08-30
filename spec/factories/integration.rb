@@ -18,7 +18,8 @@ FactoryBot.define do
               }
             },
             web_hook_info: {
-              channel: Faker::Lorem.word
+              channel: Faker::Lorem.word,
+              url: Faker::Internet.url
             }
           }
         }
