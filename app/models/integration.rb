@@ -5,8 +5,10 @@ class Integration < ApplicationRecord
 
   def notify; end
 
-  def self.notify(data)
-    find_each { |integration| integration.notify(*data) }
+  def self.notify(event:, action:, reason: '')
+    find_each do |integration|
+      integration.notify(event: event, action: action, reason: reason) if integration.project_id == event.project_id
+    end
   end
 
   delegate :user_owner?, to: :project, allow_nil: true, prefix: true

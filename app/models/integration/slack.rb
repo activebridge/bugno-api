@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Integration::Slack < Integration
-  def notify(event, action, reason = '')
+  def notify(event:, action:, reason: '')
     ::Integrations::SlackService.call(event: event, action: action, integration: self, reason: reason)
   end
 

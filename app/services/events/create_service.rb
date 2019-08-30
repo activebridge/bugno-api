@@ -29,9 +29,9 @@ class Events::CreateService < ApplicationService
   end
 
   def notify_attributes
-    return [event, UserChannel::ACTIONS::CREATE_EVENT, nil] if event.parent?
+    return { event: event, action: UserChannel::ACTIONS::CREATE_EVENT, reason: nil } if event.parent?
 
-    [parent_event, UserChannel::ACTIONS::UPDATE_EVENT, 'Occurrence']
+    { event: parent_event, action: UserChannel::ACTIONS::UPDATE_EVENT, reason: 'Occurrence' }
   end
 
   def update_subscription
