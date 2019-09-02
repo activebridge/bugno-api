@@ -9,6 +9,7 @@ class Project < ApplicationRecord
   has_many :events, dependent: :delete_all
   has_many :active_events, -> { where(status: :active, parent_id: nil) }, class_name: 'Event'
   has_many :activities, class_name: 'PublicActivity::Activity', as: :recipient
+  has_many :integrations, dependent: :destroy
   has_one :subscription, dependent: :destroy
 
   friendly_id :name, use: %i[slugged finders]

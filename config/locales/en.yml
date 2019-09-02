@@ -6,6 +6,7 @@ en:
   api:
     event_captured: event captured
     errors:
+      unprocessable_entity: unprocessable entity
       not_found: not found
       subscription_exists: you have an active subscription already
       subscription_absent: subscription is absent
@@ -14,7 +15,7 @@ en:
     default: You cannot perform this action.
   project_user_mailer:
     invite:
-      subject: 'You have been invited to join %{project_name} project by %{inviter}'
+      subject: 'You have been invited to join%{project_name} project by %{inviter}'
       template:
         header: 'Follow this url to be immediately added to %{project_name} after registration.'
         matched_token_warning: Before finishing your registration make sure url in your address bar is matched to one down below in
@@ -35,3 +36,4 @@ en:
       template:
         trace_line: '%{method} at line %{lineno} of "%{filename}"'
         view_on_bugno_link_name: View on Bugno.io
+  slack_workspace_url: 'https://%{workspace}.slack.com'

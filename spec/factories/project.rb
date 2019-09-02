@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :project do
-    name { Faker::App.unique.name }
+    sequence(:name) { |n| "#{Faker::App.name}#{n}" }
     api_key { SecureRandom.urlsafe_base64(nil, false) }
     description { Faker::Books::Lovecraft.sentence }
   end

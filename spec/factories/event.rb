@@ -10,18 +10,18 @@ FactoryBot.define do
     server_data { { host: Faker::Lorem.word, root: Faker::Lorem.word } }
     backtrace do
       [{ filename: Faker::Lorem.sentence,
-         lineno: Faker::Number.number(3),
+         lineno: Faker::Number.number(digits: 3),
          method: Faker::Lorem.word,
          code: Faker::Lorem.sentence,
          context: {
-           pre: Faker::Lorem.sentences(4),
-           post: Faker::Lorem.sentences(4)
+           pre: Faker::Lorem.sentences(number: 4),
+           post: Faker::Lorem.sentences(number: 4)
          } }]
     end
     url { Faker::Internet.url }
     http_method { 'POST' }
     person_data do
-      { id: Faker::Number.number(1),
+      { id: Faker::Number.number(digits: 1),
         email: Faker::Internet.email,
         username: Faker::Internet.username }
     end

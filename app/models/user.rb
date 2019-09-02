@@ -3,8 +3,7 @@
 class User < ActiveRecord::Base
   extend Devise::Models
   devise :database_authenticatable,
-         :validatable,
-         :omniauthable
+         :validatable
   include DeviseTokenAuth::Concerns::User
 
   validates :email, uniqueness: true

@@ -6,6 +6,7 @@ class Events::UpdateService < ApplicationService
 
     if event.saved_changes['status']
       create_activity
+      notify
       occurrences.update_all(status: declared_params.dig(:event, :status))
     end
     event
@@ -18,6 +19,11 @@ class Events::UpdateService < ApplicationService
                                    recipient: project,
                                    params: { status: { previous: event.saved_changes['status'].first,
                                                        new: event.saved_changes['status'].last } })
+  end
+
+  def notify
+    action = UserChannel::ACTIONS::UPDATE_EVENT
+    Integration.notify(event: event, action: action, reason: user.nickname)
   end
 
   def event

@@ -5,5 +5,5 @@ class ProjectPolicy < ApplicationPolicy
     record.user_owner?(user)
   end
 
-  alias delete? update?
+  alias destroy? update?
 end

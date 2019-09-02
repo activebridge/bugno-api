@@ -3,7 +3,7 @@
 class Events::CreateService < ApplicationService
   def call
     return [{ message: I18n.t('api.errors.invalid_api_key') }, 401] unless project
-    return [{ message: I18n.t('api.errors.subscription_absent') }, 422] if subscription.nil? || expired_subscription
+    return [{ message: I18n.t('api.errors.subscription_absent') }, 403] if subscription.nil? || expired_subscription
 
     handle_event_create
   end
@@ -11,11 +11,32 @@ class Events::CreateService < ApplicationService
   private
 
   def handle_event_create
-    EventMailer.create(event).deliver_later if notify?
-    check_parent_status
+    return [{ message: I18n.t('api.errors.unprocessable_entity') }, 422] unless event.persisted?
+
+    notify if notify?
+    update_subscription
+    [{ message: I18n.t('api.event_captured') }, 201]
+  end
+
+  def notify?
+    event.persisted? && (event.parent? || parent_event.resolved?)
+  end
+
+  def notify
+    update_parent_event if parent_event&.resolved?
+    EventMailer.create(event).deliver_later
+    Integration.notify(notify_attributes)
+  end
+
+  def notify_attributes
+    return { event: event, action: UserChannel::ACTIONS::CREATE_EVENT, reason: nil } if event.parent?
+
+    { event: parent_event, action: UserChannel::ACTIONS::UPDATE_EVENT, reason: 'Occurrence' }
+  end
+
+  def update_subscription
     Subscription.decrement_counter(:events, subscription.id)
     subscription.expired! if subscription.events <= 1
-    [{ message: I18n.t('api.event_captured') }, 201]
   end
 
   def expired_subscription
@@ -38,9 +59,7 @@ class Events::CreateService < ApplicationService
     @parent_event ||= event.parent
   end
 
-  def check_parent_status
-    return unless parent_event&.resolved?
-
+  def update_parent_event
     parent_event.active!
     parent_event.occurrences.update_all(status: :active)
     create_activity
@@ -51,9 +70,5 @@ class Events::CreateService < ApplicationService
                                           recipient: project,
                                           params: { status: { previous: parent_event.saved_changes['status'].first,
                                                               new: parent_event.saved_changes['status'].last } })
-  end
-
-  def notify?
-    project && event.persisted? && (event.parent_id.nil? || parent_event.resolved?)
   end
 end

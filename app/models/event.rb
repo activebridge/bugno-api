@@ -24,6 +24,10 @@ class Event < ApplicationRecord
   after_save :brodcast
   after_save :update_active_parent_count
 
+  def parent?
+    parent_id.nil?
+  end
+
   private
 
   def update_active_parent_count
@@ -42,7 +46,7 @@ class Event < ApplicationRecord
 
     project.project_users.each do |project_user|
       ActionCable.server.broadcast("user_#{project_user.user_id}",
-                                   EventSerializer.new(self, action: action).as_json)
+                                   EventSerializer.new(self).as_json.merge(action: action))
     end
   end
 end
