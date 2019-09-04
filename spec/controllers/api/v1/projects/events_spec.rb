@@ -76,6 +76,13 @@ describe API::V1::Projects::Events, type: :request do
           let!(:parent_event) { create(:event, :with_equal_attributes, project: project, status: :muted) }
           it { expect { subject }.not_to change { parent_event.reload.status } }
         end
+
+        context 'update parent event last_occurrence_at' do
+          let!(:parent_event) { create(:event, :with_equal_attributes, project: project) }
+          let!(:params) { attributes_for(:event, :with_equal_attributes) }
+
+          it { expect { subject }.to change { parent_event.reload.last_occurrence_at } }
+        end
       end
 
       context 'invalid subscription' do
