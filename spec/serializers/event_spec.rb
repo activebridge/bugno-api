@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe EventSerializer do
-  let(:event) { create(:event) }
+  let!(:event) { create(:event) }
 
   subject do
     described_class.new(event).as_json
@@ -25,6 +25,7 @@ RSpec.describe EventSerializer do
                            http_method: event.http_method,
                            params: event.params,
                            position: event.position,
-                           server_data: event.server_data)
+                           server_data: event.server_data,
+                           last_occurrence_at: event.last_occurrence_at)
   }
 end

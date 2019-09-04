@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_21_082024) do
+ActiveRecord::Schema.define(version: 2019_09_04_111056) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,6 +70,7 @@ ActiveRecord::Schema.define(version: 2019_08_21_082024) do
     t.jsonb "person_data"
     t.jsonb "route_params"
     t.integer "occurrence_count", default: 0
+    t.datetime "last_occurrence_at"
     t.index ["parent_id"], name: "index_events_on_parent_id"
     t.index ["project_id"], name: "index_events_on_project_id"
     t.index ["user_id"], name: "index_events_on_user_id"
