@@ -5,5 +5,5 @@ class EventSerializer < ApplicationSerializer
              :message, :backtrace, :framework, :url, :ip_address, :headers,
              :http_method, :params, :position, :server_data, :created_at,
              :parent_id, :person_data, :route_params, :updated_at,
-             :occurrence_count
+             :occurrence_count, :last_occurrence_at
 end
