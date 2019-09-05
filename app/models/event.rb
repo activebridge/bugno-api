@@ -24,6 +24,11 @@ class Event < ApplicationRecord
   after_save :brodcast
   after_save :update_active_parent_count
 
+  def created_at=(value)
+    timestamp = value.is_a?(Integer) ? Time.at(value) : value
+    super(timestamp)
+  end
+
   def parent?
     parent_id.nil?
   end

@@ -27,7 +27,7 @@ FactoryBot.define do
     end
     environment { ActiveRecord::Base.configurations.keys.sample }
     ip_address { Faker::Internet.ip_v4_address }
-    last_occurrence_at { 1.hour.from_now }
+    last_occurrence_at { 10.minutes.ago }
 
     trait :with_equal_attributes do
       association :project
@@ -51,7 +51,7 @@ FactoryBot.define do
       person_data { nil }
       url { 'http://localhost:3000' }
       http_method { 'POST' }
-      last_occurrence_at { 1.hour.from_now }
+      last_occurrence_at { 1.hour.ago }
     end
   end
 end
