@@ -1,19 +1,19 @@
 table
   tr
-    td
-      | Project:
-    td
-      = @event.project.name
+    td Project:
+    td = @event.project.name
   tr
-    td
-      | Time:
-    td
-      = @event.created_at
-  tr
-    td
-      | Environment:
-    td
-      = @event.environment
+    td Time:
+    td = @event.created_at
+  - if @event.environment
+    tr
+      td Environment:
+      td = @event.environment
+  - if @request_url
+    tr
+      td Request url:
+      td = @request_url
+
 h3 Message:
 p = "#{@event.title}: #{@event.message}"
 p = link_to I18n.t('event_mailer.create.template.view_on_bugno_link_name'), @event_url
