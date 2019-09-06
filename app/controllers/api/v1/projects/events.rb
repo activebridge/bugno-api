@@ -22,6 +22,7 @@ class API::V1::Projects::Events < Grape::API
         requires :project_id, type: String
         requires :title, type: String
         requires :message, type: String
+        optional :created_at, type: Integer
         optional :framework, type: String
         optional :environment, type: String
         optional :backtrace, type: Array
