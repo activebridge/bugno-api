@@ -102,6 +102,7 @@ GEM
     database_cleaner (1.7.0)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
+    device_detector (1.0.2)
     devise (4.6.2)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -411,6 +412,7 @@ DEPENDENCIES
   bullet
   byebug
   database_cleaner
+  device_detector
   devise
   devise_token_auth
   factory_bot_rails
