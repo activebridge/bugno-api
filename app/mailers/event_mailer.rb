@@ -10,7 +10,7 @@ class EventMailer < ApplicationMailer
     mail(to: @users.pluck(:email),
          subject: I18n.t('event_mailer.create.subject',
                          project_name: @event.project.name, event_environment: @event.environment,
-                         event_title: @event.title, event_message: @event.message.capitalize))
+                         event_title: @event.title, event_message: @event.message.truncate(140)))
   end
 
   private
