@@ -16,7 +16,7 @@ class EventSerializer < ApplicationSerializer
   end
 
   def client
-    client = object.framework == 'rails' ? object.headers['User-Agent'] : object.person_data['javascript']['browser']
+    client = object.headers['User-Agent']
     @client ||= DeviceDetector.new(client)
   end
 end

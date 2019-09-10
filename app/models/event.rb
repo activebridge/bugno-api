@@ -40,7 +40,7 @@ class Event < ApplicationRecord
   end
 
   def user_agent?
-    (headers && headers['User-Agent']).present? || (person_data && person_data.dig('javascript', 'browser')).present?
+    (headers && headers['User-Agent']).present?
   end
 
   private
