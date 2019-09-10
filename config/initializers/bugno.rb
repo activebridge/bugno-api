@@ -12,12 +12,12 @@ Bugno.configure do |config|
 
   # Specify which rails exception to skip:
   config.excluded_exceptions = [
-   'AbstractController::ActionNotFound',
-   'ActionController::InvalidAuthenticityToken',
-   'ActionController::RoutingError',
-   'ActionController::UnknownAction',
-   'ActiveRecord::RecordNotFound',
-   'ActiveJob::DeserializationError'
+    'AbstractController::ActionNotFound',
+    'ActionController::InvalidAuthenticityToken',
+    'ActionController::RoutingError',
+    'ActionController::UnknownAction',
+    'ActiveRecord::RecordNotFound',
+    'ActiveJob::DeserializationError'
   ]
 
   # Specify or add usage environments:
