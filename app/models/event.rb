@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Event < ApplicationRecord
+  MESSAGE_MAX_LENGTH = 3000
   include PublicActivity::Common
 
   belongs_to :project
@@ -25,7 +26,7 @@ class Event < ApplicationRecord
   after_save :update_active_parent_count
 
   def message=(value)
-    message = value.length > 3000 ? value.truncate(3000) : value
+    message = value.length > MESSAGE_MAX_LENGTH ? value.truncate(MESSAGE_MAX_LENGTH) : value
     super(message)
   end
 
