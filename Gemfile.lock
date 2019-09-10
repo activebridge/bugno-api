@@ -1,4 +1,10 @@
 GIT
+  remote: https://github.com/activebridge/bugno-ruby.git
+  revision: 6b29ec1975e37a05ff826cac9b90d0617299fb24
+  specs:
+    bugno (0.1.5)
+
+GIT
   remote: https://github.com/kmrshntr/omniauth-slack.git
   revision: afd9f5c055d4393b70f3218c99baa21adfb458df
   specs:
@@ -409,6 +415,7 @@ DEPENDENCIES
   activeadmin
   acts_as_list
   bootsnap (>= 1.1.0)
+  bugno!
   bullet
   byebug
   database_cleaner
