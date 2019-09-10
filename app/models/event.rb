@@ -39,6 +39,10 @@ class Event < ApplicationRecord
     parent_id.nil?
   end
 
+  def user_agent?
+    (headers && headers['User-Agent']).present? || (person_data && person_data.dig('javascript', 'browser')).present?
+  end
+
   private
 
   def update_active_parent_count

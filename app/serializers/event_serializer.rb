@@ -7,17 +7,12 @@ class EventSerializer < ApplicationSerializer
              :parent_id, :person_data, :route_params, :updated_at,
              :occurrence_count, :last_occurrence_at
 
-  attribute :user_agent, if: proc { user_agent? && client.known? }
+  attribute :user_agent, if: proc { object.user_agent? && client.known? }
 
   def user_agent
     { browser: "#{client.name} #{client.full_version}",
       os: "#{client.os_name} #{client.os_full_version}",
       device: "#{client.device_name} #{client.device_type}" }
-  end
-
-  def user_agent?
-    (object.headers && object.headers['User-Agent']).present? \
-      || (object.person_data && object.person_data.dig('javascript', 'browser')).present?
   end
 
   def client
