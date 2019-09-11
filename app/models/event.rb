@@ -26,7 +26,7 @@ class Event < ApplicationRecord
   after_save :update_active_parent_count
 
   def message=(value)
-    message = value.length > MESSAGE_MAX_LENGTH ? value.truncate(MESSAGE_MAX_LENGTH) : value
+    message = value.is_a?(String) && value.length > MESSAGE_MAX_LENGTH ? value.truncate(MESSAGE_MAX_LENGTH) : value
     super(message)
   end
 
