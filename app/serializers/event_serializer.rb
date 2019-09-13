@@ -7,16 +7,9 @@ class EventSerializer < ApplicationSerializer
              :parent_id, :person_data, :route_params, :updated_at,
              :occurrence_count, :last_occurrence_at
 
-  attribute :user_agent, if: proc { object.user_agent? && client.known? }
+  attribute :user_agent, if: proc { object.user_agent? }
 
   def user_agent
-    { browser: "#{client.name} #{client.full_version}",
-      os: "#{client.os_name} #{client.os_full_version}",
-      device: "#{client.device_name} #{client.device_type}" }
-  end
-
-  def client
-    client = object.headers['User-Agent']
-    @client ||= DeviceDetector.new(client)
+    DeviceDetectorSerializer.new(object.headers['User-Agent']).as_json[:parsed_data]
   end
 end
