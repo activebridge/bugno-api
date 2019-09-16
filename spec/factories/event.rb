@@ -20,6 +20,7 @@ FactoryBot.define do
     end
     url { Faker::Internet.url }
     http_method { 'POST' }
+    headers { { Faker::Lorem.word => Faker::Lorem.sentence } }
     person_data do
       { id: Faker::Number.number(digits: 1),
         email: Faker::Internet.email,
@@ -48,6 +49,10 @@ FactoryBot.define do
       end
       environment { 'test' }
       ip_address { '127.0.0.1' }
+      headers do
+        { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) \
+                        AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36' }
+      end
       person_data { nil }
       url { 'http://localhost:3000' }
       http_method { 'POST' }

@@ -9,6 +9,8 @@ gem 'active_model_serializers', '~> 0.10.0'
 gem 'activeadmin'
 gem 'acts_as_list'
 gem 'bootsnap', '>= 1.1.0', require: false
+gem 'bugno', github: 'activebridge/bugno-ruby'
+gem 'device_detector'
 gem 'devise'
 gem 'devise_token_auth'
 gem 'friendly_id'

@@ -5,11 +5,9 @@ require 'rails_helper'
 RSpec.describe EventSerializer do
   let!(:event) { create(:event) }
 
-  subject do
-    described_class.new(event).as_json
-  end
+  subject { described_class.new(event).as_json }
 
-  it {
+  it do
     is_expected.to include(id: event.id,
                            title: event.title,
                            environment: event.environment,
@@ -27,5 +25,11 @@ RSpec.describe EventSerializer do
                            position: event.position,
                            server_data: event.server_data,
                            last_occurrence_at: event.last_occurrence_at)
-  }
+  end
+
+  context 'user_agent' do
+    let!(:event) { create(:event, :with_equal_attributes) }
+
+    it { is_expected.to include(:user_agent) }
+  end
 end

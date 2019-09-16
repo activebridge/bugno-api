@@ -26,4 +26,18 @@ RSpec.describe Event, type: :model do
 
     it { is_expected.to be <= 3000 }
   end
+
+  context 'user_agent?' do
+    let(:event) { create(:event, :with_equal_attributes) }
+
+    subject { event.user_agent? }
+
+    it { is_expected.to be_truthy }
+
+    context 'false' do
+      let(:event) { create(:event, headers: nil) }
+
+      it { is_expected.to be_falsy }
+    end
+  end
 end

@@ -6,4 +6,10 @@ class EventSerializer < ApplicationSerializer
              :http_method, :params, :position, :server_data, :created_at,
              :parent_id, :person_data, :route_params, :updated_at,
              :occurrence_count, :last_occurrence_at
+
+  attribute :user_agent, if: proc { object.user_agent? }
+
+  def user_agent
+    DeviceDetectorSerializer.new(object.headers['User-Agent']).as_json[:parsed_data]
+  end
 end
