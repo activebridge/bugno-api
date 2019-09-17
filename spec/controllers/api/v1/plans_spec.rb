@@ -1,20 +1,16 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe API::V1::Plans, type: :request do
-  let!(:plans) { create_list(:plan, 3) }
+describe API::V1::Plans do
   let(:base_url) { '/api/v1/plans' }
   let(:url) { base_url }
   let(:params) { {} }
   let(:request_params) { [url, { params: params, headers: headers }] }
 
-  context '#index' do
-    subject do
-      get(*request_params)
-      json.count
-    end
+  describe '#index' do
+    subject { -> { get(*request_params) } }
+    let!(:plans) { create_list(:plan, 3) }
 
-    it { is_expected.to eq(plans.count) }
+    it { is_expected.to respond_with_status(200) }
+    it { is_expected.to respond_with_json_count(3) }
   end
 end

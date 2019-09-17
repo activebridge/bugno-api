@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe API::V1::Activities, type: :request do
+describe API::V1::Activities do
   let!(:user) { create(:user, :with_projects) }
   let(:project) { user.projects.first }
   let(:base_url) { '/api/v1/activities' }
@@ -11,15 +9,11 @@ describe API::V1::Activities, type: :request do
   let(:params) { {} }
   let(:request_params) { [url, { params: params, headers: headers }] }
 
-  context '#index' do
+  describe '#index' do
+    subject { -> { get(*request_params) } }
     let!(:activities) { create_list(:activity, 3, owner: user, recipient: project) }
 
-    subject do
-      get(*request_params)
-      json
-    end
-
-    it { expect(subject['activities'].count).to eq(3) }
-    it { expect(subject['total_count']).to eq(3) }
+    it { is_expected.to respond_with_json_count(3).at(:activities) }
+    it { is_expected.to respond_with_json(3, :total_count) }
   end
 end

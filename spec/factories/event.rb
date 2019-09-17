@@ -30,7 +30,7 @@ FactoryBot.define do
     ip_address { Faker::Internet.ip_v4_address }
     last_occurrence_at { 10.minutes.ago }
 
-    trait :with_equal_attributes do
+    trait :static_attributes do
       association :project
       association :user
       title { 'NameError' }

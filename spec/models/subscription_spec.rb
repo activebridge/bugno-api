@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-RSpec.describe Subscription, type: :model do
+describe Subscription do
   it { should validate_presence_of(:status) }
   it { should validate_presence_of(:expires_at) }
   it { should belong_to(:project) }

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe API::V1::Projects::Integrations, type: :request do
+describe API::V1::Projects::Integrations do
   let(:user) { create(:user, :with_projects) }
   let(:project) { user.projects.first }
   let(:base_url) { "/api/v1/projects/#{project.id}/integrations" }
@@ -11,23 +9,20 @@ describe API::V1::Projects::Integrations, type: :request do
   let(:params) { {} }
   let(:request_params) { [url, { params: params, headers: headers }] }
 
-  context '#index' do
+  describe '#index' do
+    subject { -> { get(*request_params) } }
     let!(:integrations) { create_list(:integration, 3, :slack, project: project) }
 
-    subject do
-      get(*request_params)
-      json.count
-    end
-
-    it { is_expected.to eq(integrations.count) }
+    it { is_expected.to respond_with_status(200) }
+    it { is_expected.to respond_with_json_count(3) }
   end
 
-  context '#delete' do
-    let!(:integration) { create(:integration, :slack, project: project) }
-    let(:url) { "#{base_url}/#{integration.id}" }
-
+  describe '#delete' do
     subject { -> { delete(*request_params) } }
+    let(:url) { "#{base_url}/#{integration.id}" }
+    let!(:integration) { create(:integration, :slack, project: project) }
 
-    it { is_expected.to change(project.integrations, :count).by(-1) }
+    it { is_expected.to respond_with_status(200) }
+    it { is_expected.to change(project.integrations, :count) }
   end
 end

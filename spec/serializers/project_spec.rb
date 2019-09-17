@@ -1,16 +1,22 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+describe ProjectSerializer do
+  subject { described_class.new(project).as_json }
+  let(:project) { create(:project, :with_subscription) }
+  let(:serialized_subscription) { SubscriptionSerializer.new(project.subscription).as_json }
 
-RSpec.describe ProjectSerializer do
-  let(:project) { create(:project) }
+  it { is_expected.to have_name(:id).with_value(project.id) }
+  it { is_expected.to have_name(:name).with_value(project.name) }
+  it { is_expected.to have_name(:description).with_value(project.description) }
+  it { is_expected.to have_name(:api_key).with_value(project.api_key) }
+  it { is_expected.to have_name(:slug).with_value(project.slug) }
+  it { is_expected.to have_name(:active_event_count).with_value(project.active_event_count) }
+  it { is_expected.to have_name(:subscription).with_value(serialized_subscription.except(:plan)) }
 
-  subject do
-    described_class.new(project).as_json
+  context '#stripe_public_key' do
+    subject { described_class.new(project, include_stripe_api_key: true).as_json }
+    let(:stripe_public_key) { ENV['STRIPE_DEVELOPMENT_PUBLIC_KEY'] }
+
+    it { is_expected.to have_name(:stripe_public_key).with_value(stripe_public_key) }
   end
-
-  it {
-    is_expected.to include(id: project.id, name: project.name, description: project.description,
-                           api_key: project.api_key)
-  }
 end
