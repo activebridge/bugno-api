@@ -17,7 +17,7 @@ class Event < ApplicationRecord
 
   validates :title, :status, :framework, presence: true
 
-  acts_as_list scope: %i[status project_id]
+  acts_as_list scope: [:status, :project_id, parent_id: nil], top_of_list: 0
   scope :by_status, ->(status) { where(status: status) if status.present? }
   scope :by_parent, ->(parent_id) { where(parent_id: parent_id) if parent_id.present? }
 
