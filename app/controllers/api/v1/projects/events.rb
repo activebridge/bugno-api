@@ -35,7 +35,7 @@ class API::V1::Projects::Events < Grape::API
       end
 
       get do
-        EventCollectionSerializer.new(events.includes(:user)).as_json
+        EventCollectionSerializer.new(events.includes(:user), include_user: true).as_json
       end
 
       desc 'Creates event'

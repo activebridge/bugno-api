@@ -6,7 +6,7 @@ class EventSerializer < ApplicationSerializer
              :http_method, :params, :position, :server_data, :created_at,
              :parent_id, :person_data, :route_params, :updated_at,
              :occurrence_count, :last_occurrence_at
-  attribute :user, if: proc { object.user }
+  attribute :user, if: proc { instance_options[:include_user] && object.user }
   attribute :user_agent, if: proc { object.user_agent? }
 
   def user
