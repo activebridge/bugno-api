@@ -1,6 +1,30 @@
 # frozen_string_literal: true
 
 class API::V1::Projects::Events < Grape::API
+  helpers do
+    def project
+      @project ||= current_user.projects.find(params[:project_id])
+    end
+
+    def event
+      @event ||= project.events.find(params[:id])
+    end
+
+    def events
+      @events ||= project.events.where(parent_id: nil)
+                         .by_status(declared_params[:status])
+                         .order(position: :asc)
+                         .page(declared_params[:page])
+    end
+
+    def occurrences
+      @occurrences ||= project.events
+                              .by_parent(declared_params[:parent_id])
+                              .order(created_at: :desc)
+                              .page(declared_params[:page])
+    end
+  end
+
   namespace 'projects/:project_id' do
     resources :events do
       desc 'Returns all or parent events if status specified'
@@ -11,9 +35,7 @@ class API::V1::Projects::Events < Grape::API
       end
 
       get do
-        events = ::Events::IndexService.call(declared_params: declared_params,
-                                             user: current_user)
-        EventCollectionSerializer.new(events).as_json
+        EventCollectionSerializer.new(events.includes(:user)).as_json
       end
 
       desc 'Creates event'
@@ -44,8 +66,6 @@ class API::V1::Projects::Events < Grape::API
       desc 'Returns event'
 
       get ':id' do
-        event = ::Events::ShowService.call(params: params,
-                                           user: current_user)
         render_api(event)
       end
 
@@ -57,9 +77,7 @@ class API::V1::Projects::Events < Grape::API
       end
 
       get 'occurrences/:parent_id' do
-        events = ::Events::OccurrencesService.call(declared_params: declared_params,
-                                                   user: current_user)
-        EventCollectionSerializer.new(events).as_json
+        EventCollectionSerializer.new(occurrences).as_json
       end
 
       desc 'Updates event'
@@ -74,8 +92,7 @@ class API::V1::Projects::Events < Grape::API
       end
 
       patch ':id' do
-        event = ::Events::UpdateService.call(declared_params: declared_params,
-                                             user: current_user)
+        event = ::Events::UpdateService.call(declared_params: declared_params, user: current_user)
         render_api(event)
       end
     end
