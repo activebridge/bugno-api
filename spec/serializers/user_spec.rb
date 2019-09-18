@@ -9,5 +9,5 @@ RSpec.describe UserSerializer do
     described_class.new(user).as_json
   end
 
-  it { is_expected.to include(id: user.id, name: user.name, email: user.email) }
+  it { is_expected.to include(id: user.id, image: user.image, email: user.email) }
 end
