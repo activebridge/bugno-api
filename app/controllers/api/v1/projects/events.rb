@@ -93,7 +93,7 @@ class API::V1::Projects::Events < Grape::API
 
       patch ':id' do
         event = ::Events::UpdateService.call(declared_params: declared_params, user: current_user)
-        render_api(event)
+        render_api(event, serializer_options: { extra: { include_user: true } })
       end
     end
   end

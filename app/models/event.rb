@@ -61,7 +61,7 @@ class Event < ApplicationRecord
 
     project.project_users.each do |project_user|
       ActionCable.server.broadcast("user_#{project_user.user_id}",
-                                   EventSerializer.new(self).as_json.merge(action: action))
+                                   EventSerializer.new(self, include_user: true).as_json.merge(action: action))
     end
   end
 end
