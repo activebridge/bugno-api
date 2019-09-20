@@ -66,7 +66,7 @@ class API::V1::Projects::Events < Grape::API
       desc 'Returns event'
 
       get ':id' do
-        render_api(event)
+        render_api(event, serializer_options: { extra: { include_user: true } })
       end
 
       desc 'Returns occurrences'
