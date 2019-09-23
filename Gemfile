@@ -36,8 +36,11 @@ gem 'slack-notifier'
 gem 'slim'
 gem 'stripe'
 
-group :development, :test do
+group :development, :test, :staging do
   gem 'bullet'
+end
+
+group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'pry'
   gem 'rspec-rails'

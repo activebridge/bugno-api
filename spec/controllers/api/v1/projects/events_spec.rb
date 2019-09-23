@@ -123,21 +123,24 @@ describe API::V1::Projects::Events, type: :request do
   end
 
   context '#update' do
-    let!(:event) { create(:event, :with_equal_attributes, project: project) }
+    let(:event) { create(:event, user: nil, project: project) }
     let(:url) { "#{base_url}/#{event.id}" }
-    let(:params) { { event: { status: 'muted' } } }
+    let(:params) { { event: { status: :muted, user_id: user.id } } }
 
     subject { -> { patch(*request_params) } }
 
     it { is_expected.to change { event.reload.status } }
-    it 'creates activity if status changed' do
-      is_expected.to change(PublicActivity::Activity, :count)
+    it { is_expected.to change { event.reload.user_id } }
+
+    context 'creates activity if status changed' do
+      it { is_expected.to change(PublicActivity::Activity, :count) }
     end
 
     context 'occurrences status' do
       let!(:occurrences) { create_list(:event, 2, :with_equal_attributes, project: project) }
+      let(:url) { "#{base_url}/#{occurrences.first.id}" }
 
-      it { is_expected.to change { occurrences.first.reload.status } }
+      it { is_expected.to change { occurrences.last.reload.status } }
     end
   end
 end

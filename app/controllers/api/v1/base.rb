@@ -14,12 +14,12 @@ class API::V1::Base < Grape::API
       error!(message, 422)
     end
 
-    def render_api(object, status = 200)
+    def render_api(object, status = 200, serializer_options: {})
       if object.nil? || object.respond_to?(:errors) && object.errors.present?
         render_error(object)
       else
         status(status)
-        render(object)
+        render(object, serializer_options)
       end
     end
   end
