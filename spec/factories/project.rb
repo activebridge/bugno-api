@@ -3,7 +3,13 @@
 FactoryBot.define do
   factory :project do
     sequence(:name) { |n| "#{Faker::App.name}#{n}" }
-    api_key { SecureRandom.urlsafe_base64(nil, false) }
     description { Faker::Books::Lovecraft.sentence }
+    active_event_count { Faker::Number.number(digits: 2) }
+
+    trait :with_subscription do
+      after :create do |project|
+        create :subscription, project: project
+      end
+    end
   end
 end

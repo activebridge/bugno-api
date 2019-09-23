@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-describe API::V1::Projects, type: :request do
+describe API::V1::Projects do
   let!(:user) { create(:user) }
   let(:valid_params) { attributes_for(:project) }
   let(:base_url) { '/api/v1/projects' }
@@ -11,63 +9,49 @@ describe API::V1::Projects, type: :request do
   let(:params) { {} }
   let(:request_params) { [url, { params: params, headers: headers }] }
 
-  context '#index' do
+  describe '#index' do
+    subject { -> { get(*request_params) } }
     let!(:project_users) { create_list(:project_user, 3, user: user) }
 
-    subject do
-      get(*request_params)
-      json.count
-    end
-
-    it { is_expected.to eq(project_users.count) }
+    it { is_expected.to respond_with_status(200) }
+    it { is_expected.to respond_with_json_count(3) }
   end
 
-  context '#create' do
-    let(:params) { { project: valid_params } }
-
+  describe '#create' do
     subject { -> { post(*request_params) } }
-
-    it { is_expected.to change(user.projects, :count).by(1) }
-
-    context 'with invalid params' do
-      let(:params) { { project: { name: nil } } }
-
-      it { is_expected.not_to change(user.projects, :count) }
-    end
-  end
-
-  context '#show' do
-    let!(:project_user) { create(:project_user, user: user) }
-    let(:url) { "#{base_url}/#{project_user.project_id}" }
-    let(:serializer_options) { { include_stripe_api_key: true } }
-    let(:result) { ProjectSerializer.new(project_user.project, serializer_options).to_json }
-
-    subject do
-      get(*request_params)
-      response.body
-    end
-
-    it { is_expected.to eq(result) }
-  end
-
-  context '#update' do
-    let!(:project_user) { create(:project_user, user: user) }
-    let(:project) { project_user.project }
     let(:params) { { project: valid_params } }
-    let(:url) { "#{base_url}/#{project.id}" }
 
-    subject { -> { patch(*request_params) } }
-
-    it { is_expected.to change { project.reload.attributes } }
+    it { is_expected.to respond_with_status(201) }
+    it { is_expected.to change(user.projects, :count).by(1) }
   end
 
-  context '#destroy' do
-    let!(:project_user) { create(:project_user, user: user) }
+  describe '#show' do
+    subject { -> { get(*request_params) } }
+    let(:url) { "#{base_url}/#{project_user.project_id}" }
+    let(:project_user) { create(:project_user, user: user) }
+    let(:project) { ProjectSerializer.new(project_user.project, include_stripe_api_key: true).as_json }
+
+    it { is_expected.to respond_with_status(200) }
+    it { is_expected.to respond_with_json(project) }
+  end
+
+  describe '#update' do
+    subject { -> { patch(*request_params) } }
+    let(:url) { "#{base_url}/#{project_user.project.id}" }
+    let(:params) { { project: valid_params } }
+    let(:project_user) { create(:project_user, user: user) }
+
+    it { is_expected.to respond_with_status(200) }
+    it { is_expected.to change { project_user.project.reload.attributes } }
+  end
+
+  describe '#destroy' do
+    subject { -> { delete(*request_params) } }
     let(:url) { "#{base_url}/#{project_user.project_id}" }
     let(:params) { { id: project_user.project_id } }
+    let!(:project_user) { create(:project_user, user: user) }
 
-    subject { -> { delete(*request_params) } }
-
-    it { is_expected.to change(user.projects, :count).by(-1) }
+    it { is_expected.to respond_with_status(200) }
+    it { is_expected.to change(user.projects, :count) }
   end
 end

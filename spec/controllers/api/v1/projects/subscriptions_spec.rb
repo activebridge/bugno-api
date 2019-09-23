@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require 'stripe_mock'
 
-describe API::V1::Projects::Subscriptions, type: :request do
+describe API::V1::Projects::Subscriptions do
   let(:stripe_helper) { StripeMock.create_test_helper }
   let(:stripe_card_token) { stripe_helper.generate_card_token }
   let(:user) { create(:user, :with_projects) }

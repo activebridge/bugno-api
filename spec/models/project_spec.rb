@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-RSpec.describe Project, type: :model do
+describe Project do
   it { should validate_presence_of(:name) }
   it { should have_many(:project_users).dependent(:destroy) }
   it { should have_many(:users).through(:project_users) }

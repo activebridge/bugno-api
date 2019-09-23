@@ -2,7 +2,7 @@
 
 class ProjectUsers::DeleteService < ApplicationService
   def call
-    ProjectUserMailer.delete(project_user, user).deliver_later if project_user.destroy && project_user.user.email
+    ProjectUserMailer.delete(project_user, user).deliver_later if project_user.destroy
     project_user
   end
 

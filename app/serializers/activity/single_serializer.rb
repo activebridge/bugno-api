@@ -7,7 +7,7 @@ class Activity::SingleSerializer < ApplicationSerializer
   %i[owner trackable recipient].each do |type|
     define_method type do
       item = object.send(type)
-      "Activity::#{item.class.name}Serializer".constantize.new(item) if item
+      "Activity::#{item.class.name}Serializer".constantize.new(item).as_json if item
     end
   end
 end

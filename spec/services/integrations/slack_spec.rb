@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
-RSpec.describe Integrations::SlackService do
+describe Integrations::SlackService do
   let(:event) { create(:event) }
   let(:integration) { create(:integration, :slack) }
   before do

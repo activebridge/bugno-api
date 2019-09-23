@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :subscription do
     association :plan
-    expires_at { 1.month.from_now }
+    association :project
 
     trait :expired do
       expires_at { 1.month.ago }
