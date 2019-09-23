@@ -22,8 +22,9 @@ class Event < ApplicationRecord
   scope :by_parent, ->(parent_id) { where(parent_id: parent_id) if parent_id.present? }
 
   before_create :assign_parent
+  after_create :update_occurrence_at
+  after_save :update_active_count
   after_save :brodcast
-  after_save :update_active_parent_count
 
   def message=(value)
     message = value.is_a?(String) && value.length > MESSAGE_MAX_LENGTH ? value.truncate(MESSAGE_MAX_LENGTH) : value
@@ -39,16 +40,22 @@ class Event < ApplicationRecord
     parent_id.nil?
   end
 
+  def occurrence?
+    parent_id.present?
+  end
+
   def user_agent?
     (headers && headers['User-Agent']).present?
   end
 
   private
 
-  def update_active_parent_count
-    return if parent_id
+  def update_occurrence_at
+    parent.update!(last_occurrence_at: created_at) if occurrence?
+  end
 
-    project.update!(active_event_count: project.active_events.size)
+  def update_active_count
+    project.update!(active_event_count: project.active_events.size) if parent?
   end
 
   def assign_parent

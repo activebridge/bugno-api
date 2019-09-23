@@ -13,7 +13,6 @@ class Events::CreateService < ApplicationService
   def handle_event_create
     return [{ message: I18n.t('api.errors.unprocessable_entity') }, 422] unless event.persisted?
 
-    parent_event.update(last_occurrence_at: event.created_at) unless event.parent?
     notify if notify?
     update_subscription
     [{ message: I18n.t('api.event_captured') }, 201]
