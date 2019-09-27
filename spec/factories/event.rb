@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :event do
-    association :project
+    association :project, :with_subscription
     association :user
     title { Faker::Lorem.word }
     framework { 'rails' }
@@ -31,7 +31,7 @@ FactoryBot.define do
     last_occurrence_at { 10.minutes.ago }
 
     trait :static_attributes do
-      association :project
+      association :project, :with_subscription
       association :user
       title { 'NameError' }
       framework { 'rails' }

@@ -16,6 +16,8 @@ class Event < ApplicationRecord
   paginates_per 25
 
   validates :title, :status, :framework, presence: true
+  validates_with EventProjectSubscriptionValidator
+  delegate :subscription, to: :project, allow_nil: true, prefix: true
 
   acts_as_list scope: [:status, :project_id, parent_id: nil], top_of_list: 0
   scope :by_status, ->(status) { where(status: status) if status.present? }
@@ -23,6 +25,9 @@ class Event < ApplicationRecord
 
   before_create :assign_parent
   after_create :update_occurrence_at
+  after_create :reactivate_parent
+  after_create :update_subscription_events
+  after_update :update_occurrences_status
   after_save :update_active_count
   after_save :brodcast
 
@@ -50,6 +55,24 @@ class Event < ApplicationRecord
 
   private
 
+  def update_subscription_events
+    return unless project&.subscription&.active?
+
+    project.subscription.decrement(:events)
+    project.subscription.save
+  end
+
+  def update_occurrences_status
+    occurrences.update_all(status: status) if parent? && saved_changes['status']
+  end
+
+  def reactivate_parent
+    return unless parent&.resolved?
+
+    parent.active!
+    ::Activities::CreateService.call(key: :update, trackable: parent, owner: self, recipient: project)
+  end
+
   def update_occurrence_at
     parent.update!(last_occurrence_at: created_at) if occurrence?
   end
@@ -63,9 +86,9 @@ class Event < ApplicationRecord
   end
 
   def brodcast
-    action = saved_change_to_id? ? UserChannel::ACTIONS::CREATE_EVENT : UserChannel::ACTIONS::UPDATE_EVENT
-    return if parent_id
+    return if occurrence?
 
+    action = saved_change_to_id? ? UserChannel::ACTIONS::CREATE_EVENT : UserChannel::ACTIONS::UPDATE_EVENT
     project.project_users.each do |project_user|
       ActionCable.server.broadcast("user_#{project_user.user_id}",
                                    EventSerializer.new(self, include_user: true).as_json.merge(action: action))

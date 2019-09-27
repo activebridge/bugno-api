@@ -4,7 +4,7 @@ en:
     production: 'https://bugno.io'
     staging: 'https://staging.bugno.io'
   api:
-    event_captured: event captured
+    event_captured: Event captured
     errors:
       unprocessable_entity: unprocessable entity
       not_found: not found

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe API::V1::Projects::Events do
-  let(:user) { create(:user, :with_projects) }
+  let(:user) { create(:user, :with_project_and_subscription) }
   let(:project) { user.projects.first }
   let(:base_url) { "/api/v1/projects/#{project.id}/events" }
   let(:url) { base_url }
@@ -9,118 +9,100 @@ describe API::V1::Projects::Events do
   let(:params) { {} }
   let(:request_params) { [url, { params: params, headers: headers }] }
 
-  context '#index parent events' do
+  describe '#index' do
+    subject { -> { get(*request_params) } }
     let!(:events) { create_list(:event, 3, project: project) }
     let!(:occurrences) { create_list(:event, 2, :static_attributes, project: project) }
 
-    subject do
-      get(*request_params)
-      json['events'].count
-    end
+    it { is_expected.to respond_with_json_count(4).at(:events) }
+    it { is_expected.to respond_with_status(200) }
 
-    it { is_expected.to eq(4) }
+    context 'with specified status' do
+      let!(:events) { create_list(:event, 3, project: project, status: :muted) }
+      let(:params) { { status: :muted } }
 
-    context '#index by status' do
-      let!(:muted_events) { create_list(:event, 3, project: project, status: 'muted') }
-      let!(:muted_occurrences) do
-        create_list(:event, 2, :static_attributes,
-                    project: project, status: 'muted',
-                    title: 'slightly',
-                    backtrace: 'different error')
-      end
-      let(:params) { { status: 'muted' } }
-
-      it { is_expected.to eq(4) }
+      it { is_expected.to respond_with_json_count(3).at(:events) }
+      it { is_expected.to respond_with_status(200) }
     end
   end
 
-  context '#occurrences' do
+  describe '#occurrences' do
+    subject { -> { get(*request_params) } }
     let!(:parent_event) { create(:event, :static_attributes, project: project) }
     let!(:occurrences) { create_list(:event, 3, :static_attributes, project: project) }
     let(:url) { "#{base_url}/occurrences/#{parent_event.id}" }
 
-    subject do
-      get(*request_params)
-      json['events'].count
-    end
-
-    it { is_expected.to eq(3) }
+    it { is_expected.to respond_with_json_count(3).at(:events) }
+    it { is_expected.to respond_with_status(200) }
   end
 
-  context '#create' do
+  describe '#create' do
+    subject { -> { post(*request_params) } }
     let(:headers) { nil }
     let(:url) { "/api/v1/projects/#{project.api_key}/events" }
     let(:params) { attributes_for(:event) }
+    let(:response_message) { { message: 'Event captured' } }
 
-    subject do
-      post(*request_params)
-      response
-    end
+    it { is_expected.to respond_with_status(201) }
+    it { is_expected.to respond_with_json(response_message) }
+    it { is_expected.to change(project.events, :count) }
 
-    context do
-      let!(:subscription) { create(:subscription, project_id: project.id) }
-      let(:result) { { 'message' => 'event captured' } }
+    context 'when occurrence' do
+      let!(:parent_event) { create(:event, :static_attributes, project: project, status: :resolved) }
+      let!(:params) { attributes_for(:event, :static_attributes) }
 
-      it { expect { subject }.to change(project.events, :count).by(1) }
-      it { expect(subject.body).to eq(result.to_json) }
-
-      context 'update parent event to active if from resolved' do
-        let!(:parent_event) { create(:event, :static_attributes, project: project, status: :resolved) }
-        let!(:params) { attributes_for(:event, :static_attributes) }
-
-        it { expect { subject }.to change { parent_event.reload.status } }
-
-        context 'should not update muted' do
-          let!(:parent_event) { create(:event, :static_attributes, project: project, status: :muted) }
-          it { expect { subject }.not_to change { parent_event.reload.status } }
-        end
-
-        context 'update parent event last_occurrence_at' do
-          let!(:parent_event) { create(:event, :static_attributes, project: project) }
-          let!(:params) { attributes_for(:event, :static_attributes) }
-
-          it { expect { subject }.to change { parent_event.reload.last_occurrence_at } }
-        end
+      it 'updates parent event last_occurrence_at' do
+        is_expected.to change { parent_event.reload.last_occurrence_at }
       end
 
-      context 'invalid subscription' do
-        before { project.subscription.update(events: -1) }
-        let(:result) { { 'message' => 'subscription is absent' } }
+      it 'changes parent event status to active' do
+        is_expected.to change { parent_event.reload.status }
+      end
 
-        it { expect { subject }.not_to change(project.events, :count) }
-        it { is_expected.to have_http_status(403) }
-        it { expect(subject.body).to eq(result.to_json) }
+      context 'when parent is muted' do
+        let!(:parent_event) { create(:event, :static_attributes, project: project, status: :muted) }
+
+        it { is_expected.not_to change { parent_event.reload.status } }
       end
     end
-    context 'without api key' do
+
+    context 'when missing subscription or it is expired' do
+      before { project.subscription.update(events: -1) }
+      let(:response_message) { { error: 'Subscription expired' } }
+
+      it { is_expected.not_to change(project.events, :count) }
+      it { is_expected.to respond_with_status(422) }
+      it { is_expected.to respond_with_json(response_message) }
+    end
+
+    context 'when missing api key' do
       let(:api_key) { nil }
       let(:url) { "/api/v1/projects/#{api_key}/events" }
 
-      it { expect { subject }.not_to change(project.events, :count) }
-      it { is_expected.to have_http_status(401) }
+      it { is_expected.to respond_with_status(401) }
+      it { is_expected.not_to change(project.events, :count) }
+    end
 
-      context 'invalid api key' do
-        let(:api_key) { 'invalid_api_key' }
-        let(:result) { { 'message' => 'api-key is invalid' } }
+    context 'when api key is invalid' do
+      let(:api_key) { 'invalid_api_key' }
+      let(:response_message) { { error: 'api-key is invalid' } }
+      let(:url) { "/api/v1/projects/#{api_key}/events" }
 
-        it { expect(subject.body).to eq(result.to_json) }
-      end
+      it { is_expected.to respond_with_status(401) }
+      it { is_expected.to respond_with_json(response_message) }
+      it { is_expected.not_to change(project.events, :count) }
     end
   end
 
-  context '#show' do
+  describe '#show' do
+    subject { -> { get(*request_params) } }
     let!(:event) { create(:event, project: project) }
     let(:url) { "#{base_url}/#{event.id}" }
 
-    subject do
-      get(*request_params)
-      response
-    end
-
-    it { is_expected.to have_http_status(200) }
+    it { is_expected.to respond_with_status(200) }
   end
 
-  context '#update' do
+  describe '#update' do
     subject { -> { patch(*request_params) } }
     let(:event) { create(:event, user: nil, project: project) }
     let(:url) { "#{base_url}/#{event.id}" }
@@ -138,7 +120,7 @@ describe API::V1::Projects::Events do
         let!(:occurrences) { create_list(:event, 2, :static_attributes, project: project) }
         let(:url) { "#{base_url}/#{occurrences.first.id}" }
 
-        it 'updates occurrences as well' do
+        it 'updates occurrences' do
           is_expected.to change { occurrences.last.reload.status }
         end
       end
