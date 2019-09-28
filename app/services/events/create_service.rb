@@ -3,21 +3,20 @@
 class Events::CreateService < ApplicationService
   def call
     return [{ error: I18n.t('api.errors.invalid_api_key') }, 401] unless project
-
-    handle_event_create
-  end
-
-  private
-
-  def handle_event_create
     return event unless event.persisted?
 
     notify if notify?
     [{ message: I18n.t('api.event_captured') }, 201]
   end
 
+  private
+
   def notify?
-    event.persisted? && (event.parent? || parent_event.resolved?)
+    event.parent? || parent_reactivated?
+  end
+
+  def parent_reactivated?
+    parent_event.saved_changes[:status] && parent_event.saved_changes[:status] == %w[resolved active]
   end
 
   def notify
