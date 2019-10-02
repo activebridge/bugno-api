@@ -5,7 +5,7 @@ require 'stripe_mock'
 describe API::V1::Projects::Subscriptions do
   let(:stripe_helper) { StripeMock.create_test_helper }
   let(:stripe_card_token) { stripe_helper.generate_card_token }
-  let(:user) { create(:user, :with_projects) }
+  let(:user) { create(:user, :with_project) }
   let(:project) { user.projects.first }
   let(:plan) { create(:plan) }
   let(:base_url) { "/api/v1/projects/#{project.id}/subscriptions" }

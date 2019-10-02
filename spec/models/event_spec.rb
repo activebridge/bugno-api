@@ -29,14 +29,14 @@ describe Event do
 
   describe '#user_agent?' do
     subject { event.user_agent? }
-    let(:event) { create(:event, :static_attributes) }
+    let(:event) { build(:event, :static_attributes) }
 
     context 'when User-Agent header present' do
       it { is_expected.to be_truthy }
     end
 
     context 'when header missing' do
-      let(:event) { create(:event, headers: nil) }
+      let(:event) { build(:event, headers: nil) }
 
       it { is_expected.to be_falsy }
     end
@@ -44,10 +44,55 @@ describe Event do
 
   describe '#parent?' do
     subject { event.parent? }
-    let(:event) { create(:event, parent_id: nil) }
+    let(:event) { build(:event, parent_id: nil) }
 
     context 'when parent_id is nil' do
       it { is_expected.to be_truthy }
     end
+  end
+
+  describe '#occurrence?' do
+    subject { event.occurrence? }
+    let(:event) { build(:event, parent_id: 1) }
+
+    context 'when parent_id is present' do
+      it { is_expected.to be_truthy }
+    end
+  end
+
+  context 'after save' do
+    subject { -> { event.save } }
+
+    describe '#update_active_count' do
+      let(:project) { create(:project, :with_subscription) }
+      let(:event) { build(:event, project: project) }
+
+      context 'when event is parent' do
+        it { is_expected.to change(project.reload, :active_event_count) }
+      end
+
+      context 'when event is occurrence' do
+        let!(:parent_event) { create(:event, :static_attributes, project: project) }
+        let(:event) { build(:event, :static_attributes, project: project) }
+
+        it { is_expected.not_to change(project.reload, :active_event_count) }
+      end
+    end
+  end
+
+  describe '#reactivate_parent' do
+    pending
+  end
+
+  describe '#update_occurrences_status' do
+    pending
+  end
+
+  describe '#update_occurrence_at' do
+    pending
+  end
+
+  describe '#update_subscription_events' do
+    pending
   end
 end

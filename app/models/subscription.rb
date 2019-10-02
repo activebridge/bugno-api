@@ -14,9 +14,16 @@ class Subscription < ApplicationRecord
 
   scope :by_expired, -> { where('expires_at <= ?', Time.now) }
 
-  after_create :update_available_events_space
+  after_create :update_events
+  after_update :check_status
 
-  def update_available_events_space
+  def check_status
+    return if expired? || events.positive?
+
+    expired!
+  end
+
+  def update_events
     update(events: plan.event_limit)
   end
 end

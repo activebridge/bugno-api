@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe API::V1::Activities do
-  let!(:user) { create(:user, :with_projects) }
+  let!(:user) { create(:user, :with_project_and_subscription) }
   let(:project) { user.projects.first }
   let(:base_url) { '/api/v1/activities' }
   let(:url) { base_url }

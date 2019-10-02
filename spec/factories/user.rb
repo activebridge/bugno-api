@@ -6,13 +6,19 @@ FactoryBot.define do
     name      { Faker::Name.name }
     password  { Faker::Internet.password }
 
-    trait :with_projects do
+    trait :with_project do
       after(:create) do |user|
         create(:project_user, user: user)
       end
     end
 
-    trait :with_projects_as_collaborator do
+    trait :with_project_and_subscription do
+      after(:create) do |user|
+        create(:project_user, :with_subscription, user: user)
+      end
+    end
+
+    trait :with_project_as_collaborator do
       after(:create) do |user|
         create(:project_user, user: user, role: 'collaborator')
       end

@@ -5,21 +5,13 @@ class Events::UpdateService < ApplicationService
     return unless event.update(declared_params[:event])
 
     if event.saved_changes['status']
-      create_activity
+      ::Activities::CreateService.call(key: :update, trackable: event, owner: user, recipient: project)
       notify
-      occurrences.update_all(status: declared_params.dig(:event, :status))
     end
     event
   end
 
   private
-
-  def create_activity
-    event.create_activity(:update, owner: user,
-                                   recipient: project,
-                                   params: { status: { previous: event.saved_changes['status'].first,
-                                                       new: event.saved_changes['status'].last } })
-  end
 
   def notify
     action = UserChannel::ACTIONS::UPDATE_EVENT
@@ -28,10 +20,6 @@ class Events::UpdateService < ApplicationService
 
   def event
     @event ||= project.events.find(declared_params[:id])
-  end
-
-  def occurrences
-    @occurrences ||= event.occurrences
   end
 
   def project
