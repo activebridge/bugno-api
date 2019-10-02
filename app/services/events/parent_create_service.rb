@@ -26,7 +26,7 @@ class Events::ParentCreateService < ApplicationService
   end
 
   def browser_js_parent
-    project.events.find_by(message: event['message'], backtrace: event['backtrace'], parent_id: nil)
+    project.events.find_by(message: event['message'], parent_id: nil)
   end
 
   def assign_project_error_trace
