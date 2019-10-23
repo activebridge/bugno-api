@@ -20,7 +20,7 @@ class Events::CreateService < ApplicationService
   end
 
   def notify
-    EventMailer.create(event, emails).deliver_later if email.any?
+    EventMailer.create(event, emails).deliver_later if emails.any?
     Integration.notify(notify_attributes)
   end
 

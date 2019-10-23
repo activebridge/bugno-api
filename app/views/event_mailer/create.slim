@@ -16,7 +16,7 @@ table
 
 h3 Message:
 p = "#{@event.title}: #{@event.message.truncate(140)}"
-p = link_to I18n.t('event_mailer.create.template.view_on_bugno_link_name'), @event_url
+p = link_to I18n.t('event_mailer.create.template.view_on_bugno_link_name'), @event_link
 - if @event.backtrace.present?
   -if @first_chunk_of_code
     = render partial: 'event_mailer/shared/chunk_of_code', object: @first_chunk_of_code, as: :trace_line

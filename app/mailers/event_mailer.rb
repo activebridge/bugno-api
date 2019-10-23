@@ -4,8 +4,8 @@ class EventMailer < ApplicationMailer
   def create(event, addresses)
     @event = event
     @first_chunk_of_code = first_chunk_of_code
-    @event_url = event_url
-    @request_url = request_url
+    @event_link = event_link
+    @request_url = event.url
     mail(to: addresses,
          subject: I18n.t('event_mailer.create.subject',
                          project_name: @event.project.name, event_environment: @event.environment,
@@ -14,11 +14,7 @@ class EventMailer < ApplicationMailer
 
   private
 
-  def request_url
-    @request_url ||= @event.url
-  end
-
-  def event_url
+  def event_link
     "#{I18n.t("web_client_url.#{Rails.env}")}/projects/#{@event.project.slug}/event/#{@event.id}"
   end
 
