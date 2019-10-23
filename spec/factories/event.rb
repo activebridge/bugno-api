@@ -26,7 +26,8 @@ FactoryBot.define do
         email: Faker::Internet.email,
         username: Faker::Internet.username }
     end
-    environment { ActiveRecord::Base.configurations.keys.sample }
+    # TODO: generate real environment names
+    environment { Faker::Lorem.word }
     ip_address { Faker::Internet.ip_v4_address }
     last_occurrence_at { 10.minutes.ago }
 

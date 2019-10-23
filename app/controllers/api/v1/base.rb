@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class API::V1::Base < Grape::API
+class Api::V1::Base < Grape::API
   auth :grape_devise_token_auth, resource_class: :user
   helpers GrapeDeviseTokenAuth::AuthHelpers
 

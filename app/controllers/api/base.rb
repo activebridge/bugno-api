@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class API::Base < Grape::API
+class Api::Base < Grape::API
   helpers Pundit
   format :json
   formatter :json, Grape::Formatter::ActiveModelSerializers
@@ -12,10 +12,10 @@ class API::Base < Grape::API
     error_response(message: I18n.t('pundit.default'), status: 403)
   end
 
-  mount API::V1::Base
-  mount API::V2::Base
-  mount API::V3::Base
-  mount API::V4::Base
+  mount Api::V1::Base
+  mount Api::V2::Base
+  mount Api::V3::Base
+  mount Api::V4::Base
 
   get 'status' do
     { status: 'OK' }

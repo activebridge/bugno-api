@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class API::V1::Projects::ProjectUsers < Grape::API
+class Api::V1::Projects::ProjectUsers < Grape::API
   helpers do
     def project
       @project ||= Project.find(params[:project_id])

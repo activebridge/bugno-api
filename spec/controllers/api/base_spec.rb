@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe API do
+describe Api do
   context 'GET /api/status' do
     subject { -> { get '/api/status' } }
 

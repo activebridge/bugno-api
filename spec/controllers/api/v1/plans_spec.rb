@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe API::V1::Plans do
+describe Api::V1::Plans do
   let(:base_url) { '/api/v1/plans' }
   let(:url) { base_url }
   let(:params) { {} }

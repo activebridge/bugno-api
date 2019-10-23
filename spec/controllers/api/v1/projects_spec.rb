@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe API::V1::Projects do
+describe Api::V1::Projects do
   let!(:user) { create(:user) }
   let(:valid_params) { attributes_for(:project) }
   let(:base_url) { '/api/v1/projects' }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class API::V1::Plans < Grape::API
+class Api::V1::Plans < Grape::API
   helpers do
     def plans
       @plans ||= Plan.order(price: :asc)

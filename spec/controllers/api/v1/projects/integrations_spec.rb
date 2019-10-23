@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe API::V1::Projects::Integrations do
+describe Api::V1::Projects::Integrations do
   let(:user) { create(:user, :with_project) }
   let(:project) { user.projects.first }
   let(:base_url) { "/api/v1/projects/#{project.id}/integrations" }

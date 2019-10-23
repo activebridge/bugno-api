@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class API::V1::Projects < Grape::API
+class Api::V1::Projects < Grape::API
   helpers do
     def projects
       @projects ||= current_user.projects.order(updated_at: :desc)

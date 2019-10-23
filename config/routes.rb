@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 end
 
   mount ActionCable.server, at: '/cable'
-  mount API::Base, at: '/api'
+  mount Api::Base, at: '/api'
   mount GrapeSwaggerRails::Engine, at: '/documentation'
   mount_devise_token_auth_for 'User', at: 'auth', controllers: {
     omniauth_callbacks: 'omniauth_callbacks',

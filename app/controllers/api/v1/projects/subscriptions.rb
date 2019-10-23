@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class API::V1::Projects::Subscriptions < Grape::API
+class Api::V1::Projects::Subscriptions < Grape::API
   helpers do
     def subscription
       @subscription ||= project.subscription

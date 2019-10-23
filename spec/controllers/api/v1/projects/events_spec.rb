@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe API::V1::Projects::Events do
+describe Api::V1::Projects::Events do
   let(:user) { create(:user, :with_project_and_subscription) }
   let(:project) { user.projects.first }
   let(:base_url) { "/api/v1/projects/#{project.id}/events" }

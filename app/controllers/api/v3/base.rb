@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class API::V3::Base < Grape::API
+class Api::V3::Base < Grape::API
   version 'v3'
   format :json
 
