@@ -20,7 +20,7 @@ class Events::CreateService < ApplicationService
   end
 
   def notify
-    EventMailer.create(event).deliver_later
+    EventMailer.create(event, emails).deliver_later if email.any?
     Integration.notify(notify_attributes)
   end
 
@@ -40,5 +40,9 @@ class Events::CreateService < ApplicationService
 
   def parent_event
     @parent_event ||= event.parent
+  end
+
+  def emails
+    @emails ||= project.users.pluck(:email).compact
   end
 end

@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 class EventMailer < ApplicationMailer
-  def create(event)
+  def create(event, addresses)
     @event = event
-    @users = event.project.users
     @first_chunk_of_code = first_chunk_of_code
     @event_url = event_url
     @request_url = request_url
-    mail(to: @users.pluck(:email),
+    mail(to: addresses,
          subject: I18n.t('event_mailer.create.subject',
                          project_name: @event.project.name, event_environment: @event.environment,
                          event_title: @event.title, event_message: @event.message.truncate(140)))
