@@ -8,6 +8,7 @@ class Event < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :parent, class_name: 'Event', optional: true, counter_cache: :occurrence_count
   has_many :occurrences, class_name: 'Event', foreign_key: 'parent_id'
+  has_many :activities, class_name: 'PublicActivity::Activity', as: :trackable, dependent: :destroy
 
   attribute :framework, :string, default: :plain
 
