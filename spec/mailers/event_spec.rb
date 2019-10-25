@@ -2,7 +2,7 @@
 
 describe EventMailer do
   let(:event) { create(:event) }
-  let(:mail) { EventMailer.create(event) }
+  let(:mail) { EventMailer.create(event, []) }
 
   it 'renders the headers' do
     expect(mail.subject).to eq("[#{event.project.name}] #{event.environment}:"\
