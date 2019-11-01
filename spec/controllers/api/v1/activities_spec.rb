@@ -12,8 +12,9 @@ describe API::V1::Activities do
   describe '#index' do
     subject { -> { get(*request_params) } }
     let!(:activities) { create_list(:activity, 3, owner: user, recipient: project) }
+    let(:response_message) { { meta: { total_count: 3 } } }
 
     it { is_expected.to respond_with_json_count(3).at(:activities) }
-    it { is_expected.to respond_with_json(3, :total_count) }
+    it { is_expected.to respond_with_json(response_message) }
   end
 end

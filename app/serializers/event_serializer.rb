@@ -6,13 +6,9 @@ class EventSerializer < ApplicationSerializer
              :http_method, :params, :position, :server_data, :created_at,
              :parent_id, :person_data, :route_params, :updated_at,
              :occurrence_count, :last_occurrence_at
-  # TODO: replace with belongs_to if possible to include nested association in endpoint
-  attribute :user, if: proc { instance_options[:include_user] && object.user }
-  attribute :user_agent, if: proc { object.user_agent? }
 
-  def user
-    PublicUserSerializer.new(object.user).as_json
-  end
+  attribute :user_agent, if: proc { object.user_agent? }
+  belongs_to :user, serializer: PublicUserSerializer
 
   def user_agent
     DeviceDetectorSerializer.new(object.headers['User-Agent']).as_json[:parsed_data]

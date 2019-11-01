@@ -15,6 +15,7 @@ class API::V1::Projects::Events < Grape::API
                          .by_status(declared_params[:status])
                          .order(position: :asc)
                          .page(declared_params[:page])
+                         .includes(:user)
     end
 
     def occurrences
@@ -22,6 +23,7 @@ class API::V1::Projects::Events < Grape::API
                               .by_parent(declared_params[:parent_id])
                               .order(created_at: :desc)
                               .page(declared_params[:page])
+                              .includes(:user)
     end
   end
 
@@ -35,7 +37,7 @@ class API::V1::Projects::Events < Grape::API
       end
 
       get do
-        render events.includes(:user),
+        render events,
                each_serializer: ParentEventSerializer,
                include: 'user',
                adapter: :json,
@@ -70,7 +72,7 @@ class API::V1::Projects::Events < Grape::API
       desc 'Returns event'
 
       get ':id' do
-        render_api(event, serializer_options: { extra: { include_user: true } })
+        render_api(event)
       end
 
       desc 'Returns occurrences'
@@ -100,7 +102,7 @@ class API::V1::Projects::Events < Grape::API
 
       patch ':id' do
         event = ::Events::UpdateService.call(declared_params: declared_params, user: current_user)
-        render_api(event, serializer_options: { extra: { include_user: true } })
+        render_api(event)
       end
     end
   end
