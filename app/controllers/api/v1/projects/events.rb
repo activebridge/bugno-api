@@ -29,7 +29,7 @@ class Api::V1::Projects::Events < Grape::API
       end
 
       get do
-        render events,
+        render events.includes(:user),
                each_serializer: ParentEventSerializer,
                include: 'user',
                adapter: :json,
@@ -74,10 +74,9 @@ class Api::V1::Projects::Events < Grape::API
         optional :page, type: Integer, default: 1
       end
 
-      get 'occurrences/:id' do
-        occurrences = ::Events::OccurrencesService.call(params: declared_params)
+      get 'occurrences/:parent_id' do
         render occurrences,
-               each_serializer: OccurrenceSerializer,
+               each_serializer: EventSerializer,
                adapter: :json,
                meta: { total_count: occurrences.total_count }
       end
