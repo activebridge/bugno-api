@@ -17,6 +17,14 @@ class Api::V1::Projects::Events < Grape::API
                          .page(declared_params[:page])
                          .includes(:user)
     end
+
+    def occurrences
+      @occurrences ||= project.events
+                              .by_parent(declared_params[:parent_id])
+                              .order(created_at: :desc)
+                              .page(declared_params[:page])
+                              .includes(:user)
+    end
   end
 
   namespace 'projects/:project_id' do
@@ -29,7 +37,7 @@ class Api::V1::Projects::Events < Grape::API
       end
 
       get do
-        render events.includes(:user),
+        render events,
                each_serializer: ParentEventSerializer,
                include: 'user',
                adapter: :json,
