@@ -35,7 +35,11 @@ class API::V1::Projects::Events < Grape::API
       end
 
       get do
-        EventCollectionSerializer.new(events.includes(:user), include_user: true).as_json
+        render events.includes(:user),
+               each_serializer: ParentEventSerializer,
+               include: 'user',
+               adapter: :json,
+               meta: { total_count: events.total_count }
       end
 
       desc 'Creates event'
@@ -77,7 +81,10 @@ class API::V1::Projects::Events < Grape::API
       end
 
       get 'occurrences/:parent_id' do
-        EventCollectionSerializer.new(occurrences).as_json
+        render occurrences,
+               each_serializer: EventSerializer,
+               adapter: :json,
+               meta: { total_count: occurrences.total_count }
       end
 
       desc 'Updates event'
