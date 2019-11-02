@@ -80,6 +80,10 @@ class Event < ApplicationRecord
 
   def assign_parent
     self.parent_id = ::Events::ParentCreateService.call(event: self, project: project)
+    return unless parent&.muted?
+
+    errors.add(:status, 'is muted')
+    throw :abort
   end
 
   def broadcast
