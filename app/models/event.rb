@@ -6,7 +6,7 @@ class Event < ApplicationRecord
   belongs_to :project
   belongs_to :user, optional: true
   belongs_to :parent, class_name: 'Event', optional: true, counter_cache: :occurrence_count
-  has_many :occurrences, class_name: 'Event', foreign_key: 'parent_id'
+  has_many :occurrences, class_name: 'Event', foreign_key: 'parent_id', dependent: :delete_all
 
   attribute :framework, :string, default: :plain
 
@@ -27,8 +27,11 @@ class Event < ApplicationRecord
   after_create :reactivate_parent, if: -> { parent&.resolved? }
   after_create :update_subscription_events, if: -> { project&.subscription&.active? }
   after_update :update_occurrences_status, if: -> { parent? && saved_changes['status'] }
-  after_save :update_active_count, if: :parent?
-  after_save :brodcast, if: :parent?
+  # TODO: refactor repetition
+  after_save :update_active_count, if: -> { parent? && active? }
+  after_save :broadcast, if: :parent?
+  after_destroy :update_active_count, if: -> { parent? && active? }
+  after_destroy :broadcast, if: :parent?
 
   def message=(value)
     message = value.is_a?(String) && value.length > MESSAGE_MAX_LENGTH ? value.truncate(MESSAGE_MAX_LENGTH) : value
@@ -79,8 +82,10 @@ class Event < ApplicationRecord
     self.parent_id = ::Events::ParentCreateService.call(event: self, project: project)
   end
 
-  def brodcast
+  def broadcast
     action = saved_change_to_id? ? UserChannel::ACTIONS::CREATE_EVENT : UserChannel::ACTIONS::UPDATE_EVENT
+    action = UserChannel::ACTIONS::DESTROY_EVENT if destroyed?
+
     project.project_users.each do |project_user|
       ActionCable.server.broadcast("user_#{project_user.user_id}",
                                    EventSerializer.new(self).as_json.merge(action: action))

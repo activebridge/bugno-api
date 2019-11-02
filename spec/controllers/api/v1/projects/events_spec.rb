@@ -122,4 +122,20 @@ describe API::V1::Projects::Events do
       end
     end
   end
+
+  describe '#destroy' do
+    subject { -> { delete(*request_params) } }
+    let!(:occurrences) { create_list(:event, 3, :static_attributes, project: project) }
+    let(:event) { occurrences.first }
+    let(:url) { "#{base_url}/#{event.id}" }
+    # let(:result) { EventSerializer.new(event).as_json }
+
+    it { is_expected.to respond_with_status(200) }
+    it { is_expected.to change(project.reload.events, :count) }
+    # TODO: fix wrong symbolize in this matcher
+    # it { is_expected.to respond_with_json(result) }
+    context 'when event has occurrences' do
+      it { is_expected.to change(event.reload.occurrences, :count) }
+    end
+  end
 end
