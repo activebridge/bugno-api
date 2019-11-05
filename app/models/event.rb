@@ -2,7 +2,6 @@
 
 class Event < ApplicationRecord
   MESSAGE_MAX_LENGTH = 3000
-  include PublicActivity::Common
 
   belongs_to :project
   belongs_to :user, optional: true
@@ -66,7 +65,6 @@ class Event < ApplicationRecord
 
   def reactivate_parent
     parent.active!
-    ::Activities::CreateService.call(key: :update, trackable: parent, owner: self, recipient: project)
   end
 
   def update_occurrence_at

@@ -4,10 +4,7 @@ class Events::UpdateService < ApplicationService
   def call
     return unless event.update(declared_params[:event])
 
-    if event.saved_changes['status']
-      ::Activities::CreateService.call(key: :update, trackable: event, owner: user, recipient: project)
-      notify
-    end
+    notify if event.saved_changes['status']
     event
   end
 

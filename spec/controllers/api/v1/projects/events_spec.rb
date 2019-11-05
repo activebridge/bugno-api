@@ -112,10 +112,6 @@ describe API::V1::Projects::Events do
     it { is_expected.to change { event.reload.user_id } }
 
     context 'when status changed' do
-      it 'creates activity' do
-        is_expected.to change(PublicActivity::Activity, :count)
-      end
-
       context do
         let!(:occurrences) { create_list(:event, 2, :static_attributes, project: project) }
         let(:url) { "#{base_url}/#{occurrences.first.id}" }
