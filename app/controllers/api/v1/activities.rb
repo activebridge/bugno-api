@@ -16,6 +16,9 @@ class API::V1::Activities < Grape::API
   end
 
   get '/activities' do
-    Activity::CollectionSerializer.new(activities).as_json
+    render(activities,
+           each_serializer: Activity::SingleSerializer,
+           adapter: :json,
+           meta: { total_count: activities.total_count })
   end
 end

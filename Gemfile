@@ -36,12 +36,9 @@ gem 'slack-notifier'
 gem 'slim'
 gem 'stripe'
 
-group :development, :test, :staging do
-  gem 'bullet'
-end
-
 group :development, :test do
-  gem 'byebug', platforms: %i[mri mingw x64_mingw]
+  gem 'awesome_print', require: 'ap'
+  gem 'bullet'
   gem 'pry'
   gem 'rspec-rails'
   gem 'rubocop'
