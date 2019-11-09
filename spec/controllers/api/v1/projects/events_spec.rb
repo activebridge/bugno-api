@@ -32,8 +32,14 @@ describe API::V1::Projects::Events do
     let!(:occurrences) { create_list(:event, 3, :static_attributes, project: project) }
     let(:url) { "#{base_url}/occurrences/#{parent_event.id}" }
 
-    it { is_expected.to respond_with_json_count(3).at(:events) }
     it { is_expected.to respond_with_status(200) }
+    it { is_expected.to respond_with_json_count(3).at(:events) }
+
+    context 'when params id belongs to occurrence' do
+      let(:url) { "#{base_url}/occurrences/#{occurrences.last.id}" }
+
+      it { is_expected.to respond_with_json_count(3).at(:events) }
+    end
   end
 
   describe '#create' do
