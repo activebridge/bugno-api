@@ -27,11 +27,8 @@ class Event < ApplicationRecord
   after_create :reactivate_parent, if: -> { parent&.resolved? }
   after_create :update_subscription_events, if: -> { project&.subscription&.active? }
   after_update :update_occurrences_status, if: -> { parent? && saved_changes['status'] }
-  # TODO: refactor repetition
-  after_save :update_active_count, if: -> { parent? && active? }
-  after_save :broadcast, if: :parent?
-  after_destroy :update_active_count, if: -> { parent? && active? }
-  after_destroy :broadcast, if: :parent?
+  after_save :update_active_count, :broadcast, if: :parent?
+  after_destroy :update_active_count, :broadcast, if: :parent?
 
   def message=(value)
     message = value.is_a?(String) && value.length > MESSAGE_MAX_LENGTH ? value.truncate(MESSAGE_MAX_LENGTH) : value
