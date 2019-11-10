@@ -3,7 +3,7 @@
 class API::V1::Projects < Grape::API
   helpers do
     def projects
-      @projects ||= current_user.projects
+      @projects ||= current_user.projects.order(updated_at: :desc)
     end
 
     def project
