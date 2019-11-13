@@ -84,12 +84,21 @@ class Event < ApplicationRecord
   end
 
   def broadcast
-    action = saved_change_to_id? ? UserChannel::ACTIONS::CREATE_EVENT : UserChannel::ACTIONS::UPDATE_EVENT
-    action = UserChannel::ACTIONS::DESTROY_EVENT if destroyed?
+    project.project_users.includes(:user).each { |project_user| broadcast_to_user(project_user.user) }
+  end
 
-    project.project_users.each do |project_user|
-      ActionCable.server.broadcast("user_#{project_user.user_id}",
-                                   EventSerializer.new(self).as_json.merge(action: action))
+  def broadcast_to_user(user)
+    ActionCable.server.broadcast("user_#{user.id}",
+                                 EventSerializer.new(self).as_json.merge(action: broadcast_action))
+  end
+
+  def broadcast_action
+    if destroyed?
+      UserChannel::ACTIONS::DESTROY_EVENT
+    elsif saved_change_to_id?
+      UserChannel::ACTIONS::CREATE_EVENT
+    else
+      UserChannel::ACTIONS::UPDATE_EVENT
     end
   end
 end
