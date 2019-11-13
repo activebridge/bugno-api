@@ -32,8 +32,14 @@ describe API::V1::Projects::Events do
     let!(:occurrences) { create_list(:event, 3, :static_attributes, project: project) }
     let(:url) { "#{base_url}/occurrences/#{parent_event.id}" }
 
-    it { is_expected.to respond_with_json_count(3).at(:events) }
     it { is_expected.to respond_with_status(200) }
+    it { is_expected.to respond_with_json_count(3).at(:events) }
+
+    context 'when params id belongs to occurrence' do
+      let(:url) { "#{base_url}/occurrences/#{occurrences.last.id}" }
+
+      it { is_expected.to respond_with_json_count(3).at(:events) }
+    end
   end
 
   describe '#create' do
@@ -112,10 +118,6 @@ describe API::V1::Projects::Events do
     it { is_expected.to change { event.reload.user_id } }
 
     context 'when status changed' do
-      it 'creates activity' do
-        is_expected.to change(PublicActivity::Activity, :count)
-      end
-
       context do
         let!(:occurrences) { create_list(:event, 2, :static_attributes, project: project) }
         let(:url) { "#{base_url}/#{occurrences.first.id}" }
@@ -124,6 +126,22 @@ describe API::V1::Projects::Events do
           is_expected.to change { occurrences.last.reload.status }
         end
       end
+    end
+  end
+
+  describe '#destroy' do
+    subject { -> { delete(*request_params) } }
+    let!(:occurrences) { create_list(:event, 3, :static_attributes, project: project) }
+    let(:event) { occurrences.first }
+    let(:url) { "#{base_url}/#{event.id}" }
+    # let(:result) { EventSerializer.new(event).as_json }
+
+    it { is_expected.to respond_with_status(200) }
+    it { is_expected.to change(project.reload.events, :count) }
+    # TODO: fix wrong symbolize in this matcher
+    # it { is_expected.to respond_with_json(result) }
+    context 'when event has occurrences' do
+      it { is_expected.to change(event.reload.occurrences, :count) }
     end
   end
 end

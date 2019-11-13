@@ -17,14 +17,6 @@ class API::V1::Projects::Events < Grape::API
                          .page(declared_params[:page])
                          .includes(:user)
     end
-
-    def occurrences
-      @occurrences ||= project.events
-                              .by_parent(declared_params[:parent_id])
-                              .order(created_at: :desc)
-                              .page(declared_params[:page])
-                              .includes(:user)
-    end
   end
 
   namespace 'projects/:project_id' do
@@ -70,7 +62,6 @@ class API::V1::Projects::Events < Grape::API
       end
 
       desc 'Returns event'
-
       get ':id' do
         render_api(event)
       end
@@ -78,13 +69,14 @@ class API::V1::Projects::Events < Grape::API
       desc 'Returns occurrences'
       params do
         requires :project_id, type: String
-        requires :parent_id, type: String
+        requires :id, type: String
         optional :page, type: Integer, default: 1
       end
 
-      get 'occurrences/:parent_id' do
+      get 'occurrences/:id' do
+        occurrences = ::Events::OccurrencesService.call(params: declared_params)
         render occurrences,
-               each_serializer: EventSerializer,
+               each_serializer: OccurrenceSerializer,
                adapter: :json,
                meta: { total_count: occurrences.total_count }
       end
@@ -103,6 +95,11 @@ class API::V1::Projects::Events < Grape::API
       patch ':id' do
         event = ::Events::UpdateService.call(declared_params: declared_params, user: current_user)
         render_api(event)
+      end
+
+      desc 'Deletes event'
+      delete ':id' do
+        render_api(event.destroy)
       end
     end
   end

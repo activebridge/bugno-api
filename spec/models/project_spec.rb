@@ -6,6 +6,5 @@ describe Project do
   it { should have_many(:users).through(:project_users) }
   it { should have_many(:events).dependent(:delete_all) }
   it { should have_many(:active_events).class_name('Event').conditions(status: :active, parent_id: nil) }
-  it { should have_many(:activities).class_name('PublicActivity::Activity') }
   it { should have_one(:subscription).dependent(:destroy) }
 end
