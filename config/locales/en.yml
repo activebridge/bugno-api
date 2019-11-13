@@ -1,4 +1,11 @@
 en:
+  activerecord:
+    errors:
+      model:
+        event:
+          attributes:
+            status:
+              muted: is muted
   web_client_url:
     development: 'http://localhost:4200'
     production: 'https://bugno.io'

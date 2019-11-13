@@ -79,7 +79,7 @@ class Event < ApplicationRecord
     self.parent_id = ::Events::ParentCreateService.call(event: self, project: project)
     return unless parent&.muted?
 
-    errors.add(:status, 'is muted')
+    errors.add(:status, I18n.t('activerecord.errors.model.event.attributes.status.muted'))
     throw :abort
   end
 
