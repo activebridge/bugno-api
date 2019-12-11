@@ -20,6 +20,7 @@ describe EventSerializer do
   it { is_expected.to have_name(:params).with_value(event.params) }
   it { is_expected.to have_name(:position).with_value(event.position) }
   it { is_expected.to have_name(:server_data).with_value(event.server_data) }
+  it { is_expected.to have_name(:background_data).with_value(event.background_data) }
   it { is_expected.to have_name(:last_occurrence_at).with_value(event.last_occurrence_at) }
 
   context '#user_agent' do

@@ -4,8 +4,8 @@ class EventSerializer < ApplicationSerializer
   attributes :id, :title, :environment, :status, :user_id, :project_id,
              :message, :backtrace, :framework, :url, :ip_address, :headers,
              :http_method, :params, :position, :server_data, :created_at,
-             :parent_id, :person_data, :route_params, :updated_at,
-             :occurrence_count, :last_occurrence_at
+             :parent_id, :person_data, :background_data, :route_params,
+             :updated_at, :occurrence_count, :last_occurrence_at
 
   attribute :user_agent, if: proc { object.user_agent? }
   belongs_to :user, serializer: PublicUserSerializer

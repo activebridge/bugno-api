@@ -53,6 +53,7 @@ class API::V1::Projects::Events < Grape::API
         optional :params, type: Hash
         optional :server_data, type: Hash
         optional :person_data, type: Hash
+        optional :background_data, type: Hash
         optional :route_params, type: Hash
       end
 
