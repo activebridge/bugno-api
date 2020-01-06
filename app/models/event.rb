@@ -18,11 +18,12 @@ class Event < ApplicationRecord
   validates_with EventProjectSubscriptionValidator
   delegate :subscription, to: :project, allow_nil: true, prefix: true
 
-  acts_as_list scope: [:status, :project_id, parent_id: nil], top_of_list: 0
+  acts_as_list scope: %i[project_id status parent_id], top_of_list: 0, add_new_at: :top
   scope :by_status, ->(status) { where(status: status) if status.present? }
   scope :by_parent, ->(parent_id) { where(parent_id: parent_id) if parent_id.present? }
 
-  before_create :assign_parent
+  before_validation :assign_parent, if: -> { new_record? && project.present? }
+  before_create :pushback_muted, if: -> { parent&.muted? }
   after_create :update_occurrence_at, if: :occurrence?
   after_create :reactivate_parent, if: -> { parent&.resolved? }
   after_create :update_subscription_events, if: -> { project&.subscription&.active? }
@@ -54,6 +55,11 @@ class Event < ApplicationRecord
 
   private
 
+  def pushback_muted
+    errors.add(:status, I18n.t('activerecord.errors.model.event.attributes.status.muted'))
+    throw :abort
+  end
+
   def update_subscription_events
     project.subscription.decrement(:events)
     project.subscription.save
@@ -77,10 +83,6 @@ class Event < ApplicationRecord
 
   def assign_parent
     self.parent_id = ::Events::ParentCreateService.call(event: self, project: project)
-    return unless parent&.muted?
-
-    errors.add(:status, I18n.t('activerecord.errors.model.event.attributes.status.muted'))
-    throw :abort
   end
 
   def broadcast
