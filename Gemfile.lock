@@ -1,14 +1,15 @@
 GIT
+  remote: https://github.com/activebridge/bugno-ruby.git
+  revision: e13497e4bc934e982fbd2f1fc400e752e9f87a5b
+  specs:
+    bugno (0.1.8)
+
+GIT
   remote: https://github.com/kmrshntr/omniauth-slack.git
   revision: afd9f5c055d4393b70f3218c99baa21adfb458df
   specs:
     omniauth-slack (2.3.0)
       omniauth-oauth2 (~> 1.4)
-
-PATH
-  remote: ../gem
-  specs:
-    bugno (0.1.8)
 
 GEM
   remote: https://rubygems.org/
