@@ -1,26 +1,19 @@
-table
-  tr
-    td Project:
-    td = @event.project.name
-  tr
-    td First exception happened:
-    td = @event.created_at
-  tr
-    td This exception occurred:
-    td = @event.created_at
-  - if @event.environment
-    tr
-      td Environment:
-      td = @event.environment
-  - if @event.url
-    tr
-      td Request url:
-      td = @event.url
-
-h3 Message:
-p = "#{@event.title}: #{@event.message.truncate(140)}"
-p = link_to I18n.t('mailer.create.template.view_on_bugno_link_name'), @link
-- if @event.backtrace.present?
-  = render partial: 'mailer/shared/chunk_of_code', object: @chunk_of_code, as: :trace_line if @chunk_of_code
-  h3 Traceback:
-  = render partial: 'mailer/shared/backtrace', collection: @event.backtrace, as: :trace_line
+.main-container
+  = render partial: 'event_mailer/shared/bugno_logo'
+  .header = t('mailer.exception_occurred_again', times: @occurrence_count)
+  = render partial: 'event_mailer/shared/project_section'
+  = render partial: 'event_mailer/shared/message_section'
+  = render partial: 'event_mailer/shared/url_section' if @event.url.present?
+  - if @chunk_of_code.present?
+    .section
+      .section-title = t('mailer.code_snippet')
+      .divider
+      .filename
+        span.section-title> = t('mailer.file_path')
+        span = @chunk_of_code['filename']
+      .code-snippet = render partial: 'event_mailer/shared/chunk_of_code', object: @chunk_of_code, as: :line if @chunk_of_code
+  - if @event.backtrace.present?
+    .section
+      .section-title = t('mailer.backtrace')
+      .divider
+      .backtrace = render partial: 'event_mailer/shared/backtrace', collection: @event.backtrace[0..10], as: :line

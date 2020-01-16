@@ -39,6 +39,7 @@ en:
         message: 'You have been removed from %{project_name} by %{remover}'
   mailer:
     new_exception_appeared: New exception appeared!
+    exception_occurred_again: 'An exception occurred for %{times} already!'
     view_on_bugno: View on bugno
     in: in
     message: message
