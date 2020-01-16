@@ -12,15 +12,16 @@ class Events::CreateService < ApplicationService
   private
 
   def notify?
-    event.parent? || parent_reactivated?
+    event.parent? || occurred_again?
   end
 
-  def parent_reactivated?
-    parent_event.saved_changes[:status] && parent_event.saved_changes[:status] == %w[resolved active]
+  def occurred_again?
+    Constants::Rules::OCCURRENCE_NOTIFICATION_POINTS.any? { |point| point == parent_event&.occurrence_count }
   end
 
   def notify
-    EventMailer.exception(event).deliver_later
+    mailer = event.parent? ? :exception : :occurrence
+    EventMailer.send(mailer, event, user_emails).deliver_later
     Integration.notify(notify_attributes)
   end
 
@@ -40,5 +41,9 @@ class Events::CreateService < ApplicationService
 
   def parent_event
     @parent_event ||= event.parent
+  end
+
+  def user_emails
+    @user_emails ||= project.users.pluck(:email)
   end
 end

@@ -1,29 +1,31 @@
 # frozen_string_literal: true
 
 class EventMailer < ApplicationMailer
-  def exception(event)
+  def exception(event, addresses)
     @event = event
-    @users = event.project.users
     @chunk_of_code = chunk_of_code
     @link = link
-    mail(to: @users.pluck(:email),
+    mail(to: addresses,
          subject: I18n.t('mailer.exception.subject',
                          project_name: @event.project.name, environment: @event.environment, title: @event.title))
   end
 
-  def occurrence(_parent_event, _occurence, users)
+  def occurrence(occurence, addresses)
+    @event = occurence
+    @parent_event = occurence.parent
     @link = link
-    @times = @event.parent.occurrence_count
-    mail(to: users.pluck(:email),
+    @occurrence_count = @event.parent.occurrence_count
+    mail(to: addresses,
          subject: I18n.t('mailer.occurrence.subject',
                          project_name: @event.project.name, environment: @event.environment,
-                         title: @event.title, times: @times))
+                         title: @event.title, times: @occurrence_count))
   end
 
   private
 
   def link
-    "#{I18n.t("web_url.#{Rails.env}")}/projects/#{@event.project.slug}/event/#{@event.id}"
+    id = @event.parent? ? @event.id : @parent_event.id
+    "#{I18n.t("web_url.#{Rails.env}")}/projects/#{@event.project.slug}/event/#{id}"
   end
 
   def chunk_of_code
