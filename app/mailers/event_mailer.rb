@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class EventMailer < ApplicationMailer
+  before_action :add_inline_logo
+
   def exception(event, addresses)
     @event = event
     @chunk_of_code = chunk_of_code
@@ -22,6 +24,10 @@ class EventMailer < ApplicationMailer
   end
 
   private
+
+  def add_inline_logo
+    attachments.inline['bugno-logo.png'] = File.read('app/assets/images/bugno-logo.png')
+  end
 
   def link
     id = @event.parent? ? @event.id : @parent_event.id
