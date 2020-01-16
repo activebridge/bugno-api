@@ -1,11 +1,8 @@
+@import 'variables';
 @import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
 
 body {
-  --wild-sand: #F6F6F6;
-  --baltic-sea: #302C39;
-  --valencia: #DB4545;
-  --silver-chalice: #A0A0A0;
-  color: var(--baltic-sea);
+  color: $baltic-sea;
   margin: 0;
   font-family: 'Lato', sans-serif;
 }
@@ -16,7 +13,7 @@ pre {
 }
 
 .wrapper {
-  background: var(--wild-sand);
+  background: $wild-sand;
 }
 
 .main-container {
@@ -51,7 +48,7 @@ pre {
   font-style: italic;
   margin: auto;
   text-align: center;
-  background: rgba(var(--valencia), 0.1);
+  background: rgba($valencia, 0.1);
   margin-bottom: 20px;
 }
 
@@ -67,7 +64,7 @@ pre {
 }
 
 .divider {
-  border-bottom: 2px solid rgba(var(--valencia), 0.6);
+  border-bottom: 2px solid rgba($valencia, 0.6);
   margin: 3px 0;
 }
 
@@ -76,7 +73,7 @@ pre {
   font-size: 12px;
   bottom: 10px;
   right: 10px;
-  color: var(--silver-chalice);
+  color: $silver-chalice;
 }
 
 .code-snippet {
@@ -85,7 +82,7 @@ pre {
 }
 
 .code-snippet-main-line {
-  background: rgba(var(--valencia), 0.1);
+  background: rgba($valencia, 0.1);
 }
 
 .backtrace { font-size: 12px; }
@@ -93,7 +90,7 @@ pre {
 .traceline { padding: 1px 0; }
 
 .link {
-  color: var(--baltic-sea);
+  color: $baltic-sea;
   text-decoration: none;
 }
 
