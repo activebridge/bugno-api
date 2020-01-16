@@ -1,7 +1,7 @@
 .main-container
   .logo-wrapper
     = link_to t('web_url.production') do
-      image.bugno-logo src=Constrants::Url::BUGNO_LOGO_LINK
+      image.bugno-logo src=Constants::Url::BUGNO_LOGO_LINK
   .header = t('mailer.new_exception_appeared')
   .project-container
     = link_to @link, class: 'link' do

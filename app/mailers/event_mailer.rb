@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class EventMailer < ApplicationMailer
-  def create(event)
+  def exception(event)
     @event = event
     @users = event.project.users
     @chunk_of_code = chunk_of_code
     @link = link
     mail(to: @users.pluck(:email),
-         subject: I18n.t('event_mailer.create.subject',
+         subject: I18n.t('mailer.exception.subject',
                          project_name: @event.project.name, environment: @event.environment, title: @event.title))
   end
 
@@ -15,7 +15,7 @@ class EventMailer < ApplicationMailer
     @link = link
     @times = @event.parent.occurrence_count
     mail(to: users.pluck(:email),
-         subject: I18n.t('event_mailer.occurrence.subject',
+         subject: I18n.t('mailer.occurrence.subject',
                          project_name: @event.project.name, environment: @event.environment,
                          title: @event.title, times: @times))
   end

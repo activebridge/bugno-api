@@ -49,6 +49,6 @@ en:
     trace_line: '%{method} at line %{lineno} of "%{filename}"'
     occurrence:
       subject: '[%{project_name}] %{environment}: %{title} has occured for %{times} times.'
-    create:
+    exception:
       subject: '[%{project_name}] %{environment}: %{title} has apeared for the first time.'
   slack_workspace_url: 'https://%{workspace}.slack.com'

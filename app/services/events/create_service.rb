@@ -20,7 +20,7 @@ class Events::CreateService < ApplicationService
   end
 
   def notify
-    EventMailer.create(event).deliver_later
+    EventMailer.exception(event).deliver_later
     Integration.notify(notify_attributes)
   end
 
