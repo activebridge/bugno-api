@@ -6,7 +6,7 @@ en:
           attributes:
             status:
               muted: is muted
-  web_client_url:
+  web_url:
     development: 'http://localhost:4200'
     production: 'https://bugno.io'
     staging: 'https://staging.bugno.io'
@@ -37,10 +37,18 @@ en:
       subject: Removed from project
       template:
         message: 'You have been removed from %{project_name} by %{remover}'
-  event_mailer:
+  mailer:
+    new_exception_appeared: New exception appeared!
+    view_on_bugno: View on bugno
+    in: in
+    message: message
+    request_url: request url
+    code_snippet: code snippet
+    file_path: 'file path:'
+    backtrace: backtrace
+    trace_line: '%{method} at line %{lineno} of "%{filename}"'
+    occurrence:
+      subject: '[%{project_name}] %{environment}: %{title} has occured for %{times} times.'
     create:
-      subject: '[%{project_name}] %{event_environment}: %{event_title} has occured. %{event_message}'
-      template:
-        trace_line: '%{method} at line %{lineno} of "%{filename}"'
-        view_on_bugno_link_name: View on Bugno.io
+      subject: '[%{project_name}] %{environment}: %{title} has apeared for the first time.'
   slack_workspace_url: 'https://%{workspace}.slack.com'

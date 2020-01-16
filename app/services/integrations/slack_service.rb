@@ -41,7 +41,7 @@ class Integrations::SlackService < ApplicationService
   end
 
   def event_url
-    @event_url ||= "#{I18n.t("web_client_url.#{Rails.env}")}/projects/#{event.project.slug}/event/#{event.id}"
+    @event_url ||= "#{I18n.t("web_url.#{Rails.env}")}/projects/#{event.project.slug}/event/#{event.id}"
   end
 
   def event_create_notification

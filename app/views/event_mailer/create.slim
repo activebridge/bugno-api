@@ -1,25 +1,34 @@
-table
-  tr
-    td Project:
-    td = @event.project.name
-  tr
-    td Time:
-    td = @event.created_at
-  - if @event.environment
-    tr
-      td Environment:
-      td = @event.environment
-  - if @request_url
-    tr
-      td Request url:
-      td = @request_url
-
-h3 Message:
-p = "#{@event.title}: #{@event.message.truncate(140)}"
-p = link_to I18n.t('event_mailer.create.template.view_on_bugno_link_name'), @event_url
-- if @event.backtrace.present?
-  -if @first_chunk_of_code
-    = render partial: 'event_mailer/shared/chunk_of_code', object: @first_chunk_of_code, as: :trace_line
-  h3
-    | Traceback:
-  = render partial: 'event_mailer/shared/backtrace', collection: @event.backtrace, as: :trace_line
+.main-container
+  .logo-wrapper
+    = link_to t('web_url.production') do
+      image.bugno-logo src=Constrants::Url::BUGNO_LOGO_LINK
+  .header = t('mailer.new_exception_appeared')
+  .project-container
+    = link_to @link, class: 'link' do
+      .main
+        span> = t('mailer.in')
+        span.font-weight-bold = @event.project.name
+      .view-on-bugno = t('mailer.view_on_bugno')
+  .section
+    .section-title = t('mailer.message')
+    .divider
+    span.font-weight-bold> = "#{@event.title}:"
+    span = @event.message.truncate(140)
+  - if @event.url.present?
+    .section
+      .section-title = t('mailer.request_url')
+      .divider
+      .url = @event.url
+  - if @chunk_of_code.present?
+    .section
+      .section-title = t('mailer.code_snippet')
+      .divider
+      .filename
+        span.section-title> = t('mailer.file_path')
+        span = @chunk_of_code['filename']
+      .code-snippet = render partial: 'event_mailer/shared/chunk_of_code', object: @chunk_of_code, as: :line if @chunk_of_code
+  - if @event.backtrace.present?
+    .section
+      .section-title = t('mailer.backtrace')
+      .divider
+      .backtrace = render partial: 'event_mailer/shared/backtrace', collection: @event.backtrace[0..10], as: :line
