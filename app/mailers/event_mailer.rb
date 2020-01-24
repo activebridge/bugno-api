@@ -8,8 +8,9 @@ class EventMailer < ApplicationMailer
     @chunk_of_code = chunk_of_code
     @link = link
     mail(to: addresses,
-         subject: I18n.t('mailer.exception.subject',
-                         project_name: @event.project.name, environment: @event.environment, title: @event.title))
+         subject: default_i18n_subject(project_name: @event.project.name,
+                                       environment: @event.environment,
+                                       title: @event.title))
   end
 
   def occurrence(occurence, addresses)
@@ -18,9 +19,9 @@ class EventMailer < ApplicationMailer
     @link = link
     @occurrence_count = @event.parent.occurrence_count
     mail(to: addresses,
-         subject: I18n.t('mailer.occurrence.subject',
-                         project_name: @event.project.name, environment: @event.environment,
-                         title: @event.title, times: @occurrence_count))
+         subject: default_i18n_subject(project_name: @event.project.name,
+                                       environment: @event.environment,
+                                       title: @event.title, times: @occurrence_count))
   end
 
   private

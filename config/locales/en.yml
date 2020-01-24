@@ -37,6 +37,11 @@ en:
       subject: Removed from project
       template:
         message: 'You have been removed from %{project_name} by %{remover}'
+  event_mailer:
+    exception:
+      subject: '[%{project_name}] %{environment}: %{title} has appeared for the first time.'
+    occurrence:
+      subject: '[%{project_name}] %{environment}: %{title} has occured for %{times} times.'
   mailer:
     new_exception_appeared: New exception appeared!
     exception_occurred_again: 'An exception occurred for %{times} times already!'
@@ -48,8 +53,4 @@ en:
     file_path: 'file path:'
     backtrace: backtrace
     trace_line: '%{method} at line %{lineno} of "%{filename}"'
-    occurrence:
-      subject: '[%{project_name}] %{environment}: %{title} has occured for %{times} times.'
-    exception:
-      subject: '[%{project_name}] %{environment}: %{title} has appeared for the first time.'
   slack_workspace_url: 'https://%{workspace}.slack.com'
