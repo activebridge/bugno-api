@@ -1,32 +1,44 @@
 # frozen_string_literal: true
 
 class EventMailer < ApplicationMailer
-  def create(event)
+  before_action :add_inline_logo
+
+  def exception(event, addresses)
     @event = event
-    @users = event.project.users
-    @first_chunk_of_code = first_chunk_of_code
-    @event_url = event_url
-    @request_url = request_url
-    mail(to: @users.pluck(:email),
-         subject: I18n.t('event_mailer.create.subject',
-                         project_name: @event.project.name, event_environment: @event.environment,
-                         event_title: @event.title, event_message: @event.message.truncate(140)))
+    @chunk_of_code = chunk_of_code
+    @link = link
+    mail(to: addresses,
+         subject: default_i18n_subject(project_name: @event.project.name,
+                                       environment: @event.environment,
+                                       title: @event.title))
+  end
+
+  def occurrence(occurence, addresses)
+    @event = occurence
+    @parent_event = occurence.parent
+    @link = link
+    @occurrence_count = @event.parent.occurrence_count
+    mail(to: addresses,
+         subject: default_i18n_subject(project_name: @event.project.name,
+                                       environment: @event.environment,
+                                       title: @event.title, times: @occurrence_count))
   end
 
   private
 
-  def request_url
-    @request_url ||= @event.url
+  def add_inline_logo
+    attachments.inline['bugno-logo.png'] = File.read('app/assets/images/bugno-logo.png')
   end
 
-  def event_url
-    "#{I18n.t("web_client_url.#{Rails.env}")}/projects/#{@event.project.slug}/event/#{@event.id}"
+  def link
+    id = @event.parent? ? @event.id : @parent_event.id
+    "#{I18n.t("web_url.#{Rails.env}")}/projects/#{@event.project.slug}/event/#{id}"
   end
 
-  def first_chunk_of_code
+  def chunk_of_code
     return if @event.framework == 'browser-js'
 
-    @first_chunk_of_code ||= @event.backtrace.find do |trace_line|
+    @chunk_of_code ||= @event.backtrace.find do |trace_line|
       trace_line['filename'].include?(@event.server_data['root'])
     end
   end

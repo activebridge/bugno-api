@@ -1,0 +1,97 @@
+@import 'variables';
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+
+body {
+  color: $baltic-sea;
+  margin: 0;
+  font-family: 'Lato', sans-serif;
+}
+
+pre {
+  margin: 0;
+  padding: 3px 5px;
+}
+
+.wrapper {
+  background: $wild-sand;
+}
+
+.main-container {
+  margin: auto;
+  padding: 55px 0;
+  width: 790px;
+}
+
+.logo-wrapper {
+  text-align: center;
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+.bugno-logo {
+  width: 150px;
+  height: 150px;
+}
+
+.header {
+  margin-bottom: 20px;
+  font-weight: 400;
+  font-size: 36px;
+  text-align: center;
+}
+
+.project-container {
+  position: relative;
+  border-radius: .25rem;
+  padding: 10px 20px;
+  font-size: 26px;
+  font-style: italic;
+  margin: auto;
+  text-align: center;
+  background: rgba($valencia, 0.1);
+  margin-bottom: 20px;
+}
+
+.section {
+  padding: 0 5px;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.divider {
+  border-bottom: 2px solid rgba($valencia, 0.6);
+  margin: 3px 0;
+}
+
+.view-on-bugno {
+  position: absolute;
+  font-size: 12px;
+  bottom: 10px;
+  right: 10px;
+  color: $silver-chalice;
+}
+
+.code-snippet {
+  font-size: 13px;
+  padding: 10px 0;
+}
+
+.code-snippet-main-line {
+  background: rgba($valencia, 0.1);
+}
+
+.backtrace { font-size: 12px; }
+
+.traceline { padding: 1px 0; }
+
+.link {
+  color: $baltic-sea;
+  text-decoration: none;
+}
+
+.font-weight-bold { font-weight: 600 !important; }

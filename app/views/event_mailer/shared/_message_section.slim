@@ -1,0 +1,5 @@
+.section
+  .section-title = t('mailer.message')
+  .divider
+  span.font-weight-bold> = "#{@event.title}:"
+  span = @event.message.truncate(140)
