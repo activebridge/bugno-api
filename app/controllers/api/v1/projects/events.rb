@@ -17,6 +17,10 @@ class API::V1::Projects::Events < Grape::API
                          .page(declared_params[:page])
                          .includes(:user)
     end
+
+    def destroyable_events
+      @destroyable_events ||= project.events.where(parent_id: nil).by_status(declared_params[:status])
+    end
   end
 
   namespace 'projects/:project_id' do
@@ -101,6 +105,15 @@ class API::V1::Projects::Events < Grape::API
       desc 'Deletes event'
       delete ':id' do
         render_api(event.destroy)
+      end
+
+      desc 'Deletes event collection'
+      params do
+        optional :status, type: String
+      end
+
+      delete do
+        render_api(destroyable_events.destroy_all)
       end
     end
   end
