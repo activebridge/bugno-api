@@ -113,6 +113,7 @@ class API::V1::Projects::Events < Grape::API
       end
 
       delete do
+        authorize(project, :destroy?)
         render_api(destroyable_events.destroy_all)
       end
     end
