@@ -36,7 +36,11 @@ class Events::CreateService < ApplicationService
   end
 
   def event
-    @event ||= project.events.create(declared_params)
+    @event ||= begin
+      project.with_lock do
+        project.events.create(declared_params)
+      end
+    end
   end
 
   def parent_event
