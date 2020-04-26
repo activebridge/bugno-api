@@ -1,6 +1,6 @@
 ## Bugno
 
-Simple bugs tracking.
+Simple bugs tracking
 
 #### Code status
 
