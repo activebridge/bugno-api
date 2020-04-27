@@ -1,0 +1,25 @@
+{
+  "name": "bugno-api",
+  "version": "1.0.0",
+  "description": "Simple bugs tracking.",
+  "main": "code.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/activebridge/bugno-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/activebridge/bugno-api/issues"
+  },
+  "homepage": "https://github.com/activebridge/bugno-api#readme",
+  "dependencies": {
+    "source-map": "^0.7.3"
+  }
+}
