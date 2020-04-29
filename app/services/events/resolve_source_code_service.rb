@@ -12,6 +12,7 @@ module Events
 
     private
 
+    # rubocop:disable Security/Open
     def source_map
       @source_map ||= open(source_map_url)
     end
