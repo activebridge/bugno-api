@@ -5,9 +5,9 @@ require 'open-uri'
 module Events
   class ResolveSourceCodeService < ApplicationService
     def call
-      `node ./app/assets/javascripts/parser.js map:#{source_map.path}
-                                               line:#{@event.backtrace['lineno']}
-                                               column:#{@event.backtrace['colno']}`
+      `node #{Constants::Path::SOURCE_MAP_PARSER} map:#{source_map.path}
+                                                  line:#{@event.backtrace['lineno']}
+                                                  column:#{@event.backtrace['colno']}`
     end
 
     private
