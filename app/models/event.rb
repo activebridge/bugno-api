@@ -23,6 +23,7 @@ class Event < ApplicationRecord
   scope :by_parent, ->(parent_id) { where(parent_id: parent_id) if parent_id.present? }
 
   before_validation :assign_parent, if: -> { new_record? && project.present? }
+  before_create :resolve_source_code, if: -> { framework == 'browser-js' && backtrace.present? }
   before_create :pushback_muted, if: -> { parent&.muted? }
   after_create :update_occurrence_at, if: :occurrence?
   after_create :reactivate_parent, if: -> { parent&.resolved? }
@@ -54,6 +55,10 @@ class Event < ApplicationRecord
   end
 
   private
+
+  def resolve_source_code
+    backtrace.first = ::Events::ResolveSourceCodeService.call(event: self)
+  end
 
   def pushback_muted
     errors.add(:status, I18n.t('activerecord.errors.model.event.attributes.status.muted'))
