@@ -33,8 +33,8 @@ gem 'redis'
 gem 'redis-rails'
 gem 'slack-notifier'
 gem 'slim'
-gem 'stripe'
 gem 'sprockets', '~> 3.7.2'
+gem 'stripe'
 
 group :development, :test do
   gem 'awesome_print', require: 'ap'
