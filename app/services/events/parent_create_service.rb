@@ -4,7 +4,7 @@ class Events::ParentCreateService < ApplicationService
   EXLCUDED_DIRECTORIES = ['vendor/', 'node_modules/']
 
   def call
-    if event['framework'] == 'browser-js'
+    if event['framework'] == Constants::Event::BROWSER_JS
       browser_js_parent&.id
     else
       assign_project_error_trace

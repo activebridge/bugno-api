@@ -25,3 +25,5 @@ coverage
 
 # Ignore database dump
 latest.dump
+
+node_modules/

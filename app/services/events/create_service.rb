@@ -3,13 +3,24 @@
 class Events::CreateService < ApplicationService
   def call
     return [{ error: I18n.t('api.errors.invalid_api_key') }, 401] unless project
-    return event unless event.persisted?
+    return event if event.invalid?
 
+    resolve_source_code if resolve_source_code?
+    event.save
     notify if notify?
     [{ message: I18n.t('api.event_captured') }, 201]
   end
 
   private
+
+  def resolve_source_code?
+    event.framework == Constants::Event::BROWSER_JS && event.backtrace.present?
+  end
+
+  def resolve_source_code
+    result = ::Events::ResolveSourceCodeService.call(trace: event.backtrace[0])
+    event.backtrace.unshift(result) if result
+  end
 
   def notify?
     event.parent? || occurred_again?
@@ -36,7 +47,7 @@ class Events::CreateService < ApplicationService
   end
 
   def event
-    @event ||= project.events.create(declared_params)
+    @event ||= project.events.new(declared_params)
   end
 
   def parent_event
