@@ -451,7 +451,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   stripe
-  stripe-ruby-mock (~> 2.5.7)
+  stripe-ruby-mock (~> 3.0.1)
 
 RUBY VERSION
    ruby 2.6.3p62
