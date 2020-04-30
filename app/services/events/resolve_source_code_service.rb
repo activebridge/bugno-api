@@ -6,7 +6,7 @@ module Events
   class ResolveSourceCodeService < ApplicationService
     def call
       unless File.exist?(path)
-        return if download.blank?
+        return if invalid_map?
 
         save_source_map
       end
@@ -14,6 +14,13 @@ module Events
     end
 
     private
+
+    def invalid_map?
+      JSON.parse(download&.string)
+      false
+    rescue StandardError
+      true
+    end
 
     def path
       @path ||= "tmp/#{filename}"
