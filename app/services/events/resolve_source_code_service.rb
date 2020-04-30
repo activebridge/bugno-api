@@ -30,7 +30,7 @@ module Events
     # rubocop:disable Security/Open
     def download
       @download ||= begin
-        open(source_map_url)
+                      open(source_map_url)
                     rescue StandardError
                       nil
       end

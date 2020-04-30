@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.1'
+ruby '2.6.6'
 
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'activeadmin'
@@ -28,7 +28,7 @@ gem 'premailer-rails'
 gem 'puma'
 gem 'pundit'
 gem 'rack-cors', require: 'rack/cors'
-gem 'rails', '~> 5.2.2', '>= 5.2.2.1'
+gem 'rails', '~> 5.2.4', '>= 5.2.4.2'
 gem 'redis'
 gem 'redis-rails'
 gem 'slack-notifier'
