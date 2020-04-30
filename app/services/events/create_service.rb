@@ -3,10 +3,10 @@
 class Events::CreateService < ApplicationService
   def call
     return [{ error: I18n.t('api.errors.invalid_api_key') }, 401] unless project
-    return event if event.invalid?
 
     resolve_source_code if resolve_source_code?
-    event.save
+    return event unless event.save
+
     notify if notify?
     [{ message: I18n.t('api.event_captured') }, 201]
   end
