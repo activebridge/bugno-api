@@ -3,6 +3,7 @@
 Bugno.configure do |config|
   # Specify api key to send exception to Bugno
   config.api_key = ENV['BUGNO_API_KEY']
+  config.api_url = ENV['BUGNO_API_URL'] if Rails.env.production?
 
   # Send in background with threading:
   config.send_in_background = true
@@ -21,7 +22,7 @@ Bugno.configure do |config|
   ]
 
   # Specify or add usage environments:
-  config.usage_environments = %w[staging]
+  config.usage_environments = %w[staging production]
   # config.usage_environments << 'development'
 
   # Specify current user method:
