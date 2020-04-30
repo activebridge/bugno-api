@@ -3,12 +3,12 @@ jobs:
  build:
    parallelism: 1
    docker:
-     - image: circleci/ruby:2.6.3-node
+     - image: circleci/ruby:2.7.1
        environment:
          RAILS_ENV: test
          PGHOST: 127.0.0.1
          PGUSER: postgres
-     - image: circleci/postgres:9.5-alpine
+     - image: circleci/postgres:11.7
        environment:
          POSTGRES_USER: postgres
          POSTGRES_DB: ab_test
