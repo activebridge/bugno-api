@@ -14,7 +14,7 @@ class Events::CreateService < ApplicationService
   private
 
   def resolve_source_code?
-    event.framework == 'browser-js' && event.backtrace.present?
+    event.framework == Constants::Event::BROWSER_JS && event.backtrace.present?
   end
 
   def resolve_source_code
