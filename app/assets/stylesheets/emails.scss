@@ -12,9 +12,11 @@ pre {
   padding: 3px 5px;
 }
 
-.wrapper {
-  background: $wild-sand;
-}
+.text-white { color: white; }
+
+.wrapper { background: $wild-sand; }
+
+.rounded { border-radius: 50%; }
 
 .main-container {
   margin: auto;
@@ -48,7 +50,7 @@ pre {
   font-style: italic;
   margin: auto;
   text-align: center;
-  background: rgba($valencia, 0.1);
+  background: rgba($java, 0.8);
   margin-bottom: 20px;
 }
 
@@ -64,7 +66,7 @@ pre {
 }
 
 .divider {
-  border-bottom: 2px solid rgba($valencia, 0.6);
+  border-bottom: 2px solid rgba($java, 0.6);
   margin: 3px 0;
 }
 
@@ -81,9 +83,7 @@ pre {
   padding: 10px 0;
 }
 
-.code-snippet-main-line {
-  background: rgba($valencia, 0.1);
-}
+.code-snippet-main-line { background: rgba($java, 0.1); }
 
 .backtrace { font-size: 12px; }
 
