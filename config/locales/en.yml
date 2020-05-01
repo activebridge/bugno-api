@@ -42,9 +42,12 @@ en:
       subject: '[%{project_name}] %{environment}: %{title} has appeared for the first time.'
     occurrence:
       subject: '[%{project_name}] %{environment}: %{title} has occured for %{times} times.'
+    assign:
+      subject: '[%{project_name}] %{environment}: %{assigner_name} has assigned you for %{title}'
   mailer:
-    new_exception_appeared: New exception appeared!
-    exception_occurred_again: 'An exception occurred for %{times} times already!'
+    new_exception_appeared: 'New exception appeared in %{project_name}!'
+    exception_occurred_again: 'An exception occurred for %{times} times in %{project_name}!'
+    user_assigned_you: '%{assigner_nickname} has assigned you for %{event_title}'
     view_on_bugno: View on bugno
     in: in
     message: message
