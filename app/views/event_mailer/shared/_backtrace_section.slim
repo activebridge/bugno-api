@@ -1,0 +1,4 @@
+.section
+  .section-title = t('mailer.backtrace')
+  .divider
+  .backtrace = render partial: 'event_mailer/shared/backtrace', collection: @event.backtrace[0..10], as: :line
