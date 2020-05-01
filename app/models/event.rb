@@ -53,6 +53,14 @@ class Event < ApplicationRecord
     (headers && headers['User-Agent']).present?
   end
 
+  def occurrences_today?
+    occurrences.any? { |occurrence| occurrence.created_at.today? }
+  end
+
+  def occurrence_count_today
+    occurrences.select { |occurrence| occurrence.created_at.today? }.count
+  end
+
   private
 
   def pushback_muted
