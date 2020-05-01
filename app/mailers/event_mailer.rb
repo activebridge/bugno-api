@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class EventMailer < ApplicationMailer
-  before_action :add_inline_logo
+  before_action :add_inline_logo, except: :assign
 
   def exception(event, addresses)
     @event = event
@@ -24,7 +24,30 @@ class EventMailer < ApplicationMailer
                                        title: @event.title, times: @occurrence_count))
   end
 
+  def assign(event, assigner)
+    @event = event
+    @link = link
+    @assignee = event.user
+    @assigner = assigner
+    @render_assignee_analytics = render_assignee_analytics?
+    add_assigner_photo
+    mail(to: @assignee.email,
+         subject: default_i18n_subject(project_name: @event.project.name,
+                                       environment: @event.environment,
+                                       title: @event.title, assigner_name: @assigner.nickname))
+  end
+
   private
+
+  def render_assignee_analytics?
+    @event.occurrence_count.positive? || @event.occurrences_today? || @assignee.assigned_in_project?(@event.project_id)
+  end
+
+  # rubocop:disable Security/Open
+  def add_assigner_photo
+    attachments.inline['assigner.png'] = open(@assigner.image).read
+  end
+  # rubocop:enable Security/Open
 
   def add_inline_logo
     attachments.inline['bugno-logo.png'] = File.read('app/assets/images/bugno-logo.png')
