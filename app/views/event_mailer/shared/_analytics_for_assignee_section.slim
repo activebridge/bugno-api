@@ -1,0 +1,14 @@
+.section
+  .section-title = 'Analytics'
+  .divider
+  - if @event.occurrence_count.positive?
+    span> Total occurrence:
+    span.font-weight-bold = @event.occurrence_count
+  - if @event.occurrences_today?
+    .new_line
+      span> Occurrences today:
+      span.font-weight-bold = @event.occurrence_count_today
+  - if @assignee.assigned_in_project?(@event.project_id)
+    .new_line
+      span> = "Assigned on you in #{@event.project.name}:"
+      span.font-weight-bold = @assignee.assigns_count_in_project(@event.project_id)
