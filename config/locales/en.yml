@@ -49,6 +49,10 @@ en:
     exception_occurred_again: 'An exception occurred for %{times} times in %{project_name}!'
     user_assigned_you: '%{assigner_nickname} has assigned you for %{event_title}'
     view_on_bugno: View on bugno
+    analytics: Analytics
+    total_occurrence: 'Total occurrences:'
+    occurrences_today: 'Occurrences today:'
+    assigned_on_user_in_project: 'Assigned events on you in project:'
     in: in
     message: message
     request_url: request url
