@@ -1,6 +1,4 @@
 .project-container
   = link_to @link, class: 'link' do
     .main
-      span> = t('mailer.in')
-      span.font-weight-bold = @event.project.name
-    .view-on-bugno = t('mailer.view_on_bugno')
+      span.text-white.font-weight-bold = t('mailer.view_on_bugno')
