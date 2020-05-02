@@ -53,12 +53,12 @@ class Event < ApplicationRecord
     (headers && headers['User-Agent']).present?
   end
 
-  def occurrences_today?
-    occurrences.any? { |occurrence| occurrence.created_at.today? }
+  def occurrences_today_count
+    occurrences.where('created_at >= ?', Time.zone.now.beginning_of_day).count
   end
 
-  def occurrence_count_today
-    occurrences.select { |occurrence| occurrence.created_at.today? }.count
+  def occurrences_today?
+    occurrences_today_count.positive?
   end
 
   private
