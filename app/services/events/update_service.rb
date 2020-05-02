@@ -17,8 +17,8 @@ class Events::UpdateService < ApplicationService
   end
 
   def notify_assignee?
-    assigne_user_id = declared_params.dig(:event, :user_id)
-    assigne_user_id.present? && assigne_user_id != user.id && event.saved_change_to_user_id?
+    assignee_user_id = declared_params.dig(:event, :user_id)
+    assignee_user_id.present? && assignee_user_id != user.id && event.saved_change_to_user_id?
   end
 
   def notify_assignee
