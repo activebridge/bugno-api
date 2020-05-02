@@ -40,7 +40,19 @@ class EventMailer < ApplicationMailer
   private
 
   def render_assignee_analytics?
-    @event.occurrence_count.positive? || @event.occurrences_today? || @assignee.assigned_in_project?(@event.project_id)
+    occurences_present || occurrences_today || assigned_in_project
+  end
+
+  def occurences_present
+    @occurences_present ||= @event.occurrence_count.positive?
+  end
+
+  def occurrences_today
+    @occurrences_today ||= @event.occurrences_today?
+  end
+
+  def assigned_in_project
+    @assignee.assigned_in_project?(@event.project_id)
   end
 
   # rubocop:disable Security/Open
