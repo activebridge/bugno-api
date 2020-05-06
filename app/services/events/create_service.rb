@@ -5,7 +5,7 @@ class Events::CreateService < ApplicationService
     return [{ error: I18n.t('api.errors.invalid_api_key') }, 401] unless project
 
     resolve_source_code if resolve_source_code?
-    return event unless event.save
+    return event unless project.with_lock { event.save }
 
     notify if notify?
     [{ message: I18n.t('api.event_captured') }, 201]
