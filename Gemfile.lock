@@ -269,6 +269,8 @@ GEM
     rack (2.2.2)
     rack-accept (0.4.5)
       rack (>= 0.4)
+    rack-attack (6.3.0)
+      rack (>= 1.0, < 3)
     rack-cors (1.1.1)
       rack (>= 2.0.0)
     rack-test (1.1.0)
@@ -438,6 +440,7 @@ DEPENDENCIES
   pry
   puma
   pundit
+  rack-attack (~> 6.3)
   rack-cors
   rails (~> 5.2.4, >= 5.2.4.2)
   redis
