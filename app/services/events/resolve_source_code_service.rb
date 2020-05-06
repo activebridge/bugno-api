@@ -16,28 +16,28 @@ module Events
     private
 
     def invalid_map?
-      JSON.parse(download&.string)
+      JSON.parse(download)
       false
     rescue StandardError
       true
     end
 
     def path
-      @path ||= "tmp/#{filename}"
+      @path ||= "public/#{filename}"
     end
 
     def filename
       @filename ||= "#{@trace['filename'].split('/')[-1]}.map"
     end
 
+    # rubocop:disable Security/Open
     def save_source_map
-      download.is_a?(File) ? download : IO.copy_stream(download, path)
+      open(path, 'wb') { |file| file << download }
     end
 
-    # rubocop:disable Security/Open
     def download
       @download ||= begin
-        open(source_map_url)
+        open(source_map_url).read
                     rescue StandardError
                       nil
       end
