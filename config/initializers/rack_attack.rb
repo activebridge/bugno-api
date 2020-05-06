@@ -2,5 +2,5 @@
 
 class Rack::Attack
   Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
-  throttle('req/ip', limit: 20, period: 20.seconds, &:ip)
+  throttle('req/ip', limit: 60, period: 60.seconds, &:ip)
 end
