@@ -76,43 +76,6 @@ ActiveRecord::Schema.define(version: 2019_12_06_175353) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "product_articles", force: :cascade do |t|
-    t.bigint "product_id", null: false
-    t.string "name"
-    t.string "url"
-    t.string "sku"
-    t.integer "price"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["product_id"], name: "index_product_articles_on_product_id"
-  end
-
-  create_table "product_photos", force: :cascade do |t|
-    t.bigint "product_id", null: false
-    t.string "url"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["product_id"], name: "index_product_photos_on_product_id"
-  end
-
-  create_table "product_sizes", force: :cascade do |t|
-    t.bigint "product_id", null: false
-    t.bigint "size_id", null: false
-    t.string "sku"
-    t.boolean "available"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["product_id"], name: "index_product_sizes_on_product_id"
-    t.index ["size_id"], name: "index_product_sizes_on_size_id"
-  end
-
-  create_table "products", force: :cascade do |t|
-    t.string "name"
-    t.string "sku"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "project_users", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "project_id"
@@ -132,21 +95,6 @@ ActiveRecord::Schema.define(version: 2019_12_06_175353) do
     t.string "slug"
     t.integer "active_event_count", default: 0, null: false
     t.index ["slug"], name: "index_projects_on_slug", unique: true
-  end
-
-  create_table "sessions", force: :cascade do |t|
-    t.string "session_id", null: false
-    t.text "data"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
-    t.index ["updated_at"], name: "index_sessions_on_updated_at"
-  end
-
-  create_table "sizes", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "subscriptions", force: :cascade do |t|
@@ -195,10 +143,6 @@ ActiveRecord::Schema.define(version: 2019_12_06_175353) do
   add_foreign_key "events", "projects"
   add_foreign_key "events", "users"
   add_foreign_key "integrations", "projects"
-  add_foreign_key "product_articles", "products"
-  add_foreign_key "product_photos", "products"
-  add_foreign_key "product_sizes", "products"
-  add_foreign_key "product_sizes", "sizes"
   add_foreign_key "project_users", "projects"
   add_foreign_key "project_users", "users"
   add_foreign_key "subscriptions", "plans"
