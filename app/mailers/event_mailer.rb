@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class EventMailer < ApplicationMailer
-  before_action :add_inline_logo, except: :assign
+  before_action :add_inline_logo, :assign_action_name, only: %i[exception occurrence]
 
   def exception(event, addresses)
     @event = event
@@ -38,6 +38,10 @@ class EventMailer < ApplicationMailer
   end
 
   private
+
+  def assign_action_name
+    @action_name = action_name
+  end
 
   def render_assignee_analytics?
     occurences_present || occurrences_today || assigned_in_project
