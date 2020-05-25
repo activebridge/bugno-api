@@ -29,7 +29,6 @@ class EventMailer < ApplicationMailer
     @link = link
     @assignee = event.user
     @assigner = assigner
-    @render_assignee_analytics = render_assignee_analytics?
     add_assigner_photo
     mail(to: @assignee.email,
          subject: default_i18n_subject(project_name: @event.project.name,
@@ -41,22 +40,6 @@ class EventMailer < ApplicationMailer
 
   def assign_action_name
     @action_name = action_name
-  end
-
-  def render_assignee_analytics?
-    occurences_present || occurrences_today || assigned_in_project
-  end
-
-  def occurences_present
-    @occurences_present ||= @event.occurrence_count.positive?
-  end
-
-  def occurrences_today
-    @occurrences_today ||= @event.occurrences_today?
-  end
-
-  def assigned_in_project
-    @assignee.assigned_in_project?(@event.project_id)
   end
 
   # rubocop:disable Security/Open

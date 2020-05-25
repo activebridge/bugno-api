@@ -53,14 +53,6 @@ class Event < ApplicationRecord
     (headers && headers['User-Agent']).present?
   end
 
-  def occurrences_today_count
-    occurrences.where('created_at >= ?', Time.zone.now.beginning_of_day).count
-  end
-
-  def occurrences_today?
-    occurrences_today_count.positive?
-  end
-
   private
 
   def pushback_muted
