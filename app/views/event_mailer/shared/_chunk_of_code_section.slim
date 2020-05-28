@@ -1,0 +1,7 @@
+.section
+  .section-title = t('mailer.code_snippet')
+  .divider
+  .filename
+    span.section-title> = t('mailer.file_path')
+    span = @chunk_of_code['filename']
+  .code-snippet = render partial: 'event_mailer/shared/chunk_of_code', object: @chunk_of_code, as: :line

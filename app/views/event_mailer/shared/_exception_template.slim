@@ -1,0 +1,8 @@
+.main-container
+  = render partial: 'event_mailer/shared/bugno_logo'
+  .header = t("mailer.#{@action_name}_section", project_name: @event.project.name, times: @occurrence_count)
+  = render partial: 'event_mailer/shared/project_section'
+  = render partial: 'event_mailer/shared/message_section'
+  = render partial: 'event_mailer/shared/url_section' if @event.url.present?
+  = render partial: 'event_mailer/shared/chunk_of_code_section' if @chunk_of_code.present?
+  = render partial: 'event_mailer/shared/backtrace_section' if @event.backtrace.present?
