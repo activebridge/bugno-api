@@ -23,11 +23,12 @@ class Event < ApplicationRecord
   scope :by_parent, ->(parent_id) { where(parent_id: parent_id) if parent_id.present? }
 
   before_validation :assign_parent, if: -> { new_record? && project.present? }
+  before_create :destroy_first_occurrence, if: :replace_occurrence?
   before_create :pushback_muted, if: -> { parent&.muted? }
   after_create :update_occurrence_at, if: :occurrence?
   after_create :reactivate_parent, if: -> { parent&.resolved? }
   after_create :update_subscription_events, if: -> { project&.subscription&.active? }
-  after_update :update_occurrences_status, if: -> { parent? && saved_changes['status'] }
+  after_update :update_occurrences_status, if: -> { parent? && saved_change_to_status? }
   after_save :update_active_count, :broadcast, if: :parent?
   after_destroy :update_active_count, :broadcast, if: :parent?
 
@@ -54,6 +55,14 @@ class Event < ApplicationRecord
   end
 
   private
+
+  def replace_occurrence?
+    occurrence? && parent.occurrence_count >= Constants::Rules::OCCURRENCES_LIMIT
+  end
+
+  def destroy_first_occurrence
+    parent.occurrences.first.destroy
+  end
 
   def pushback_muted
     errors.add(:status, I18n.t('activerecord.errors.model.event.attributes.status.muted'))
