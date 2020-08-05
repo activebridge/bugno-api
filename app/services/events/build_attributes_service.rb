@@ -1,10 +1,16 @@
 # frozen_string_literal: true
 
-class Events::AssignParentService < ApplicationService
+class Events::BuildAttributesService < ApplicationService
   EXLCUDED_DIRECTORIES = ['vendor/', 'node_modules/']
 
   def call
-    if @event.framework == Constants::Event::BROWSER_JS
+    @params.merge(parent_id: parent_id)
+  end
+
+  private
+
+  def parent_id
+    if @params['framework'] == Constants::Event::BROWSER_JS
       browser_js_parent&.id
     else
       assign_project_trace
@@ -12,30 +18,28 @@ class Events::AssignParentService < ApplicationService
     end
   end
 
-  private
-
   def parent_by_backtrace
     query = 'parent_id IS NULL AND title = ? AND backtrace @> ARRAY[?]::jsonb[]'
-    @project.events.where(query, @event.title, project_trace.except('project_error').to_json)&.first
+    @project.events.where(query, @params['title'], project_trace.except('project_error').to_json)&.first
   end
 
   def parent_by_title
-    @project.events.find_by(title: @event.title, message: @event.message, parent_id: nil)
+    @project.events.find_by(title: @params['title'], message: @params['message'], parent_id: nil)
   end
 
   def browser_js_parent
-    @project.events.find_by(message: @event.message, parent_id: nil)
+    @project.events.find_by(message: @params['message'], parent_id: nil)
   end
 
   def assign_project_trace
-    @event.backtrace.each do |trace|
-      trace['project_error'] = true if trace['filename'].include?(@event['server_data']['root']) && \
+    @params['backtrace'].each do |trace|
+      trace['project_error'] = true if trace['filename'].include?(@params.dig('server_data', 'root')) &&
                                        !excluded_directory?(trace['filename'])
     end
   end
 
   def project_trace
-    @event.backtrace.find { |trace| trace['project_error'] }
+    @params['backtrace'].find { |trace| trace['project_error'] }
   end
 
   def excluded_directory?(filename)

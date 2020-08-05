@@ -4,7 +4,6 @@ class Events::CreateService < ApplicationService
   def call
     return event unless project
 
-    assign_parent
     project.with_lock { event.save }
     event
   end
@@ -16,10 +15,10 @@ class Events::CreateService < ApplicationService
   end
 
   def event
-    @event ||= Event.new(@params.merge(project: project))
+    @event ||= Event.new(project ? event_attributes : @params)
   end
 
-  def assign_parent
-    event.parent_id = ::Events::AssignParentService.call(event: event, project: project)
+  def event_attributes
+    @event_attributes ||= ::Events::BuildAttributesService.call(params: @params, project: project).merge(project: project)
   end
 end
