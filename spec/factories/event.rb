@@ -38,14 +38,12 @@ FactoryBot.define do
       message { 'undefined local variable or method' }
       server_data { { host: 'ancient-pc', root: 'user/my_app' } }
       backtrace do
-        [{ filename: 'user/my_app/models/post',
+        [{ code: 'call',
            lineno: '33',
            method: 'class ApplicationRecord',
-           code: 'call',
-           context: {
-             pre: %w[line before code],
-             post: %w[line after code]
-           } }]
+           context: { pre: %w[line before code],
+                      post: %w[line after code] },
+           filename: 'user/my_app/models/post'}]
       end
       environment { 'test' }
       ip_address { '127.0.0.1' }
