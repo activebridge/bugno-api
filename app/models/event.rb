@@ -22,8 +22,6 @@ class Event < ApplicationRecord
   scope :by_status, ->(status) { where(status: status) if status.present? }
   scope :by_parent, ->(parent_id) { where(parent_id: parent_id) if parent_id.present? }
 
-  before_validation :assign_parent, if: -> { new_record? && project.present? }
-  before_create :pushback_muted, if: -> { parent&.muted? }
   after_create :update_occurrence_at, if: :occurrence?
   after_create :reactivate_parent, if: -> { parent&.resolved? }
   after_create :update_subscription_events, if: -> { project&.subscription&.active? }
@@ -55,11 +53,6 @@ class Event < ApplicationRecord
 
   private
 
-  def pushback_muted
-    errors.add(:status, I18n.t('activerecord.errors.model.event.attributes.status.muted'))
-    throw :abort
-  end
-
   def update_subscription_events
     project.subscription.decrement(:events)
     project.subscription.save
@@ -79,10 +72,6 @@ class Event < ApplicationRecord
 
   def update_active_count
     project.update!(active_event_count: project.active_events.size)
-  end
-
-  def assign_parent
-    self.parent_id = ::Events::ParentCreateService.call(event: self, project: project)
   end
 
   def broadcast
