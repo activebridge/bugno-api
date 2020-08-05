@@ -43,7 +43,7 @@ FactoryBot.define do
            method: 'class ApplicationRecord',
            context: { pre: %w[line before code],
                       post: %w[line after code] },
-           filename: 'user/my_app/models/post'}]
+           filename: 'user/my_app/models/post' }]
       end
       environment { 'test' }
       ip_address { '127.0.0.1' }

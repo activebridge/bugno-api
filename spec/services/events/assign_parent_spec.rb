@@ -28,7 +28,9 @@ describe Events::AssignParentService do
   context 'when javascript' do
     context 'by message' do
       let(:event) { create(:event, project: project, framework: Constants::Event::BROWSER_JS) }
-      let(:occurrence) { build(:event, project: project, framework: Constants::Event::BROWSER_JS, message: event.message) }
+      let(:occurrence) do
+        build(:event, project: project, framework: Constants::Event::BROWSER_JS, message: event.message)
+      end
 
       it { is_expected.to eq(event.id) }
     end
