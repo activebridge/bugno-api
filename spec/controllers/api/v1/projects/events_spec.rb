@@ -11,34 +11,36 @@ describe API::V1::Projects::Events do
 
   describe '#index' do
     subject { -> { get(*request_params) } }
-    let!(:events) { create_list(:event, 3, project: project) }
-    let!(:occurrences) { create_list(:event, 2, :static_attributes, project: project) }
+    let!(:event) { create(:event, project: project) }
 
-    it { is_expected.to respond_with_json_count(4).at(:events) }
-    it { is_expected.to respond_with_status(200) }
+    context 'return parent events' do
+      let!(:occurrence) { create(:event, project: project, parent_id: event.id) }
 
-    context 'with specified status' do
-      let!(:events) { create_list(:event, 3, project: project, status: :muted) }
+      it { is_expected.to respond_with_json_count(1).at(:events) }
+      it { is_expected.to respond_with_status(200) }
+    end
+
+    context 'by status' do
+      let!(:muted_event) { create(:event, project: project, status: :muted) }
       let(:params) { { status: :muted } }
 
-      it { is_expected.to respond_with_json_count(3).at(:events) }
-      it { is_expected.to respond_with_status(200) }
+      it { is_expected.to respond_with_json_count(1).at(:events) }
     end
   end
 
   describe '#occurrences' do
     subject { -> { get(*request_params) } }
-    let!(:parent_event) { create(:event, :static_attributes, project: project) }
-    let!(:occurrences) { create_list(:event, 3, :static_attributes, project: project) }
-    let(:url) { "#{base_url}/occurrences/#{parent_event.id}" }
+    let(:event) { create(:event, project: project) }
+    let!(:occurrence) { create(:event, project: project, parent_id: event.id) }
+    let(:url) { "#{base_url}/occurrences/#{event.id}" }
 
+    it { is_expected.to respond_with_json_count(1).at(:events) }
     it { is_expected.to respond_with_status(200) }
-    it { is_expected.to respond_with_json_count(3).at(:events) }
 
-    context 'when params id belongs to occurrence' do
-      let(:url) { "#{base_url}/occurrences/#{occurrences.last.id}" }
+    context 'when occurrence id' do
+      let(:url) { "#{base_url}/occurrences/#{occurrence.id}" }
 
-      it { is_expected.to respond_with_json_count(3).at(:events) }
+      it { is_expected.to respond_with_json_count(1).at(:events) }
     end
   end
 
@@ -47,10 +49,8 @@ describe API::V1::Projects::Events do
     let(:headers) { nil }
     let(:url) { "/api/v1/projects/#{project.api_key}/events" }
     let(:params) { attributes_for(:event) }
-    let(:response_message) { { message: 'Event captured' } }
 
     it { is_expected.to respond_with_status(201) }
-    it { is_expected.to respond_with_json(response_message) }
     it { is_expected.to change(project.events, :count) }
 
     context 'when occurrence' do
@@ -91,11 +91,9 @@ describe API::V1::Projects::Events do
 
     context 'when api key is invalid' do
       let(:api_key) { 'invalid_api_key' }
-      let(:response_message) { { error: 'api-key is invalid' } }
       let(:url) { "/api/v1/projects/#{api_key}/events" }
 
-      it { is_expected.to respond_with_status(401) }
-      it { is_expected.to respond_with_json(response_message) }
+      it { is_expected.to respond_with_status(422) }
       it { is_expected.not_to change(project.events, :count) }
     end
   end
@@ -118,21 +116,17 @@ describe API::V1::Projects::Events do
     it { is_expected.to change { event.reload.user_id } }
 
     context 'when status changed' do
-      context do
-        let!(:occurrences) { create_list(:event, 2, :static_attributes, project: project) }
-        let(:url) { "#{base_url}/#{occurrences.first.id}" }
+      let(:occurrence) { create(:event, project: project, parent_id: event.id) }
+      let(:url) { "#{base_url}/#{occurrence.id}" }
 
-        it 'updates occurrences' do
-          is_expected.to change { occurrences.last.reload.status }
-        end
-      end
+      it { is_expected.to change { occurrence.reload.status } }
     end
   end
 
   describe '#destroy' do
     subject { -> { delete(*request_params) } }
-    let!(:occurrences) { create_list(:event, 3, :static_attributes, project: project) }
-    let(:event) { occurrences.first }
+    let(:event) { create(:event, project: project) }
+    let!(:occurrence) { create(:event, project: project, parent_id: event.id) }
     let(:url) { "#{base_url}/#{event.id}" }
     # let(:result) { EventSerializer.new(event).as_json }
 
@@ -141,7 +135,7 @@ describe API::V1::Projects::Events do
     # TODO: fix wrong symbolize in this matcher
     # it { is_expected.to respond_with_json(result) }
     context 'when event has occurrences' do
-      it { is_expected.to change(event.reload.occurrences, :count) }
+      it { is_expected.to change(Event.where(parent_id: event.id), :count) }
     end
   end
 end
