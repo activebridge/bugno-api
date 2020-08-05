@@ -19,10 +19,6 @@ class Events::CreateService < ApplicationService
     @event ||= Event.new(@params.merge(project: project))
   end
 
-  def parent
-    @parent ||= event.parent
-  end
-
   def assign_parent
     event.parent_id = ::Events::AssignParentService.call(event: event, project: project)
   end
