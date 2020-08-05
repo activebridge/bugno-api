@@ -62,8 +62,12 @@ class API::V1::Projects::Events < Grape::API # rubocop:disable Metrics/ClassLeng
       end
 
       post do
-        event = ::Events::CreateService.call(declared_params: declared_params)
-        render_api(*event)
+        @event = ::Events::CreateService.call(params: declared_params)
+        if @event.persisted?
+          ::Events::ResolveSourceCodeService.call(event: @event, trace: @event.backtrace[0])
+          ::Events::NotifyService.call(event: @event)
+        end
+        render_api(@event, @event.persisted? ? :created : :unprocessable_entity)
       end
 
       desc 'Returns event'
@@ -98,7 +102,7 @@ class API::V1::Projects::Events < Grape::API # rubocop:disable Metrics/ClassLeng
       end
 
       patch ':id' do
-        event = ::Events::UpdateService.call(declared_params: declared_params, user: current_user)
+        event = ::Events::UpdateService.call(params: declared_params, user: current_user)
         render_api(event)
       end
 
