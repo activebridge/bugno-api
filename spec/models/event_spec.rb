@@ -72,10 +72,10 @@ describe Event do
       end
 
       context 'when event is occurrence' do
-        let!(:parent_event) { create(:event, :static_attributes, project: project) }
-        let(:event) { build(:event, :static_attributes, project: project) }
+        let(:parent) { create(:event, project: project) }
+        let(:event) { build(:event, project: project, parent_id: parent.id) }
 
-        it { is_expected.not_to change(project.reload, :active_event_count) }
+        it { is_expected.to change(project.reload, :active_event_count).from(0).to(1) }
       end
     end
   end
