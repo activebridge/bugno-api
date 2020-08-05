@@ -4,7 +4,7 @@ class Events::BuildAttributesService < ApplicationService
   EXLCUDED_DIRECTORIES = ['vendor/', 'node_modules/']
 
   def call
-    @params.merge(parent_id: parent_id)
+    @params.merge(parent_id: parent_id, project: @project)
   end
 
   private

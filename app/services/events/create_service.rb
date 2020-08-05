@@ -19,7 +19,6 @@ class Events::CreateService < ApplicationService
   end
 
   def event_attributes
-    @event_attributes ||= ::Events::BuildAttributesService
-                          .call(params: @params, project: project).merge(project: project)
+    @event_attributes ||= ::Events::BuildAttributesService.call(params: @params, project: project)
   end
 end
