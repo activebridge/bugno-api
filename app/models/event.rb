@@ -25,7 +25,7 @@ class Event < ApplicationRecord
   after_create :update_occurrence_at, if: :occurrence?
   after_create :reactivate_parent, if: -> { parent&.resolved? }
   after_create :update_subscription_events, if: -> { project&.subscription&.active? }
-  after_update :update_occurrences_status, if: -> { parent? && saved_changes['status'] }
+  after_update :update_occurrences_status, if: -> { parent? && saved_change_to_status? }
   after_save :update_active_count, :broadcast, if: :parent?
   after_destroy :update_active_count, :broadcast, if: :parent?
 
