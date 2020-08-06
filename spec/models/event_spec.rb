@@ -62,9 +62,9 @@ describe Event do
 
   context 'after save' do
     subject { -> { event.save } }
+    let(:project) { create(:project, :with_subscription) }
 
     describe '#update_active_count' do
-      let(:project) { create(:project, :with_subscription) }
       let(:event) { build(:event, project: project) }
 
       context 'when event is parent' do
@@ -78,21 +78,36 @@ describe Event do
         it { is_expected.to change(project.reload, :active_event_count).from(0).to(1) }
       end
     end
+
+    context do
+      let(:parent) { create(:event, project: project, status: :resolved) }
+      let(:event) { build(:event, project: project, parent_id: parent.id) }
+
+      describe '#reactivate_parent' do
+        it { is_expected.to change { parent.reload.status }.from('resolved').to('active') }
+      end
+
+      describe '#update_occurrence_at' do
+        let(:parent) { create(:event, project: project, last_occurrence_at: nil) }
+
+        it { is_expected.to change { parent.reload.last_occurrence_at } }
+      end
+
+      describe '#update_subscription_events' do
+        it { is_expected.to change { project.subscription.reload.events }.by(-2) }
+      end
+    end
   end
 
-  describe '#reactivate_parent' do
-    pending
-  end
+  context do
+    subject { -> { parent.update(status: new_status) } }
+    let(:project) { create(:project, :with_subscription) }
+    let(:parent) { create(:event, project: project) }
+    let(:event) { create(:event, project: project, parent_id: parent.id) }
+    let(:new_status) { 'resolved' }
 
-  describe '#update_occurrences_status' do
-    pending
-  end
-
-  describe '#update_occurrence_at' do
-    pending
-  end
-
-  describe '#update_subscription_events' do
-    pending
+    describe '#update_occurrences_status' do
+      it { is_expected.to change { event.reload.status }.to('resolved') }
+    end
   end
 end
