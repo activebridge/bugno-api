@@ -15,10 +15,24 @@ class Events::CreateService < ApplicationService
   end
 
   def event
-    @event ||= Event.new(project ? event_attributes : @params)
+    @event ||= Event.new(event_attributes)
   end
 
   def event_attributes
-    @event_attributes ||= ::Events::BuildAttributesService.call(params: @params, project: project)
+    return @params unless project
+
+    parent_muted? ? cut_attributes : built_attributes
+  end
+
+  def parent_muted?
+    built_attributes[:parent_id] && Event.find(built_attributes[:parent_id]).muted?
+  end
+
+  def cut_attributes
+    built_attributes.slice(:id, :project_id, :title, :message, :framework, :parent_id).merge(status: :muted)
+  end
+
+  def built_attributes
+    @built_attributes ||= ::Events::BuildAttributesService.call(params: @params, project: project)
   end
 end
