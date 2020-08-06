@@ -12,10 +12,16 @@ class Events::BuildAttributesService < ApplicationService
   def parent_id
     if @params['framework'] == Constants::Event::BROWSER_JS
       browser_js_parent&.id
+    elsif @params['backtrace']
+      handle_backtrace_event
     else
-      assign_project_trace
-      project_trace && project_trace['code'] ? parent_by_backtrace&.id : parent_by_title&.id
+      parent_by_title&.id
     end
+  end
+
+  def handle_backtrace_event
+    assign_project_trace
+    project_trace && project_trace['code'] ? parent_by_backtrace&.id : parent_by_title&.id
   end
 
   def parent_by_backtrace
