@@ -74,11 +74,9 @@ describe API::V1::Projects::Events do
 
     context 'when missing subscription or it is expired' do
       before { project.subscription.update(events: -1) }
-      let(:response_message) { { error: 'Subscription expired' } }
 
       it { is_expected.not_to change(project.events, :count) }
       it { is_expected.to respond_with_status(422) }
-      it { is_expected.to respond_with_json(response_message) }
     end
 
     context 'when missing api key' do
