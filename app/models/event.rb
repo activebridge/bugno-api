@@ -22,7 +22,6 @@ class Event < ApplicationRecord
   scope :by_status, ->(status) { where(status: status) if status.present? }
   scope :by_parent, ->(parent_id) { where(parent_id: parent_id) if parent_id.present? }
 
-  after_create :update_occurrence_at, if: :occurrence?
   after_create :reactivate_parent, if: -> { parent&.resolved? }
   after_create :update_subscription_events, if: -> { project&.subscription&.active? }
   after_update :update_occurrences_status, if: -> { parent? && saved_change_to_status? }
@@ -51,6 +50,10 @@ class Event < ApplicationRecord
     (headers && headers['User-Agent']).present?
   end
 
+  def occurrence_limit_reached?
+    occurrence_count >= Constants::Event::OCCURRENCE_LIMIT
+  end
+
   private
 
   def update_subscription_events
@@ -64,10 +67,6 @@ class Event < ApplicationRecord
 
   def reactivate_parent
     parent.active!
-  end
-
-  def update_occurrence_at
-    parent.update!(last_occurrence_at: created_at)
   end
 
   def update_active_count
