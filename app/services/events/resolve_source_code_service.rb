@@ -5,8 +5,6 @@ require 'open-uri'
 module Events
   class ResolveSourceCodeService < ApplicationService
     def call
-      return unless resolve_code?
-
       unless File.exist?(path)
         return if invalid_map?
 
@@ -16,10 +14,6 @@ module Events
     end
 
     private
-
-    def resolve_code?
-      @event.framework == Constants::Event::BROWSER_JS && @event.backtrace.present?
-    end
 
     def result
       @result ||= resolve_trace
