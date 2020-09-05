@@ -64,7 +64,7 @@ class API::V1::Projects::Events < Grape::API # rubocop:disable Metrics/ClassLeng
       post do
         @event = ::Events::CreateService.call(params: declared_params)
         ::Events::NotifyService.call(event: event) if event.persisted?
-        render_api(@event, @event.persisted? ? :created : :unprocessable_entity)
+        status(@event.persisted? ? :created : :unprocessable_entity)
       end
 
       desc 'Returns event'
