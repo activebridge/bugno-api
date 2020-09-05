@@ -87,12 +87,6 @@ describe Event do
         it { is_expected.to change { parent.reload.status }.from('resolved').to('active') }
       end
 
-      describe '#update_occurrence_at' do
-        let(:parent) { create(:event, project: project, last_occurrence_at: nil) }
-
-        it { is_expected.to change { parent.reload.last_occurrence_at } }
-      end
-
       describe '#update_subscription_events' do
         it { is_expected.to change { project.subscription.reload.events }.by(-2) }
       end
