@@ -2,7 +2,7 @@
 
 class Events::NotifyService < ApplicationService
   def call
-    return unless notify?
+    return unless notify? && notifiable_status?
 
     mailer = @event.parent? ? :exception : :occurrence
     EventMailer.send(mailer, @event, user_emails).deliver_later
@@ -15,8 +15,12 @@ class Events::NotifyService < ApplicationService
     @event.parent? || occurrence_point?
   end
 
+  def notifiable_status?
+    !@event.muted? && !@event.parent&.muted?
+  end
+
   def occurrence_point?
-    Constants::Event::OCCURRENCE_NOTIFICATION_POINTS.any? { |point| point == @event.parent&.occurrence_count }
+    Constants::Event::OCCURRENCE_NOTIFICATION_POINTS.any? { |point| point == @event.parent.occurrence_count }
   end
 
   def notify_attributes
