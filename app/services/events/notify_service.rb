@@ -16,7 +16,7 @@ class Events::NotifyService < ApplicationService
   end
 
   def occurrence_point?
-    Constants::Rules::OCCURRENCE_NOTIFICATION_POINTS.any? { |point| point == @event.parent&.occurrence_count }
+    Constants::Event::OCCURRENCE_NOTIFICATION_POINTS.any? { |point| point == @event.parent&.occurrence_count }
   end
 
   def notify_attributes
