@@ -16,10 +16,10 @@ class EventSerializer < ApplicationSerializer
   end
 
   def user_email
-    object.person_data['email']
+    object.person_data&.dig('email')
   end
 
   def refer_url
-    object.headers['Referer']
+    object.headers&.dig('Referer')
   end
 end
