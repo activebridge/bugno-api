@@ -1,60 +1,51 @@
 # frozen_string_literal: true
 
 class Events::CreateService < ApplicationService
-  def call
-    return [{ error: I18n.t('api.errors.invalid_api_key') }, 401] unless project
+  def call # rubocop:disable Metrics/AbcSize
+    return event unless project
 
-    resolve_source_code if resolve_source_code?
-    return event unless project.with_lock { event.save }
-
-    notify if notify?
-    [{ message: I18n.t('api.event_captured') }, 201]
+    ::Events::ResolveSourceCodeService.call(event: event, trace: event.backtrace[0]) if resolve_source?
+    occurrence_limit_reached? ? push_occurrence : create_event
+    parent.update(last_occurrence_at: Time.now) if event.occurrence?
+    event
   end
 
   private
 
-  def resolve_source_code?
+  def create_event
+    project.with_lock { event.save }
+  end
+
+  def push_occurrence
+    parent.occurrences.first.delete
+    create_event
+  end
+
+  def resolve_source?
     event.framework == Constants::Event::BROWSER_JS && event.backtrace.present?
   end
 
-  def resolve_source_code
-    result = ::Events::ResolveSourceCodeService.call(trace: event.backtrace[0])
-    event.backtrace.unshift(result) if result
-  end
-
-  def notify?
-    event.parent? || occurred_again?
-  end
-
-  def occurred_again?
-    Constants::Rules::OCCURRENCE_NOTIFICATION_POINTS.any? { |point| point == parent_event&.occurrence_count }
-  end
-
-  def notify
-    mailer = event.parent? ? :exception : :occurrence
-    EventMailer.send(mailer, event, user_emails).deliver_later
-    Integration.notify(notify_attributes)
-  end
-
-  def notify_attributes
-    return { event: event, action: UserChannel::ACTIONS::CREATE_EVENT, reason: nil } if event.parent?
-
-    { event: parent_event, action: UserChannel::ACTIONS::UPDATE_EVENT, reason: 'Occurrence' }
-  end
-
   def project
-    @project ||= Project.find_by(api_key: declared_params[:project_id])
+    @project ||= Project.find_by(api_key: @params[:project_id])
   end
 
   def event
-    @event ||= project.events.new(declared_params)
+    @event ||= Event.new(event_attributes)
   end
 
-  def parent_event
-    @parent_event ||= event.parent
+  def event_attributes
+    project ? built_attributes : @params
   end
 
-  def user_emails
-    @user_emails ||= project.users.pluck(:email)
+  def parent
+    @parent ||= Event.find(built_attributes[:parent_id])
+  end
+
+  def built_attributes
+    @built_attributes ||= ::Events::BuildAttributesService.call(params: @params, project: project)
+  end
+
+  def occurrence_limit_reached?
+    built_attributes[:parent_id] && parent.occurrence_limit_reached?
   end
 end

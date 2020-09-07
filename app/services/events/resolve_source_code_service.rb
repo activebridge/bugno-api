@@ -10,10 +10,14 @@ module Events
 
         save_source_map
       end
-      resolve_trace
+      @event.backtrace.unshift(result) if result
     end
 
     private
+
+    def result
+      @result ||= resolve_trace
+    end
 
     def invalid_map?
       JSON.parse(download)

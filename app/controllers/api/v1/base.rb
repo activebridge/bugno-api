@@ -10,8 +10,7 @@ class API::V1::Base < Grape::API
     end
 
     def render_error(record)
-      message = record.respond_to?(:errors) ? error!(record.errors.full_messages.to_sentence, 422) : nil
-      error!(message, 422)
+      record.respond_to?(:errors) ? error!(record.errors.full_messages.to_sentence, 422) : status(422)
     end
 
     def render_api(object, status = 200)
