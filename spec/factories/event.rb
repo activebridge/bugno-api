@@ -56,5 +56,17 @@ FactoryBot.define do
       http_method { 'POST' }
       last_occurrence_at { 1.hour.ago }
     end
+
+    trait :with_project_error_trace do
+      backtrace do
+        [{ code: 'call',
+           lineno: '33',
+           method: 'class ApplicationRecord',
+           context: { pre: %w[line before code],
+                      post: %w[line after code] },
+           filename: 'user/my_app/models/post',
+           project_error: true }]
+      end
+    end
   end
 end
