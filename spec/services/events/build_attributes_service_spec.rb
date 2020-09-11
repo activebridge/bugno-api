@@ -6,9 +6,9 @@ describe Events::BuildAttributesService do
 
   context 'when rails' do
     context 'by backtrace' do
-      let!(:event) { create(:event, :static_attributes, project: project) }
+      let!(:event) { create(:event, :static_attributes, :with_project_error_trace, project: project) }
       let(:params) { attributes_for(:event, :static_attributes).as_json }
-      let(:project_trace) { subject['backtrace'].find { |trace| trace[:project_error] } }
+      let(:project_trace) { subject['backtrace'].find { |trace| trace['project_error'] } }
 
       it { is_expected.to include(parent_id: event.id) }
       it do
