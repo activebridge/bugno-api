@@ -54,7 +54,9 @@ describe API::V1::Projects::Events do
     it { is_expected.to change(project.events, :count) }
 
     context 'when occurrence' do
-      let!(:parent_event) { create(:event, :static_attributes, :with_project_error_trace, project: project, status: :resolved) }
+      let!(:parent_event) do
+        create(:event, :static_attributes, :with_project_error_trace, project: project, status: :resolved)
+      end
       let!(:params) { attributes_for(:event, :static_attributes) }
 
       it 'updates parent event last_occurrence_at' do
