@@ -22,6 +22,23 @@ describe Events::BuildAttributesService do
       let(:params) { attributes_for(:event, title: event.title, message: event.message).as_json }
 
       it { is_expected.to include(parent_id: event.id) }
+
+      context 'when messages are similar' do
+        let(:event) do
+          create(
+            :event, project: project,
+                    message: '`identify -format %[orientation] /tmp/ActiveStorage20200911-6277-16hdqlp.png[0]`'
+          )
+        end
+        let(:params) do
+          attributes_for(
+            :event, title: event.title,
+                    message: '`identify -format %[orientation] /tmp/ActiveStorage20200911-6277-1x55pi4.png[0]`'
+          ).as_json
+        end
+
+        it { is_expected.to include(parent_id: event.id) }
+      end
     end
   end
 
