@@ -21,7 +21,7 @@ class Events::BuildAttributesService < ApplicationService
 
   def parent_id_by_backtrace
     query = 'parent_id IS NULL AND title = ? AND backtrace @> ARRAY[?]::jsonb[]'
-    @project.events.where(query, @params['title'], project_trace.except(:project_error).to_json)&.first&.id
+    @project.events.where(query, @params['title'], project_trace.to_json)&.first&.id
   end
 
   def parent_id_by_title
@@ -43,7 +43,7 @@ class Events::BuildAttributesService < ApplicationService
   def built_backtrace
     @params['backtrace'].map do |trace|
       is_project_error = trace['filename'].include?(directory_root) && !excluded_directory?(trace['filename'])
-      trace.merge(project_error: is_project_error)
+      trace.merge('project_error' => is_project_error)
     end
   end
 
@@ -56,7 +56,7 @@ class Events::BuildAttributesService < ApplicationService
   end
 
   def project_trace
-    backtrace.find { |trace| trace[:project_error] }
+    backtrace.find { |trace| trace['project_error'] }
   end
 
   def excluded_directory?(filename)
