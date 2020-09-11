@@ -13,9 +13,9 @@ class Events::BuildAttributesService < ApplicationService
     if @params['framework'] == Constants::Event::BROWSER_JS
       parent_id_by_message
     elsif @params['backtrace']
-      project_trace && project_trace['code'] ? parent_id_by_backtrace : parent_id_by_title
+      project_trace && project_trace['code'] ? parent_id_by_backtrace : parent_id_by_title_and_message
     else
-      parent_id_by_title
+      parent_id_by_title_and_message
     end
   end
 
@@ -24,8 +24,9 @@ class Events::BuildAttributesService < ApplicationService
     @project.events.where(query, @params['title'], project_trace.to_json)&.first&.id
   end
 
-  def parent_id_by_title
-    @project.events.find_by(title: @params['title'], message: @params['message'], parent_id: nil)&.id
+  def parent_id_by_title_and_message
+    similar_message_event&.id ||
+      @project.events.find_by(title: @params['title'], message: @params['message'], parent_id: nil)&.id
   end
 
   def parent_id_by_message
@@ -61,5 +62,19 @@ class Events::BuildAttributesService < ApplicationService
 
   def excluded_directory?(filename)
     EXLCUDED_DIRECTORIES.any? { |directory| filename.include?(directory) }
+  end
+
+  def same_title_events
+    @same_title_events ||= @project.events
+                                   .where(parent_id: nil, title: @params['title'], framework: @params['framework'])
+                                   .select(:id, :message)
+  end
+
+  def similar_message_event
+    @similar_message_event ||= same_title_events.find { |ev| similar_message?(ev.message) }
+  end
+
+  def similar_message?(message)
+    StringDifference.percent(message, @params['message']) <= Constants::Event::MESSAGE_SIMILARITY_PERCENT
   end
 end
