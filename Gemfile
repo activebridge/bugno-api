@@ -7,6 +7,7 @@ ruby '2.6.6'
 
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'activeadmin'
+gem 'activerecord-import'
 gem 'acts_as_list'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'bugno'
