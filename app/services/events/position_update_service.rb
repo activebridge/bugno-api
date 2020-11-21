@@ -2,7 +2,7 @@
 
 class Events::PositionUpdateService < ApplicationService
   def call
-    Event.import(events.to_a, on_duplicate_key_update: [:position], validate: false)
+    Event.import(%i[id position], events, on_duplicate_key_update: [:position], validate: false)
   end
 
   private
@@ -13,8 +13,9 @@ class Events::PositionUpdateService < ApplicationService
   end
 
   def events
-    Event.where(project_id: @project_id, parent_id: nil, status: @status)
-         .order(Arel.sql(order))
-         .select(Arel.sql("id, ROW_NUMBER() OVER(ORDER BY #{order}) AS position"))
+    @project.events
+            .where(parent_id: nil, status: @status)
+            .order(Arel.sql(order))
+            .pluck(Arel.sql("id, ROW_NUMBER() OVER(ORDER BY #{order}) AS position"))
   end
 end
