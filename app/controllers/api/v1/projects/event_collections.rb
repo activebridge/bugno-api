@@ -7,11 +7,22 @@ class API::V1::Projects::EventCollections < Grape::API
     end
 
     def events
-      @events ||= project.events.where(parent_id: nil)
+      @events ||= project.events.includes(:user)
+                         .where(parent_id: nil)
                          .by_status(declared_params[:status])
                          .order(position: :asc)
                          .page(declared_params[:page])
-                         .includes(:user)
+    end
+
+    def events_payload
+      { events: ActiveModel::Serializer::CollectionSerializer.new(events, serializer: ParentEventSerializer).as_json }
+        .merge({ project_id: project.id, action: UserChannel::ACTIONS::BULK_UPDATE, status: declared_params[:status] })
+    end
+
+    def broadcast_events
+      project.project_users.pluck(:user_id).each do |user_id|
+        ActionCable.server.broadcast("user_#{user_id}", events_payload)
+      end
     end
   end
 
@@ -28,11 +39,8 @@ class API::V1::Projects::EventCollections < Grape::API
         ::Events::PositionUpdateService
           .call(status: declared_params[:status], project: project,
                 direction: declared_params[:direction], column: declared_params[:column])
-        render(events,
-               each_serializer: ParentEventSerializer,
-               include: 'user',
-               adapter: :json,
-               meta: { total_count: events.total_count })
+        broadcast_events
+        status 200
       end
     end
   end
