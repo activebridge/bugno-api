@@ -16,6 +16,6 @@ class Events::PositionUpdateService < ApplicationService
     @project.events
             .where(parent_id: nil, status: @status)
             .order(Arel.sql(order))
-            .pluck(Arel.sql("id, ROW_NUMBER() OVER(ORDER BY #{order}) AS position"))
+            .pluck(Arel.sql("id, ROW_NUMBER() OVER(ORDER BY #{order}) - 1 AS position"))
   end
 end
