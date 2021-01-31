@@ -20,7 +20,7 @@ class Events::NotifyService < ApplicationService
 
   def notify?
     if high_frequency?
-      notify_high_frequency?
+      notification_point?(frequency)
     else
       @event.parent? || occurrence_point?
     end
@@ -44,10 +44,6 @@ class Events::NotifyService < ApplicationService
 
   def high_frequency?
     @high_frequency ||= frequency > Constants::Event::FIRST_NOTIFICATION_POINT - 1
-  end
-
-  def notify_high_frequency?
-    notification_point?(frequency)
   end
 
   def notify_attributes
