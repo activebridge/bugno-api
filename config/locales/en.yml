@@ -44,7 +44,11 @@ en:
       subject: '[%{project_name}] %{environment}: %{title} has occured for %{times} times.'
     assign:
       subject: '[%{project_name}] %{environment}: %{assigner_name} has assigned you for %{title}'
+    high_frequency:
+      subject: '[%{project_name}] %{environment}: High frequency for %{title}! %{frequency} in last minute.'
   mailer:
+    high_requency_alert: 'High frequency alert in %{project_name}!'
+    high_requency_in_last_minute: '%{title} %{frequency} times in last minute.'
     exception_section: 'New exception appeared in %{project_name}!'
     occurrence_section: 'An exception occurred for %{times} times in %{project_name}!'
     user_assigned_you: '%{assigner_nickname} has assigned you for %{event_title}'
