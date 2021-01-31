@@ -21,6 +21,7 @@ class Event < ApplicationRecord
   acts_as_list scope: %i[project_id status parent_id], top_of_list: 0, add_new_at: :top
   scope :by_status, ->(status) { where(status: status) if status.present? }
   scope :by_parent, ->(parent_id) { where(parent_id: parent_id) if parent_id.present? }
+  scope :since, ->(time_ago) { where('created_at > :time_ago', time_ago: time_ago) }
 
   after_create :reactivate_parent, if: -> { parent&.resolved? }
   after_create :update_subscription_events, if: -> { project&.subscription&.active? }
