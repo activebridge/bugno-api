@@ -19,7 +19,7 @@ class Events::NotifyService < ApplicationService
   end
 
   def notify?
-    @event.parent? || notify_high_frequency? || occurrence_point?
+    (@event.parent? && !high_frequency?) || notify_high_frequency? || occurrence_point?
   end
 
   def notifiable_status?
