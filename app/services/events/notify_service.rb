@@ -35,7 +35,7 @@ class Events::NotifyService < ApplicationService
   end
 
   def frequency
-    @frequency ||= Event.since(1.minute.ago).where(title: @event.title).count
+    @frequency ||= Event.since(1.minute.ago).where(title: @event.title, project_id: @event.project_id).count
   end
 
   def high_frequency?
