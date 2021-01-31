@@ -39,7 +39,7 @@ class EventMailer < ApplicationMailer
   def high_frequency(event, addresses)
     @event = event
     @link = project_link
-    @frequency = Event.since(1.minute.ago).where(title: @event.title).count
+    @frequency = Event.since(1.minute.ago).where(title: @event.title, project_id: @event.project_id).count
     add_high_frequency_image
     mail(to: addresses,
          subject: default_i18n_subject(project_name: @event.project.name,
