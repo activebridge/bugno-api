@@ -1,0 +1,9 @@
+.main-container
+  = render partial: 'event_mailer/shared/high_frequency_image'
+  .header = t('mailer.high_requency_alert', project_name: @event.project.name)
+  .header = t('mailer.high_requency_in_last_minute', title: @event.title, frequency: @frequency)
+  = render partial: 'event_mailer/shared/project_section'
+  = render partial: 'event_mailer/shared/message_section'
+  = render partial: 'event_mailer/shared/url_section' if @event.url.present?
+  = render partial: 'event_mailer/shared/chunk_of_code_section' if @chunk_of_code.present?
+  = render partial: 'event_mailer/shared/backtrace_section' if @event.backtrace.present?
