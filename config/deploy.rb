@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-lock '~> 3.14.1'
+lock '~> 3.16.0'
 set :application, 'bugno-api'
 set :repo_url, 'git@github.com:activebridge/bugno-api.git'
 set :deploy_to, "/home/dmytsuu/#{fetch :application}"
