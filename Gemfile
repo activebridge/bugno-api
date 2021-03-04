@@ -40,6 +40,7 @@ gem 'stripe'
 group :development, :test do
   gem 'awesome_print', require: 'ap'
   gem 'bullet'
+  gem 'dotenv-rails'
   gem 'pry'
   gem 'rspec-rails'
   gem 'rubocop'

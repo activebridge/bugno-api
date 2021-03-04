@@ -42,5 +42,3 @@ module Bugno
     config.middleware.use ActionDispatch::Session::CookieStore
   end
 end
-
-Rails.application.credentials.config.each { |key, value| ENV[key.to_s.upcase] ||= value }
