@@ -94,7 +94,7 @@ Rails.application.configure do
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
   config.web_socket_server_url = 'wss://demon.bugno.io/cable'
-  config.action_cable.allowed_request_origins = ['https://demon.bugno.io', 'http://demon.bugno.io']
+  config.action_cable.allowed_request_origins = ['https://bugno-demon.web.app', 'http://bugno-demon.web.app']
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 end
