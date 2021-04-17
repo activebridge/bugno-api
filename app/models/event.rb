@@ -51,10 +51,6 @@ class Event < ApplicationRecord
     (headers && headers['User-Agent']).present?
   end
 
-  def occurrence_limit_reached?
-    occurrence_count >= Constants::Event::OCCURRENCE_LIMIT
-  end
-
   private
 
   def update_subscription_events

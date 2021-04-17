@@ -5,7 +5,7 @@ class Events::CreateService < ApplicationService
     return event unless project
 
     ::Events::ResolveSourceCodeService.call(event: event, trace: event.backtrace[0]) if resolve_source?
-    occurrence_limit_reached? ? push_occurrence : create_event
+    create_event
     parent.update(last_occurrence_at: Time.now) if event.occurrence?
     event
   end
@@ -43,9 +43,5 @@ class Events::CreateService < ApplicationService
 
   def built_attributes
     @built_attributes ||= ::Events::BuildAttributesService.call(params: @params, project: project)
-  end
-
-  def occurrence_limit_reached?
-    built_attributes[:parent_id] && parent.occurrence_limit_reached?
   end
 end
