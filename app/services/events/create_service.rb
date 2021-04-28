@@ -4,7 +4,7 @@ class Events::CreateService < ApplicationService
   def call # rubocop:disable Metrics/AbcSize
     return event unless project
 
-    ::Events::ResolveSourceCodeService.call(event: event, trace: event.backtrace[0]) if resolve_source?
+    # ::Events::ResolveSourceCodeService.call(event: event, trace: event.backtrace[0]) if resolve_source?
     create_event
     parent.update(last_occurrence_at: Time.now) if event.occurrence?
     event
