@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Events::CreateService < ApplicationService
-  def call # rubocop:disable Metrics/AbcSize
+  def call
     return event unless project
 
     # ::Events::ResolveSourceCodeService.call(event: event, trace: event.backtrace[0]) if resolve_source?
